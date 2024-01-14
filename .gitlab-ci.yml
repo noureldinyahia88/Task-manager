@@ -13,7 +13,7 @@ build:
     - CI=false npm run build
   artifacts:
     paths:
-      - dist
+      - build
 
 deploy:
   stage: deploy
