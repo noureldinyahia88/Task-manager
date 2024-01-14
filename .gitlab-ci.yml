@@ -25,7 +25,7 @@ deploy:
     - aws --version
 
   script:
-    - aws s3 sync dist/ s3://task-manager-system-frontend-2 --delete
+    - aws s3 sync build/ s3://task-manager-system-frontend-2 --delete
 
   only:
     - main
