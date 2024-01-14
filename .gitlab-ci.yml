@@ -1,0 +1,31 @@
+image: node:latest
+
+
+stages:
+  - build
+  - deploy
+
+
+build:
+  stage: build
+  script:
+    - npm install
+    - CI=false npm run build
+  artifacts:
+    paths:
+      - dist
+
+deploy:
+  stage: deploy
+  image: amazonlinux:latest
+  timeout: 4 minutes 
+  before_script:
+    - yum update -y
+    - yum install -y aws-cli
+    - aws --version
+
+  script:
+    - aws s3 sync dist/ s3://task-manager-system-frontend-2 --delete
+
+  only:
+    - main
