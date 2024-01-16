@@ -2,25 +2,57 @@ import React from 'react'
 import styled from 'styled-components'
 
 import grid from '../../img/grid.svg'
-import peopleFill from '../../img/people-fill.svg'
-import people from '../../img/🦆 icon _people_.svg'
-import folder from '../../img/folder-fill.svg'
-import personfill from '../../img/person-fill.svg'
-import logout from '../../img/Log Out.svg'
+
+
+import logo from '../../img/logo.png'
+import adminImg from '../../img/adminpng.png'
+
+import { FaUserGroup } from "react-icons/fa6";
+import { MdGroups } from "react-icons/md";
+import { FaFolder } from "react-icons/fa";
+import { IoPersonSharp } from "react-icons/io5";
+import { RiLogoutBoxLine } from "react-icons/ri";
+
+
 
 
 const theme = {
     skyColor:'#7DD3FC',
     white: '#F9FAFB',
     sky50: '#F0F9FF',
-    fontColor: '#0D1C2E'
+    fontColor: '#0D1C2E',
+    gray800: '#1F2937'
 };
 
 const SidebarWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    width: 20%;
+`
+
+const LogoWrapper = styled.div``
+
+const Logo = styled.img`
+    
+`
+const AdminInfoWrapper = styled.div`
+    margin-top: 30px;
+`
+
+const AdminImg = styled.img``
+const Header3 = styled.h3`
+    font-size: 13px;
+    font-weight: bold;
+    color: ${theme.gray800};
+    text-align: center;
+    padding: 0;
+    margin: 0;
+`
+const BtnsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-left: 35px;
     padding-right: 35px;
     height: 100vh;
@@ -34,7 +66,7 @@ const Button = styled.button`
     border-radius:10px;
     color: ${theme.fontColor};
     border: none;
-    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
@@ -52,17 +84,27 @@ const Button = styled.button`
     &:hover{
         background-color: ${theme.skyColor};
         color: ${theme.white};
+        padding-left: 20px;
     }
 `
 const AdminSidebar = () => {
 return (
     <SidebarWrapper>
+        <LogoWrapper>
+            <Logo src={logo} alt='' />
+        </LogoWrapper>
+        <AdminInfoWrapper>
+        <AdminImg src={adminImg} alt='' />
+        <Header3>Vivian R.  Lloyd</Header3>
+        </AdminInfoWrapper>
+    <BtnsWrapper>
         <Button className='active'><img src={grid} alt='' /> Manage Projects</Button>
-        <Button><img src={peopleFill} alt="" /> Manage Admins</Button>
-        <Button><img src={people} alt="" /> Manage Employees</Button>
-        <Button><img src={folder} alt="" /> Manage PMs</Button>
-        <Button><img src={personfill} alt="" /> My Account</Button>
-        <Button><img src={logout} alt="" /> Log Out</Button>
+        <Button><FaUserGroup /> Manage Admins</Button>
+        <Button><MdGroups /> Manage Employees</Button>
+        <Button><FaFolder /> Manage PMs</Button>
+        <Button><IoPersonSharp /> My Account</Button>
+        <Button><RiLogoutBoxLine /> Log Out</Button>
+    </BtnsWrapper>
     </SidebarWrapper>
 )
 }
