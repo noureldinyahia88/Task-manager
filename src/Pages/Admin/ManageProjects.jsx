@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import AdminProjectSummery from '../../components/Admin/AdminProjectSummery'
 
 import { FaCalendarMinus } from "react-icons/fa6";
-import { ButtonSky100 } from '../../components/Uitily/Buttons'
+// import { ButtonSky100 } from '../../components/Uitily/Buttons'
 import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
@@ -29,7 +29,7 @@ const theme = {
 
 const MangeProjectWrapper = styled.div`
     display: flex;
-
+    font-family: "Roboto Condensed", sans-serif;
 `;
 const MangeProjectPage = styled.div`
     width: 100%;
@@ -105,21 +105,6 @@ const Header2 = styled.h2`
 `
 /* **************Update Form****************** */
 
-const OverlayDiv = styled.div`
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: #00000036;
-    display: none;
-    place-items: center;
-    top: 0;
-    left: 0;
-
-    &.show{
-        display: grid;
-    }
-
-`
 
 const Form = styled.form`
     padding: 40px;
@@ -195,26 +180,28 @@ const OverlayDiv2 = styled.div`
         display: grid;
     }
 `
-const ConfirmationWrapper = styled.div`
+const ConFarimationBox = styled.div`
     width: 320px;
     height: 148px;
     background-color: ${theme.white};
     padding: 5px;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content:center;
     align-items: center;
     border-radius: 10px;
     text-align: center;
-    /* position: absolute;
-    bottom: 40px;
-    right: 40px; */
+    position: absolute;
+    bottom: 18px;
+    right: 30px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    z-index:100;
 
-    /* &.show{
+    &.show{
         display: flex;
-    } */
+    }
 `
+
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -247,7 +234,20 @@ const ButtonSky400 = styled.button`
     border-radius: 10px;
     width: 150px;
     height: 50px;
-    background-color: ${theme.blue700};
+    background-color: #E0F2FE;
+    color: ${theme.gray800};
+    font-size: 20px;
+    font-size: bold;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+    z-index: 100;
+`
+const ButtonSky100 = styled.button`
+    border-radius: 10px;
+    border: none;
+    width: 150px;
+    height: 50px;
+    background-color: #38BDF8;
     color: ${theme.gray800};
     font-size: 20px;
     font-size: bold;
@@ -270,35 +270,24 @@ const ManageProjects = () => {
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
     });
+    //End of React Hook Form
 
     const onSubmit = (data) => {
         console.log(data);
     }
 
     const [showUpdateForm, setUpdateFrom] = useState(false)
-
-
+    const [cancel, setCancel] = useState(false)
 
     const handleclickUpdateForm = () => {
         setUpdateFrom(!showUpdateForm)
-    }
-
-    const [generateReports, setGenerateReports] = useState(false)
-    const [cancel, setCancel] = useState(false)
-
-
-    const GenerateReportsBtnHandle = () =>{
-        console.log('clicked');
-    
-        setGenerateReports(!generateReports)
+        setCancel(false)
     }
 
     // for confirmation function
     
-    const confarimationHandle = () => {
-        console.log('clicked');
+    const confarimationHandleCancel = () => {
         setCancel(!cancel)
-        // setGenerateReports(!generateReports)
     }
 
 
@@ -379,12 +368,22 @@ const ManageProjects = () => {
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100  btnTitle={'Cancel'} />
+            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
             <ButtonSky400  type='submit'>Save</ButtonSky400>
         </FormWrapperBtns>
 
+        <ConFarimationBox className={cancel? "show":""}>
+        <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
+        <ConfimationBtnsWrapper>
+            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+        </ConfimationBtnsWrapper>
+        </ConFarimationBox>
         </Form>
         </OverlayDiv2>
+
+        
+
     </MangeProjectWrapper>
 )
 }

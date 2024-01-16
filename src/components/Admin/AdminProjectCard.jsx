@@ -1,19 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import manger from '../../img/manger.png'
-
-import { MdOutlineSettings } from "react-icons/md";
-
-
-import { FaCalendarMinus } from "react-icons/fa6";
-
-
-import { ButtonSky100 } from '../../components/Uitily/Buttons'
 import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 
-
+import { MdOutlineSettings } from "react-icons/md";
+import { FaCalendarMinus } from "react-icons/fa6";
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -71,38 +64,6 @@ const ButtonSetting = styled.button`
     color: #374151;
 `
 
-
-
-const WrapperForm = styled.div`
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    background-color: #00000037;
-    display: none;
-    place-items: center;
-    &.show{
-        display: grid;
-    }
-    `
-
-const FormsWrapper = styled.form`
-    padding: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: ${theme.white};
-    width: 1130px;
-    height: 768px;
-    border-radius: 40px;
-    gap: 80px;
-    position: relative;
-`
-const FormWrapperChild = styled.div`
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 122px;
-` 
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -110,60 +71,29 @@ const InputWrapper = styled.div`
     gap: 5px;
     position: relative;
 `
-const CalendarIcon = styled.img`
-    position: absolute;
-    right: 0;
-    bottom: 17px;
-`
 
 
-const HeaderForm2 = styled.h2`
-    position: absolute;
-    top: 40px;
-    font-weight: 600;
-    color: ${theme.gray800};
-    font-size: 60px;
-    margin: 0;
-    border-bottom: 2px solid ${theme.inputColor};
-    width: 1130px;
-    padding-bottom: 60px;
-`
-const OverlayDiv = styled.div`
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: #00000036;
-    display: none;
-    place-items: center;
-    top: 0;
-    left: 0;
 
-    &.show{
-        display: grid;
-    }
-
-`
-
-
-const ConfirmationWrapper = styled.div`
+const ConFarimationBox = styled.div`
     width: 320px;
     height: 148px;
     background-color: ${theme.white};
     padding: 5px;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content:center;
     align-items: center;
     border-radius: 10px;
     text-align: center;
-    /* position: absolute;
-    bottom: 40px;
-    right: 40px; */
+    position: absolute;
+    bottom: 33px;
+    right: 31px;
+    z-index: 200;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-    /* &.show{
+    &.show{
         display: flex;
-    } */
+    }
 `
 
 const Header2confirmation = styled.h2`
@@ -261,12 +191,57 @@ const OverlayDiv2 = styled.div`
     }
 
 `
+// ********ConFarimation Box Setting**************
+const ConFarimationBoxSetting =styled.div`
+    width: 320px;
+    height: 148px;
+    background-color: ${theme.white};
+    padding: 5px;
+    display: none;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    border-radius: 10px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
+    z-index:100;
+
+    &.show{
+        display: flex;
+    }
+`
+const Header2confirmationSetting = styled.div`
+    font-size: 30px;
+    font-weight: bold;
+    color: #463F3F;
+    border-bottom: 1px solid ${theme.black};
+    padding-bottom: 15px;
+    width: 100%;
+    margin: 0;
+`
+
 const ButtonSky400 = styled.button`
     border: none;
     border-radius: 10px;
     width: 150px;
     height: 50px;
-    background-color: ${theme.blue700};
+    background-color: #E0F2FE;
+    color: ${theme.gray800};
+    font-size: 20px;
+    font-size: bold;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+    z-index: 100;
+`
+const ButtonSky100 = styled.button`
+    border-radius: 10px;
+    border: none;
+    width: 150px;
+    height: 50px;
+    background-color: #38BDF8;
     color: ${theme.gray800};
     font-size: 20px;
     font-size: bold;
@@ -301,8 +276,13 @@ const AdminProjectCard = () => {
     }
 
     const handleclickUpdateForm = () => {
-        setChoose(false)
         setUpdateFrom(!showUpdateForm)
+        setChoose(false)
+    }
+
+    const [cancel, setCancel] = useState(false)
+    const confarimationHandleCancel = () => {
+        setCancel(!cancel)
     }
     return (
         <MangeProjectHeader>
@@ -318,24 +298,9 @@ const AdminProjectCard = () => {
             <MdOutlineSettings style={{ width: '24px', height:'24px'}} />
             </ButtonSetting>
         </MangeWrapper>
-
-        
-
-        <OverlayDiv  className={choose ? 'show': ''}>
-        <ConfirmationWrapper className={choose ? 'show': ''}>
-        <Header2confirmation>Setting</Header2confirmation>
-
-        <ConfimationBtnsWrapper>
-            <button onClick={handleclickUpdateForm}>Update</button>
-
-            <ButtonSky400 confarimationHandle={handleClick} btnTitle={'Delete'} />
-        </ConfimationBtnsWrapper>
-
-        </ConfirmationWrapper>
-        </OverlayDiv>
         
         
-        <OverlayDiv2 className={choose ? 'show': ''}>
+        <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
         <FormHeading2>Project No: #1555236</FormHeading2>
 
@@ -373,12 +338,29 @@ const AdminProjectCard = () => {
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100  btnTitle={'Cancel'} />
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
         </FormWrapperBtns>
 
+        {/* confirm cancel */}
+        <ConFarimationBox className={cancel? "show":""}>
+        <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
+        <ConfimationBtnsWrapper>
+            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+        </ConfimationBtnsWrapper>
+        </ConFarimationBox>
+        {/* End Of confirm cancel */}
         </Form>
         </OverlayDiv2>
+
+        <ConFarimationBoxSetting className={choose ? 'show': ''}>
+        <Header2confirmationSetting>Setting</Header2confirmationSetting>
+        <ConfimationBtnsWrapper>
+            <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
+            <ButtonSky100 onClick={handleClick}>Delete</ButtonSky100>
+        </ConfimationBtnsWrapper>
+        </ConFarimationBoxSetting>
     </MangeProjectHeader>
 )
 }

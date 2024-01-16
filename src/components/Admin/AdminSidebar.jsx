@@ -52,7 +52,7 @@ const Header3 = styled.h3`
 const BtnsWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    margin-top: 100px;
     padding-left: 35px;
     padding-right: 35px;
     height: 100vh;
