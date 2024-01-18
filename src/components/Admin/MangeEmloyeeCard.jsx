@@ -5,9 +5,9 @@ import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 
-import { MdOutlineSettings } from "react-icons/md";
-import { FaCalendarMinus } from "react-icons/fa6";
+import adminImg from '../../img/adminpng.png';
 import { IoSettings } from "react-icons/io5";
+import { AiFillEyeInvisible } from "react-icons/ai";
 
 
 const theme = {
@@ -20,7 +20,8 @@ const theme = {
     gray500: '#6B7280',
     gray800: '#1F2937',
     inputColor: '#9CA3AF',
-    black: '#000'
+    black: '#000',
+    sky900Color: '#0C4A6E',
 };
 
 const ButtonSetting = styled.button`
@@ -38,7 +39,10 @@ const MangeProjectHeader = styled.div`
     width: 100%;
     background-color: ${theme.white};
     border-radius: 10px;
-    padding: 10px;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+
     margin-top:30px;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -136,6 +140,33 @@ const Form = styled.form`
     gap: 80px;
     position: relative;
 `
+const FormHeadingWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+`
+const ImageWrapper = styled.div`
+    padding-top: 15px;
+`
+const AdminImage = styled.img`
+    border-radius: 50%;
+`
+const AdminheaderDeatials = styled.div`
+    color: ${theme.sky900Color};
+`
+
+const AdminId = styled.p`
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+`
+
+const TypeOfAdmin =styled.h4`
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+`
+
 const InputFormWrapperParent = styled.div`
     display: flex;
     align-items: center;
@@ -176,14 +207,12 @@ const FormWrapperBtns = styled.div`
     gap: 10px;
 `
 const FormHeading2 = styled.h2`
-    
-    font-weight: 600;
-    color: ${theme.gray800};
-    font-size: 60px;
+    font-weight: 400;
+    color: ${theme.sky900Color};
+    font-size: 49px;
     margin: 0;
-    border-bottom: 2px solid ${theme.inputColor};
+    /* border-bottom: 2px solid ${theme.inputColor}; */
     width: 1130px;
-    padding-bottom: 60px;
 `
 const OverlayDiv2 = styled.div`
     position: fixed;
@@ -259,7 +288,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const AdminProjectCard = () => {
+const MangeEmloyeeCard = () => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -293,14 +322,14 @@ const AdminProjectCard = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
-    return (
-        <MangeProjectHeader>
+
+  return (
+    <MangeProjectHeader>
         <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle>Fake Title</HeaderTitle>
-        <HeaderTitle>25%</HeaderTitle>
         <HeaderTitle><img src={manger} alt="" /> Vivian R. Lloyd</HeaderTitle>
+        <HeaderTitle>pleasurethink@gmail.com</HeaderTitle>
+        <HeaderTitle>+20 1029208427</HeaderTitle>
         <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
-        <HeaderTitle>September 28, 2023</HeaderTitle>
     
         <MangeWrapper>
             <ButtonSetting onClick={handleClick}>
@@ -310,39 +339,64 @@ const AdminProjectCard = () => {
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
+
         <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormHeading2>Project No: #1555236</FormHeading2>
+
+        <FormHeadingWrapper>
+                <ImageWrapper>
+                    <AdminImage src={adminImg} alt=''/>
+                </ImageWrapper>
+
+                <AdminheaderDeatials>
+            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
+            <AdminId>ID: #7821</AdminId>
+            <TypeOfAdmin>Global Admin</TypeOfAdmin>
+                </AdminheaderDeatials>
+            </FormHeadingWrapper>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter your Title ' {...register("title")} />
+        <Label htmlFor="">First Name</Label>
+        <Input type='text' placeholder='Enter your first name' {...register("title")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">Manager ID</Label>
-        <Input type='number' placeholder='Enter your  User ID' {...register("id")} />
+        <Label htmlFor="">E-mail Address </Label>
+        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
+        <InputWrapper>
+        <Label htmlFor="">New Password</Label>
+        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
+        <Span>{errors.date?.message}</Span>
+        </InputWrapper>
         </InputformWrapper>
 
         <InputformWrapper>
-        <InputWrapper>
-        <Label htmlFor="">Date</Label>
-        <Input type='clender' placeholder='....\....\....' {...register("date")}/>
-        <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
-        <Span>{errors.date?.message}</Span>
-        </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter your Description' {...register("description")} />
+        <Label htmlFor="">Last Name</Label>
+        <Input type='text' placeholder='Enter your last name' {...register("description")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
+        <InputWrapper>
+        <Label htmlFor="">Phone Number</Label>
+        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Span>{errors.description?.message}</Span>
+        </InputWrapper>
+
+        <InputWrapper>
+        <Label htmlFor="">Confirm New Password</Label>
+        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
+        <Span>{errors.date?.message}</Span>
+        </InputWrapper>
+
         </InputformWrapper>
         </InputFormWrapperParent>
 
@@ -374,4 +428,4 @@ const AdminProjectCard = () => {
 )
 }
 
-export default AdminProjectCard
+export default MangeEmloyeeCard

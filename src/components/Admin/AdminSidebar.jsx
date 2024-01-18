@@ -12,6 +12,9 @@ import { MdGroups } from "react-icons/md";
 import { FaFolder } from "react-icons/fa";
 import { IoPersonSharp } from "react-icons/io5";
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { LuLayoutGrid } from "react-icons/lu";
+import { NavLink } from 'react-router-dom'
+
 
 
 
@@ -67,14 +70,15 @@ const Button = styled.button`
     color: ${theme.fontColor};
     border: none;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     gap: 10px;
+    padding-left: 15px;
     
     &.active{
     background-color: ${theme.skyColor};
@@ -87,6 +91,7 @@ const Button = styled.button`
         padding-left: 20px;
     }
 `
+
 const AdminSidebar = () => {
 return (
     <SidebarWrapper>
@@ -98,12 +103,30 @@ return (
         <Header3>Vivian R.  Lloyd</Header3>
         </AdminInfoWrapper>
     <BtnsWrapper>
-        <Button className='active'><img src={grid} alt='' /> Manage Projects</Button>
-        <Button><FaUserGroup /> Manage Admins</Button>
-        <Button><MdGroups /> Manage Employees</Button>
-        <Button><FaFolder /> Manage PMs</Button>
-        <Button><IoPersonSharp /> My Account</Button>
-        <Button><RiLogoutBoxLine /> Log Out</Button>
+    
+    <NavLink to="/" style={{ textDecoration: 'none' }}>
+        <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
+    </NavLink>
+
+    <NavLink to="/manageAdmin" style={{ textDecoration: 'none' }}>
+        <Button><FaUserGroup style={{fontSize:"16px"}} /> Manage Admins</Button>
+    </NavLink>
+
+    <NavLink to="/manageEmployees" style={{ textDecoration: 'none' }}>
+        <Button><MdGroups style={{fontSize:"16px"}} /> Manage Employees</Button>
+    </NavLink>
+
+    <NavLink to="/managePMS" style={{ textDecoration: 'none' }}>
+        <Button><FaFolder style={{fontSize:"16px"}} /> Manage PMs</Button>
+    </NavLink>
+
+    <NavLink to="/" style={{ textDecoration: 'none' }}>
+        <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
+    </NavLink>
+
+    <NavLink to="/" style={{ textDecoration: 'none' }}>
+        <Button><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
+    </NavLink>
     </BtnsWrapper>
     </SidebarWrapper>
 )

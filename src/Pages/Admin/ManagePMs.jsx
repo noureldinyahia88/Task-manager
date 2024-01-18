@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
-import AdminMangeProjectHeader from '../../components/Admin/AdminMangeProjectHeader'
-import AdminProjectCard from '../../components/Admin/AdminProjectCard'
-import styled from 'styled-components'
-import AdminProjectSummery from '../../components/Admin/AdminProjectSummery'
+import { IoMdSearch } from "react-icons/io";
 
-import { FaCalendarMinus } from "react-icons/fa6";
-// import { ButtonSky100 } from '../../components/Uitily/Buttons'
+import styled from 'styled-components'
+import { AiFillEyeInvisible } from "react-icons/ai";
 import { useForm } from 'react-hook-form';
+import adminImg from '../../img/adminpng.png';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
+import AdminManagePMSCARD from '../../components/Admin/AdminManagePMSCARD'
 
 
 
@@ -31,30 +30,36 @@ const theme = {
 const MangeProjectWrapper = styled.div`
     display: flex;
     font-family: "Roboto Condensed", sans-serif;
-`;
+`
 const MangeProjectPage = styled.div`
     width: 100%;
     background-color: ${theme.blue400};
     border-radius: 30px;
     padding: 20px 60px 20px 60px;
 `
+const Header2 = styled.h2`
+    font-weight: 600;
+    color: ${theme.white};
+    font-size: 60px;
+    margin: 0;
+`
 const Wrapper = styled.div`
 margin-top: 50px;
 `
-const WrapperChild = styled.div`
-margin-top: 50px;
-`
-
 const ManageProjectsInputs = styled.div`
     display: flex;
+    flex-direction: column;
+    align-items: center;
     min-width: 100%;
-    justify-content: space-between;
-    margin-bottom: 15px;
+    justify-content: center;
+    margin-bottom: 102px;
+    gap: 20px;
 `
 
 const FormWrapper = styled.div`
     display: flex;
     align-items: center;
+    justify-content: center;
     width: 50%;
 `
 const InputSearch = styled.input`
@@ -64,6 +69,7 @@ const InputSearch = styled.input`
     height: 30px;
     padding: 5px;
     border-radius: 10px 0px 0px 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
 
     &:focus{
         outline: none;
@@ -79,13 +85,8 @@ const SearchBtn = styled.button`
     color: ${theme.white};
     cursor: pointer;
 `
-const BtnsWrapper = styled.div`
-    display: flex;
-    width: 40%;
-    gap: 50px;
-`
+
 const Button = styled.button`
-    width: 50%;
     background-color: ${theme.white};
     padding: 15px;
     border: none;
@@ -97,12 +98,6 @@ const Button = styled.button`
     background-color: ${theme.blue700};
     color: ${theme.white};
     }
-`
-const Header2 = styled.h2`
-    font-weight: 600;
-    color: ${theme.white};
-    font-size: 60px;
-    margin: 0;
 `
 /* **************Update Form****************** */
 
@@ -118,6 +113,33 @@ const Form = styled.form`
     gap: 80px;
     position: relative;
 `
+const FormHeadingWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+`
+const ImageWrapper = styled.div`
+    padding-top: 15px;
+`
+const AdminImage = styled.img`
+    border-radius: 50%;
+`
+const AdminheaderDeatials = styled.div`
+    color: ${theme.sky900Color};
+`
+
+const AdminId = styled.p`
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+`
+
+const TypeOfAdmin =styled.h4`
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+`
+
 const InputFormWrapperParent = styled.div`
     display: flex;
     align-items: center;
@@ -257,9 +279,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-
-const ManageProjects = () => {
-
+const ManagePMs = () => {
     //React Hook Form
     const validationSchema = yup.object().shape({
         title: yup.string().required("Title is required"),
@@ -290,38 +310,30 @@ const ManageProjects = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
-
-
     return (
-
-    <MangeProjectWrapper>
+        <MangeProjectWrapper>
         <AdminSidebar />
         <MangeProjectPage>
-            <Header2>Manage Projects</Header2>
+            <Header2>Manage PMS</Header2>
 
             <Wrapper >
-                <AdminProjectSummery />
-            <WrapperChild>
-                <ManageProjectsInputs>
+                
+            
+            <ManageProjectsInputs>
+                <Button className='blueBtn'>Add New PM</Button>
                     <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' />
-                    <SearchBtn className="searchButton">Go</SearchBtn>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
+                    <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
-
-                    <BtnsWrapper>
-                        <Button >Generate Reports</Button>
-                        <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Projects</Button>
-                    </BtnsWrapper>
                 </ManageProjectsInputs>
-            </WrapperChild>
 
             <AdminMangeHeader />
 
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
+            <AdminManagePMSCARD />
+            <AdminManagePMSCARD />
+            <AdminManagePMSCARD />
+            <AdminManagePMSCARD />
+            <AdminManagePMSCARD />
 
             
             </Wrapper>
@@ -333,38 +345,61 @@ const ManageProjects = () => {
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormHeading2>Project No: #1555236</FormHeading2>
+
+        <FormHeadingWrapper>
+                <ImageWrapper>
+                    <AdminImage src={adminImg} alt=''/>
+                </ImageWrapper>
+
+                <AdminheaderDeatials>
+            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
+            <AdminId>ID: #7821</AdminId>
+                </AdminheaderDeatials>
+            </FormHeadingWrapper>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter your Title ' {...register("title")} />
+        <Label htmlFor="">First Name</Label>
+        <Input type='text' placeholder='Enter your first name' {...register("title")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">Manager ID</Label>
-        <Input type='number' placeholder='Enter your  User ID' {...register("id")}/>
+        <Label htmlFor="">E-mail Address </Label>
+        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
+        <InputWrapper>
+        <Label htmlFor="">New Password</Label>
+        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
+        <Span>{errors.date?.message}</Span>
+        </InputWrapper>
         </InputformWrapper>
 
         <InputformWrapper>
-        <InputWrapper>
-        <Label htmlFor="">Date</Label>
-        <Input type='clender' placeholder='....\....\....'{...register("date")} />
-        <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
-        <Span>{errors.date?.message}</Span>
-        </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter your Description'{...register("description")} />
+        <Label htmlFor="">Last Name</Label>
+        <Input type='text' placeholder='Enter your last name' {...register("description")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
+        <InputWrapper>
+        <Label htmlFor="">Phone Number</Label>
+        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Span>{errors.description?.message}</Span>
+        </InputWrapper>
+
+        <InputWrapper>
+        <Label htmlFor="">Confirm New Password</Label>
+        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
+        <Span>{errors.date?.message}</Span>
+        </InputWrapper>
+
         </InputformWrapper>
         </InputFormWrapperParent>
 
@@ -389,4 +424,4 @@ const ManageProjects = () => {
 )
 }
 
-export default ManageProjects
+export default ManagePMs

@@ -16,8 +16,9 @@ const MangeProjectHeader = styled.div`
     width: 100%;
     background-color: ${theme.white};
     border-radius: 10px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-top: 8px;
+    padding-left: 15px;
+    padding-bottom: 8px;
     font-weight: bold;
 `
 const HeaderTitle = styled.h3`
@@ -39,15 +40,14 @@ const ButtonSetting = styled.button`
     cursor: pointer;
 `
 
-const AdminMangeHeader = () => {
-    return (
+const ManageAdminHeaderpage = () => {
+  return (
     <MangeProjectHeader>
         <HeaderTitle>ID</HeaderTitle>
         <HeaderTitle>Title</HeaderTitle>
-        <HeaderTitle>Progress</HeaderTitle>
-        <HeaderTitle>Manager</HeaderTitle>
+        <HeaderTitle>Email</HeaderTitle>
+        <HeaderTitle>Phone Number</HeaderTitle>
         <HeaderTitle>Date</HeaderTitle>
-        <HeaderTitle>Deadline</HeaderTitle>
 
         <MangeWrapper>
             <ButtonSetting>
@@ -58,4 +58,4 @@ const AdminMangeHeader = () => {
 )
 }
 
-export default AdminMangeHeader
+export default ManageAdminHeaderpage
