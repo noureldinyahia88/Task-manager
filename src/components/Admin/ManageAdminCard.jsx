@@ -145,6 +145,7 @@ const FormHeadingWrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+    border-bottom: 1px solid #9CA3AF;
 `
 const ImageWrapper = styled.div`
     padding-top: 15px;
@@ -363,7 +364,7 @@ const ManageAdminCard = () => {
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         

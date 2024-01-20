@@ -1,22 +1,20 @@
 import React, { useState } from 'react'
-import AdminSidebar from '../../components/Admin/AdminSidebar'
-import { IoMdSearch } from "react-icons/io";
-
 import styled from 'styled-components'
-import { AiFillEyeInvisible } from "react-icons/ai";
+import AdminSidebar from '../../components/Admin/AdminSidebar'
+import adminImg from '../../img/adminpng.png'
+
 import { useForm } from 'react-hook-form';
-import placeHoderImage from '../../img/image-fill.png';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
-import MangeEmloyeeCard from '../../components/Admin/MangeEmloyeeCard' 
-import ManageAdminHeaderpage from '../../components/Admin/ManageAdminHeaderpage';
-import { MdModeEditOutline } from "react-icons/md";
+import { AiFillEyeInvisible } from "react-icons/ai";
+
 
 
 const theme = {
     skyColor:'#7DD3FC',
     white: '#F9FAFB',
     sky50: '#F0F9FF',
+    sky900: '#0C4A6E',
     fontColor: '#0D1C2E',
     blue400: '#38BDF8',
     blue700: '#1D4ED8',
@@ -26,15 +24,18 @@ const theme = {
     black: '#000'
 };
 
-const AdminManageEmployees = styled.div`
+const ManageAdminsWrapper = styled.div`
     display: flex;
     font-family: "Roboto Condensed", sans-serif;
 `
-const MangeProjectPage = styled.div`
+const MyAcountPageWarpper = styled.div`
     width: 100%;
     background-color: ${theme.blue400};
     border-radius: 30px;
     padding: 20px 60px 20px 60px;
+`
+const MangeProjectPage = styled.div`
+    margin-bottom: 50px;
 `
 const Header2 = styled.h2`
     font-weight: 600;
@@ -42,18 +43,10 @@ const Header2 = styled.h2`
     font-size: 60px;
     margin: 0;
 `
-const Wrapper = styled.div`
-margin-top: 50px;
-`
+
 
 const ManageProjectsInputs = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 100%;
-    justify-content: center;
-    margin-bottom: 102px;
-    gap: 20px;
+    
 `
 
 const FormWrapper = styled.div`
@@ -94,20 +87,12 @@ const Button = styled.button`
     cursor: pointer;
     font-weight: bold;
     font-size: 20px;
-    &.blueBtn{
-    background-color: ${theme.blue700};
-    color: ${theme.white};
-    }
 `
-/* **************Update Form****************** */
-
 
 const Form = styled.form`
-    padding: 40px;
+    /* max-width: 1050px; */
     display: flex;
     flex-direction: column;
-    background-color: ${theme.white};
-    width: 1130px;
     border-radius: 40px;
     gap: 20px;
     position: relative;
@@ -115,28 +100,44 @@ const Form = styled.form`
 const FormHeadingWrapper = styled.div`
     display: flex;
     align-items: center;
+    border-bottom: 1px solid ${theme.inputColor};
+    padding-bottom: 15px;
     gap: 20px;
-    padding-bottom: 60px;
-    border-bottom: 2px solid ${theme.inputColor};
+    margin-bottom: 70px;
 `
-
 const AdminImage = styled.img`
     border-radius: 50%;
 `
+const AdminheaderDeatials = styled.div`
+    color: ${theme.sky900Color};
+`
 
+const FormHeading2 = styled.h2`
+    font-weight: 400;
+    color: ${theme.sky900};
+    font-size: 49px;
+    margin: 0;
+    width: 1130px;
+`
+const AdminId = styled.p`
+    font-size: 24px;
+    font-weight: bold;
+    color: ${theme.sky900};
+    margin: 0;
+`
 
 const InputFormWrapperParent = styled.div`
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 80px;
+    gap: inherit;
+    width: 100%;
+    margin-bottom: 60px;
 `
 const InputformWrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 120px;
+    gap: 90px;
 `
 const Label = styled.label`
     font-weight: bold;
@@ -165,7 +166,7 @@ const FormWrapperBtns = styled.div`
     display: flex;
     gap: 10px;
 `
-
+// ******************* update form *********************
 const OverlayDiv2 = styled.div`
     position: fixed;
     width: 100%;
@@ -179,6 +180,17 @@ const OverlayDiv2 = styled.div`
     &.show{
         display: grid;
     }
+`
+
+const FormUpdate = styled.form`
+    padding: 40px;
+    max-width: 1130px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 40px;
+    gap: 20px;
+    position: fixed;
+    background-color: ${theme.white};
 `
 const ConFarimationBox = styled.div`
     width: 320px;
@@ -256,33 +268,14 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 const ImageWrapper = styled.div`
-    width: 146px;
-    height: 146px;
-    border-radius: 50%;
-    background-color: #D1D5DB;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 `
 
-const EditBtnWrapper = styled.div`
-    position: absolute;
-    background-color: #F3F4F6;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    right: 7px;
-    bottom: 10px;
-    display: grid;
-    place-items: center;
-`
-const EditBtn = styled.button`
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-`
-const ManageEmployees = () => {
+
+const MyAccountAdmin = () => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -314,47 +307,26 @@ const ManageEmployees = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
-
+    
     return (
-        <AdminManageEmployees>
+        <ManageAdminsWrapper>
         <AdminSidebar />
+        <MyAcountPageWarpper>
         <MangeProjectPage>
-            <Header2>Manage Employees</Header2>
-
-            <Wrapper >
-                
-                <ManageProjectsInputs>
-                <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Employee</Button>
-                    <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
-                    <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
-                    </FormWrapper>
-                </ManageProjectsInputs>
-
-            <ManageAdminHeaderpage />
-
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-
-            
-            </Wrapper>
+            <Header2>My Profile</Header2>
         </MangeProjectPage>
 
-
-        <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
 
         <FormHeadingWrapper>
                 <ImageWrapper>
-                    <AdminImage src={placeHoderImage} alt=''/>
-                    <EditBtnWrapper>
-                        <EditBtn><MdModeEditOutline style={{'font-size': '16px'}} /></EditBtn>
-                    </EditBtnWrapper>
+                    <AdminImage src={adminImg} alt=''/>
                 </ImageWrapper>
 
+                <AdminheaderDeatials>
+            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
+            <AdminId>ID: #7821</AdminId>
+                </AdminheaderDeatials>
             </FormHeadingWrapper>
 
         <InputFormWrapperParent>
@@ -368,6 +340,65 @@ const ManageEmployees = () => {
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
         <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
+        <Span>{errors.id?.message}</Span>
+        </InputWrapper>
+        
+        <InputWrapper>
+        <Label htmlFor="">Password</Label>
+        <Input type='clender' placeholder='Enter your password' {...register("date")}/>
+        <Span>{errors.date?.message}</Span>
+        </InputWrapper>
+
+        </InputformWrapper>
+
+        <InputformWrapper>
+
+        <InputWrapper>
+        <Label htmlFor="">Last Name</Label>
+        <Input type='text' placeholder='Enter your last name' {...register("description")} />
+        <Span>{errors.description?.message}</Span>
+        </InputWrapper>
+        
+        <InputWrapper>
+        <Label htmlFor="">Phone Number</Label>
+        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Span>{errors.description?.message}</Span>
+        </InputWrapper>
+
+        </InputformWrapper>
+
+        </InputFormWrapperParent>
+                <ManageProjectsInputs>
+                <Button className='blueBtn' onClick={handleclickUpdateForm}>Update</Button>
+                </ManageProjectsInputs>
+        </Form>
+        </MyAcountPageWarpper>
+
+        {/* <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
+        <FormUpdate onSubmit={handleSubmit(onSubmit)}>
+
+            <FormHeadingWrapper>
+                <ImageWrapper>
+                    <AdminImage src={adminImg} alt=''/>
+                </ImageWrapper>
+
+                <AdminheaderDeatials>
+            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
+            <AdminId>ID: #7821</AdminId>
+                </AdminheaderDeatials>
+            </FormHeadingWrapper>
+
+        <InputFormWrapperParent>
+        <InputformWrapper>
+        <InputWrapper>
+        <Label htmlFor="">First Name</Label>
+        <Input type='text' placeholder='Enter your first name' {...register("title")} />
+        <Span>{errors.title?.message}</Span>
+        </InputWrapper>
+
+        <InputWrapper>
+        <Label htmlFor="">E-mail Address </Label>
+        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
@@ -405,21 +436,22 @@ const ManageEmployees = () => {
 
         <FormWrapperBtns>
             <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
         </FormWrapperBtns>
 
+        
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
             <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
-        </Form>
-        </OverlayDiv2>
-
-    </AdminManageEmployees>
+        </FormUpdate>
+        </OverlayDiv2> */}
+    
+    </ManageAdminsWrapper>
 )
 }
 
-export default ManageEmployees
+export default MyAccountAdmin

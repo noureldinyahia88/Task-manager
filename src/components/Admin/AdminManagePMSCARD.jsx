@@ -8,6 +8,7 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import adminImg from '../../img/adminpng.png'
 import { IoSettings } from "react-icons/io5";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { MdModeEditOutline } from "react-icons/md";
 
 
 const theme = {
@@ -135,7 +136,6 @@ const Form = styled.form`
     flex-direction: column;
     background-color: ${theme.white};
     width: 1130px;
-    height: 768px;
     border-radius: 40px;
     gap: 80px;
     position: relative;
@@ -144,9 +144,32 @@ const FormHeadingWrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+    border-bottom: 1px solid #9CA3AF;
 `
+
 const ImageWrapper = styled.div`
-    padding-top: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+`
+
+const EditBtnWrapper = styled.div`
+    position: absolute;
+    background-color: #F3F4F6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    right: 7px;
+    bottom: 20px;
+    display: grid;
+    place-items: center;
+`
+const EditBtn = styled.button`
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
 `
 const AdminImage = styled.img`
     border-radius: 50%;
@@ -161,17 +184,13 @@ const AdminId = styled.p`
     margin: 0;
 `
 
-const TypeOfAdmin =styled.h4`
-    font-size: 24px;
-    margin: 0;
-    font-weight: bold;
-`
 
 const InputFormWrapperParent = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    margin-bottom: 110px;
 `
 const InputformWrapper = styled.div`
     width: 100%;
@@ -211,7 +230,6 @@ const FormHeading2 = styled.h2`
     color: ${theme.sky900Color};
     font-size: 49px;
     margin: 0;
-    /* border-bottom: 2px solid ${theme.inputColor}; */
     width: 1130px;
 `
 const OverlayDiv2 = styled.div`
@@ -323,7 +341,7 @@ const AdminManagePMSCARD = () => {
         setCancel(!cancel)
     }
 
-  return (
+    return (
     <MangePMSHeader>
         <HeaderTitle>#123</HeaderTitle>
         <HeaderTitle><img src={manger} alt="" /> Vivian R. Lloyd</HeaderTitle>
@@ -345,12 +363,14 @@ const AdminManagePMSCARD = () => {
         <FormHeadingWrapper>
                 <ImageWrapper>
                     <AdminImage src={adminImg} alt=''/>
+                    <EditBtnWrapper>
+                        <EditBtn><MdModeEditOutline style={{'font-size': '16px'}} /></EditBtn>
+                    </EditBtnWrapper>
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
             <FormHeading2>Vivian R.  Lloyd</FormHeading2>
             <AdminId>ID: #7821</AdminId>
-            <TypeOfAdmin>Global Admin</TypeOfAdmin>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
 
@@ -364,7 +384,7 @@ const AdminManagePMSCARD = () => {
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
@@ -425,7 +445,7 @@ const AdminManagePMSCARD = () => {
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>
     </MangePMSHeader>
-  )
+)
 }
 
 export default AdminManagePMSCARD

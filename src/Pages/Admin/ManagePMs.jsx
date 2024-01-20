@@ -108,43 +108,18 @@ const Form = styled.form`
     flex-direction: column;
     background-color: ${theme.white};
     width: 1130px;
-    height: 768px;
     border-radius: 40px;
     gap: 80px;
     position: relative;
 `
-const FormHeadingWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 20px;
-`
-const ImageWrapper = styled.div`
-    padding-top: 15px;
-`
-const AdminImage = styled.img`
-    border-radius: 50%;
-`
-const AdminheaderDeatials = styled.div`
-    color: ${theme.sky900Color};
-`
 
-const AdminId = styled.p`
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
-`
-
-const TypeOfAdmin =styled.h4`
-    font-size: 24px;
-    margin: 0;
-    font-weight: bold;
-`
 
 const InputFormWrapperParent = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    margin-bottom: 100px;
 `
 const InputformWrapper = styled.div`
     width: 100%;
@@ -179,16 +154,7 @@ const FormWrapperBtns = styled.div`
     display: flex;
     gap: 10px;
 `
-const FormHeading2 = styled.h2`
-    
-    font-weight: 600;
-    color: ${theme.gray800};
-    font-size: 60px;
-    margin: 0;
-    border-bottom: 2px solid ${theme.inputColor};
-    width: 1130px;
-    padding-bottom: 60px;
-`
+
 const OverlayDiv2 = styled.div`
     position: fixed;
     width: 100%;
@@ -207,7 +173,7 @@ const ConFarimationBox = styled.div`
     width: 320px;
     height: 148px;
     background-color: ${theme.white};
-    padding: 5px;
+    padding: 5px 5px 10px 5px;
     display: none;
     flex-direction: column;
     justify-content:center;
@@ -318,9 +284,8 @@ const ManagePMs = () => {
 
             <Wrapper >
                 
-            
             <ManageProjectsInputs>
-                <Button className='blueBtn'>Add New PM</Button>
+                <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New PM</Button>
                     <FormWrapper>
                     <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
                     <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
@@ -346,16 +311,6 @@ const ManagePMs = () => {
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
 
-        <FormHeadingWrapper>
-                <ImageWrapper>
-                    <AdminImage src={adminImg} alt=''/>
-                </ImageWrapper>
-
-                <AdminheaderDeatials>
-            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
-            <AdminId>ID: #7821</AdminId>
-                </AdminheaderDeatials>
-            </FormHeadingWrapper>
 
         <InputFormWrapperParent>
         <InputformWrapper>
@@ -367,7 +322,7 @@ const ManagePMs = () => {
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='number' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         

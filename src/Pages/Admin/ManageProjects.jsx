@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import AdminProjectSummery from '../../components/Admin/AdminProjectSummery'
 
 import { FaCalendarMinus } from "react-icons/fa6";
-// import { ButtonSky100 } from '../../components/Uitily/Buttons'
 import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'

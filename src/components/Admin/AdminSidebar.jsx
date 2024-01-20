@@ -92,6 +92,8 @@ const Button = styled.button`
     }
 `
 
+
+
 const AdminSidebar = () => {
 return (
     <SidebarWrapper>
@@ -104,27 +106,27 @@ return (
         </AdminInfoWrapper>
     <BtnsWrapper>
     
-    <NavLink to="/" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>
         <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
     </NavLink>
 
-    <NavLink to="/manageAdmin" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/manageAdmin" style={{ textDecoration: 'none' }}>
         <Button><FaUserGroup style={{fontSize:"16px"}} /> Manage Admins</Button>
     </NavLink>
 
-    <NavLink to="/manageEmployees" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/manageEmployees" style={{ textDecoration: 'none' }}>
         <Button><MdGroups style={{fontSize:"16px"}} /> Manage Employees</Button>
     </NavLink>
 
-    <NavLink to="/managePMS" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/managePMS" style={{ textDecoration: 'none' }}>
         <Button><FaFolder style={{fontSize:"16px"}} /> Manage PMs</Button>
     </NavLink>
 
-    <NavLink to="/" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/myAccountAdmin" style={{ textDecoration: 'none' }}>
         <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
     </NavLink>
 
-    <NavLink to="/" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/LoginPage" style={{ textDecoration: 'none' }}>
         <Button><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
     </NavLink>
     </BtnsWrapper>
