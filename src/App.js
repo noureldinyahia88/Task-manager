@@ -10,6 +10,7 @@ function App() {
   return (
     <BrowserRouter>
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<ManageProjects />} />
       <Route path="/manageAdmin" element={<ManageAdmins />} />
       <Route path="/manageEmployees" element={<ManageEmployees />} />
