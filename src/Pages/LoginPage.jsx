@@ -141,14 +141,11 @@ const LongninBtn = styled.button`
     cursor: pointer;
 `
 
+
 // Login Page component
 const LoginPage = () => {
 
-    // const { data, ispending, isError, error }  = useQuery({
-    //     queryKey: ['data'],
-    //     queryFn: fetchEvent
-    // })
-
+    
     return (
     <LoginPagestyle>
         {/* <Container> */}

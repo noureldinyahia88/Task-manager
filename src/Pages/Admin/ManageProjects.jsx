@@ -10,6 +10,9 @@ import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
 
+import { useQuery } from '@tanstack/react-query';
+import { fetchEvent } from '../../components/Uitily/http/http'
+
 
 
 
@@ -254,7 +257,13 @@ const ButtonSky100 = styled.button`
     cursor: pointer;
     z-index: 100;
 `
-
+// *********************
+const ErrorBlock = styled.div`
+  
+`
+const LoadingIndicator = styled.div`
+  
+`
 
 const ManageProjects = () => {
 
@@ -289,6 +298,14 @@ const ManageProjects = () => {
         setCancel(!cancel)
     }
 
+    // const { data, isLoading, isError, error  }  = useQuery({
+    //     queryKey: ['data'],
+    //     queryFn: fetchEvent,
+    //     staleTime: 5000,
+    // })
+
+
+    console.log(fetchEvent())
 
     return (
 
@@ -315,14 +332,25 @@ const ManageProjects = () => {
 
             <AdminMangeHeader />
 
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
-            <AdminProjectCard />
-
             
             </Wrapper>
+
+            {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    
+                    {data && data.map((project) => (
+                        <AdminProjectCard
+                            key={project.projectId}
+                            title={project.title}
+                            description={project.description}
+                            startDate={project.startDate}
+                            deadline={project.deadline}
+                            progress={project.progress}
+                            managerName={project.managerName}
+                            managerImg={project.managerImg}
+                        />
+                    ))}
+
         </MangeProjectPage>
 
 {/* ********************Add New Project form************** */}

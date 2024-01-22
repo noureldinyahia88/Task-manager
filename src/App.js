@@ -6,8 +6,13 @@ import ManagePMs from "./Pages/Admin/ManagePMs";
 import MyAccountAdmin from "./Pages/Admin/MyAccountAdmin";
 import LoginPage from "./Pages/LoginPage";
 
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>    
     <BrowserRouter>
     <Routes>
       <Route path="/login" element={<LoginPage />} />
@@ -19,6 +24,7 @@ function App() {
       <Route path="/LoginPage" element={<LoginPage />} />
     </Routes>
     </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

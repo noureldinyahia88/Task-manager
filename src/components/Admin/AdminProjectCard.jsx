@@ -5,9 +5,12 @@ import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 
-import { MdOutlineSettings } from "react-icons/md";
+
 import { FaCalendarMinus } from "react-icons/fa6";
 import { IoSettings } from "react-icons/io5";
+import { useQuery } from '@tanstack/react-query';
+
+import { fetchEvent } from '../Uitily/http/http'
 
 
 const theme = {
@@ -258,8 +261,10 @@ const ButtonSky100 = styled.button`
     cursor: pointer;
     z-index: 100;
 `
+// *********************
 
-const AdminProjectCard = () => {
+
+const AdminProjectCard = ({key, title, description, startDate, deadline, managerName}) => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -293,14 +298,15 @@ const AdminProjectCard = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
+
     return (
         <MangeProjectHeader>
-        <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle>Fake Title</HeaderTitle>
-        <HeaderTitle>25%</HeaderTitle>
-        <HeaderTitle><img src={manger} alt="" /> Vivian R. Lloyd</HeaderTitle>
-        <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
-        <HeaderTitle>September 28, 2023</HeaderTitle>
+        <HeaderTitle>{key}</HeaderTitle>
+        <HeaderTitle>{title}</HeaderTitle>
+        <HeaderTitle>{startDate}</HeaderTitle>
+        <HeaderTitle><img src={manger} alt="" /> {managerName}</HeaderTitle>
+        <HeaderTitle>{startDate}</HeaderTitle>
+        <HeaderTitle>{deadline}</HeaderTitle>
     
         <MangeWrapper>
             <ButtonSetting onClick={handleClick}>
