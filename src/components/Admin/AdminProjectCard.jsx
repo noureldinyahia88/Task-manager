@@ -264,7 +264,7 @@ const ButtonSky100 = styled.button`
 // *********************
 
 
-const AdminProjectCard = ({key, title, description, startDate, deadline, managerName}) => {
+const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDate, deadline, managerName}) => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -301,10 +301,10 @@ const AdminProjectCard = ({key, title, description, startDate, deadline, manager
 
     return (
         <MangeProjectHeader>
-        <HeaderTitle>{key}</HeaderTitle>
+        <HeaderTitle># {id}</HeaderTitle>
         <HeaderTitle>{title}</HeaderTitle>
-        <HeaderTitle>{startDate}</HeaderTitle>
-        <HeaderTitle><img src={manger} alt="" /> {managerName}</HeaderTitle>
+        <HeaderTitle>{progress}%</HeaderTitle>
+        <HeaderTitle><img src={managerImg} alt="" /> {managerName}</HeaderTitle>
         <HeaderTitle>{startDate}</HeaderTitle>
         <HeaderTitle>{deadline}</HeaderTitle>
     

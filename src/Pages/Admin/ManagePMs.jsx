@@ -10,7 +10,9 @@ import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
 import AdminManagePMSCARD from '../../components/Admin/AdminManagePMSCARD'
+import { fetchPMs } from '../../components/Uitily/http/AdminApi/ManagePMsApi';
 
+import { useQuery } from '@tanstack/react-query';
 
 
 
@@ -276,6 +278,16 @@ const ManagePMs = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
+
+
+    const { data, isLoading, isError, error  }  = useQuery({
+        queryKey: ['data'],
+        queryFn: () => fetchPMs(),
+        staleTime: 5000,
+    })
+
+    console.log(data)
+
     return (
         <MangeProjectWrapper>
         <AdminSidebar />
@@ -294,11 +306,20 @@ const ManagePMs = () => {
 
             <AdminMangeHeader />
 
-            <AdminManagePMSCARD />
-            <AdminManagePMSCARD />
-            <AdminManagePMSCARD />
-            <AdminManagePMSCARD />
-            <AdminManagePMSCARD />
+
+            {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    
+                    {data && data.map((project) => (
+                        <AdminManagePMSCARD
+                            key={project.projectId}
+                            staffId={project.staffId}
+                            firstName={project.firstName}
+                            email={project.email}
+                            phoneNo={project.phoneNo}
+                            imgSrc={project.imgSrc}
+                        />
+                    ))}
 
             
             </Wrapper>

@@ -305,7 +305,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const MangeEmloyeeCard = () => {
+const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc}) => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -342,10 +342,10 @@ const MangeEmloyeeCard = () => {
 
   return (
     <MangeProjectHeader>
-        <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle><img src={manger} alt="" /> Vivian R. Lloyd</HeaderTitle>
-        <HeaderTitle>pleasurethink@gmail.com</HeaderTitle>
-        <HeaderTitle>+20 1029208427</HeaderTitle>
+        <HeaderTitle>#{staffId}</HeaderTitle>
+        <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
+        <HeaderTitle>{email}</HeaderTitle>
+        <HeaderTitle>+02 {phoneNo}</HeaderTitle>
         <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
     
         <MangeWrapper>

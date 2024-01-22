@@ -298,14 +298,14 @@ const ManageProjects = () => {
         setCancel(!cancel)
     }
 
-    // const { data, isLoading, isError, error  }  = useQuery({
-    //     queryKey: ['data'],
-    //     queryFn: fetchEvent,
-    //     staleTime: 5000,
-    // })
 
+    const { data, isLoading, isError, error  }  = useQuery({
+        queryKey: ['data'],
+        queryFn: () => fetchEvent(),
+        staleTime: 5000,
+    })
 
-    console.log(fetchEvent())
+    console.log(data)
 
     return (
 
@@ -332,15 +332,13 @@ const ManageProjects = () => {
 
             <AdminMangeHeader />
 
-            
-            </Wrapper>
-
             {isLoading && <h2>Loading...</h2>}
                     {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
                     
                     {data && data.map((project) => (
                         <AdminProjectCard
                             key={project.projectId}
+                            id={project.projectId}
                             title={project.title}
                             description={project.description}
                             startDate={project.startDate}
@@ -350,6 +348,10 @@ const ManageProjects = () => {
                             managerImg={project.managerImg}
                         />
                     ))}
+            
+            </Wrapper>
+
+            
 
         </MangeProjectPage>
 

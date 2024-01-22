@@ -12,10 +12,7 @@ const UseGetDataToken = async (url, params) => {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    const res = await baseURL.get(url, config);
-    const data = res.data 
-    console.log(data);
-    return data;
+    return await baseURL.get(url, config);
 };
 
 export default UseGetDataToken;

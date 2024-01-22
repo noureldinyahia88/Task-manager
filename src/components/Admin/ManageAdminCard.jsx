@@ -290,7 +290,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const ManageAdminCard = () => {
+const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}) => {
     //React Hook Form
     const validationSchema = yup.object().shape({
         title: yup.string().required("Title is required"),
@@ -326,11 +326,11 @@ const ManageAdminCard = () => {
 
     return (
     <MangeAdminsHeader>
-        <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle><img src={manger} alt="" /> Vivian R. Lloyd</HeaderTitle>
-        <HeaderTitle>pleasurethink@gmail.com</HeaderTitle>
-        <HeaderTitle>+20 1029208427</HeaderTitle>
-        <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
+        <HeaderTitle>#{staffId}</HeaderTitle>
+        <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
+        <HeaderTitle>{email}</HeaderTitle>
+        <HeaderTitle>+20 {phoneNo}</HeaderTitle>
+        <HeaderTitle>{startDate}</HeaderTitle>
     
         <MangeWrapper>
             <ButtonSetting onClick={handleClick}>

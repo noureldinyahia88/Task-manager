@@ -12,7 +12,8 @@ import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import { MdModeEditOutline } from "react-icons/md";
 import placeHoderImage from '../../img/image-fill.png';
-
+import { fetchAdmins } from '../../components/Uitily/http/AdminApi/ManageAdminsApi';
+import { useQuery } from '@tanstack/react-query';
 
 
 
@@ -342,6 +343,15 @@ const ManageAdmins = () => {
         setCancel(!cancel)
     }
 
+    const { data, isLoading, isError, error  }  = useQuery({
+        queryKey: ['admins'],
+        queryFn: () => fetchAdmins(),
+        staleTime: 5000,
+    })
+
+    console.log(data)
+
+
     return (
     <ManageAdminsWrapper>
         <AdminSidebar />
@@ -360,11 +370,20 @@ const ManageAdmins = () => {
 
             <ManageAdminHeaderpage />
 
-            <ManageAdminCard />
-            <ManageAdminCard />
-            <ManageAdminCard />
-            <ManageAdminCard />
-            <ManageAdminCard />
+            {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    
+                    {data && data.map((project) => (
+                        <ManageAdminCard
+                            key={project.staffId}
+                            staffId={project.staffId}
+                            firstName={project.firstName}
+                            email={project.email}
+                            startDate={project.startDate}
+                            phoneNo={project.phoneNo}
+                            imgSrc={project.imgSrc}
+                        />
+                    ))}
             
             </Wrapper>
         </MangeProjectPage>

@@ -11,6 +11,9 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import MangeEmloyeeCard from '../../components/Admin/MangeEmloyeeCard' 
 import ManageAdminHeaderpage from '../../components/Admin/ManageAdminHeaderpage';
 import { MdModeEditOutline } from "react-icons/md";
+import { fetchEmployees } from '../../components/Uitily/http/AdminApi/ManageEmployeesApi';
+
+import { useQuery } from '@tanstack/react-query';
 
 
 const theme = {
@@ -315,6 +318,16 @@ const ManageEmployees = () => {
         setCancel(!cancel)
     }
 
+
+    //react query
+    const { data, isLoading, isError, error  }  = useQuery({
+        queryKey: ['data'],
+        queryFn: () => fetchEmployees(),
+        staleTime: 5000,
+    })
+
+    console.log(data)
+
     return (
         <AdminManageEmployees>
         <AdminSidebar />
@@ -333,11 +346,20 @@ const ManageEmployees = () => {
 
             <ManageAdminHeaderpage />
 
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
-            <MangeEmloyeeCard />
+            {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    
+                    {data && data.map((project) => (
+                        <MangeEmloyeeCard
+                            key={project.staffId}
+                            staffId={project.staffId}
+                            firstName={project.firstName}
+                            email={project.email}
+                            phoneNo={project.phoneNo}
+                            imgSrc={project.imgSrc}
+                        />
+                    ))}
+
 
             
             </Wrapper>
