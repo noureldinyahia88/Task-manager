@@ -330,7 +330,7 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
         <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
         <HeaderTitle>{email}</HeaderTitle>
         <HeaderTitle>+20 {phoneNo}</HeaderTitle>
-        <HeaderTitle>{startDate}</HeaderTitle>
+        {/* <HeaderTitle>{startDate}</HeaderTitle> */}
     
         <MangeWrapper>
             <ButtonSetting onClick={handleClick}>

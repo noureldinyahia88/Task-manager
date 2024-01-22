@@ -347,7 +347,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
         <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
         <HeaderTitle>{email}</HeaderTitle>
         <HeaderTitle>+20 {phoneNo}</HeaderTitle>
-        <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
+        {/* <HeaderTitle>9 \ 5 \ 2023</HeaderTitle> */}
     
         <MangeWrapper>
             <ButtonSetting onClick={handleClick}>

@@ -305,7 +305,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         <HeaderTitle>{title}</HeaderTitle>
         <HeaderTitle>{progress}%</HeaderTitle>
         <HeaderTitle><img src={managerImg} alt="" /> {managerName}</HeaderTitle>
-        <HeaderTitle>{startDate}</HeaderTitle>
+        {/* <HeaderTitle>{startDate}</HeaderTitle> */}
         <HeaderTitle>{deadline}</HeaderTitle>
     
         <MangeWrapper>

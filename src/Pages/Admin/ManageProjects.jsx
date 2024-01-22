@@ -341,7 +341,6 @@ const ManageProjects = () => {
                             id={project.projectId}
                             title={project.title}
                             description={project.description}
-                            startDate={project.startDate}
                             deadline={project.deadline}
                             progress={project.progress}
                             managerName={project.managerName}

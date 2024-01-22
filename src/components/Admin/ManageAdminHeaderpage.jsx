@@ -47,7 +47,7 @@ const ManageAdminHeaderpage = () => {
         <HeaderTitle>Title</HeaderTitle>
         <HeaderTitle>Email</HeaderTitle>
         <HeaderTitle>Phone Number</HeaderTitle>
-        <HeaderTitle>Date</HeaderTitle>
+        {/* <HeaderTitle>Date</HeaderTitle> */}
 
         <MangeWrapper>
             <ButtonSetting>
