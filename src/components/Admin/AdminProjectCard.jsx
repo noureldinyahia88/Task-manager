@@ -354,7 +354,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
 
         <FormWrapperBtns>
             <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
+            <ButtonSky400  type='submit'>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}

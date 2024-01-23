@@ -351,6 +351,7 @@ const ManageAdmins = () => {
 
     console.log(data)
 
+    // post data
 
     return (
     <ManageAdminsWrapper>

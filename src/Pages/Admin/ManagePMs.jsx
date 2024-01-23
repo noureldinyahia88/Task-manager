@@ -10,11 +10,14 @@ import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
 import AdminManagePMSCARD from '../../components/Admin/AdminManagePMSCARD'
-import { fetchPMs } from '../../components/Uitily/http/AdminApi/ManagePMsApi';
+import { createNewPMs, fetchPMs } from '../../components/Uitily/http/AdminApi/ManagePMsApi';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { createNewProject, fetchEvent, queryClient } from '../../components/Uitily/http/http'
 
+import { useMutation } from '@tanstack/react-query';
+import { Navigate } from 'react-router';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -250,11 +253,14 @@ const ButtonSky100 = styled.button`
 const ManagePMs = () => {
     //React Hook Form
     const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
+        FirstName: yup.string().required("First Name is required"),
+        email: yup.string().email().required("Please Enter a valid email"),
+        lastName: yup.string().required("Last Name is required"),
+        password: yup.string().required("Password is required"),
+        confirmPass: yup.string().required("Password confirmation is required").oneOf([yup.ref('password'), null], 'Passwords must match'),
+        phoneNumber: yup.number().required("Phone number is required")
     });
+
 
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
@@ -281,12 +287,40 @@ const ManagePMs = () => {
 
 
     const { data, isLoading, isError, error  }  = useQuery({
-        queryKey: ['data'],
+        queryKey: ['pms'],
         queryFn: () => fetchPMs(),
         staleTime: 5000,
     })
 
     console.log(data)
+
+
+    // post data
+    const {mutate, isPending} = useMutation({
+        mutationFn: createNewPMs,
+        onSuccess: () => {
+            // to refatch the data
+            queryClient.invalidateQueries({queryKey:['pms']});
+            console.log("sucsess");
+            Navigate('/managePMS')
+        }
+    })
+
+    async function handleSubmitAddNewProject(formData){
+        mutate({
+            firstName: formData.FirstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            confirmPass: formData.confirmPass,
+            phoneNo: formData.phoneNumber
+    })
+    
+    console.log("**********");
+    console.log(formData);
+        }
+
+
 
     return (
         <MangeProjectWrapper>
@@ -320,7 +354,7 @@ const ManagePMs = () => {
                             imgSrc={project.imgSrc}
                         />
                     ))}
-
+                    
             
             </Wrapper>
         </MangeProjectPage>
@@ -330,28 +364,28 @@ const ManagePMs = () => {
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
 
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
-        <Span>{errors.title?.message}</Span>
+        <Input type='text' placeholder='Enter your first name' name='FirstName' id='FirstName' {...register("FirstName")} />
+        <Span>{errors.firstName?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
-        <Span>{errors.id?.message}</Span>
+        <Label htmlFor="">E-mail Address</Label>
+        <Input type='email' placeholder='Enter your e-mail' id='email' name='email' {...register("email")} />
+        <Span>{errors.email?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <Input type='clender' placeholder='Enter your new password' id='password' name='password' {...register("password")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        <Span>{errors.password?.message}</Span>
         </InputWrapper>
         </InputformWrapper>
 
@@ -359,21 +393,21 @@ const ManagePMs = () => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='text' placeholder='Enter your last name' id='lastName' name='lastName'{...register("lastName")} />
+        <Span>{errors.lastName?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='text' placeholder='Enter Phone Number' id='phoneNumber' name='phoneNumber' {...register("phoneNumber")} />
+        <Span>{errors.phoneNo?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <Input type='clender' placeholder='Confirm your new password' id='confirmPass' name='confirmPass' {...register("confirmPass")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        <Span>{errors.password?.message}</Span>
         </InputWrapper>
 
         </InputformWrapper>
@@ -381,7 +415,7 @@ const ManagePMs = () => {
 
         <FormWrapperBtns>
             <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>

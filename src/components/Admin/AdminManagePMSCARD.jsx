@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import manger from '../../img/manger.png'
+// import manger from '../../img/manger.png'
 import { useForm } from 'react-hook-form';
-import  * as yup from 'yup';
-import {yupResolver} from '@hookform/resolvers/yup'
 
 import adminImg from '../../img/adminpng.png'
 import { IoSettings } from "react-icons/io5";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import { MdModeEditOutline } from "react-icons/md";
+import { set } from 'react-hook-form';
+
 
 
 const theme = {
@@ -309,16 +309,10 @@ const ButtonSky100 = styled.button`
 const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
 
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
-    });
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const {register, reset, errors, handleSubmit } = useForm();
+
+
 
     const onSubmit = (data) => {
         console.log(data);
@@ -342,6 +336,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
     }
 
     return (
+
     <MangePMSHeader>
         <HeaderTitle>#{staffId}</HeaderTitle>
         <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
@@ -377,22 +372,29 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
-        <Span>{errors.title?.message}</Span>
+        <label htmlFor="firstName">First Name</label>
+        <Input
+                    type="text"
+                    name="firstName"
+                    placeholder="Enter your first name"
+                    {...register('firstName', { required: 'First Name is required' })}
+                />
+                {errors?.firstName && (
+            <span>{errors.firstName.message}</span>
+        )}
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
-        <Span>{errors.id?.message}</Span>
+        <Input type='email' placeholder='Enter your e-mail' name='email' />
+        {/* <Span>{errors.id?.message}</Span> */}
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <Input type='password' placeholder='Enter your new password' name='password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        {/* <Span>{errors.date?.message}</Span> */}
         </InputWrapper>
         </InputformWrapper>
 
@@ -400,21 +402,21 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='text' placeholder='Enter your last name' name='lastName' />
+        {/* <Span>{errors.description?.message}</Span> */}
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='number' placeholder='Enter Phone Number' />
+        {/* <Span>{errors.description?.message}</Span> */}
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <Input type='password' placeholder='Confirm your new password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        {/* <Span>{errors.date?.message}</Span> */}
         </InputWrapper>
 
         </InputformWrapper>

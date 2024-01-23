@@ -11,7 +11,10 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchEvent } from '../../components/Uitily/http/http'
+import { createNewProject, fetchEvent, queryClient } from '../../components/Uitily/http/http'
+
+import { useMutation } from '@tanstack/react-query'
+import { Navigate } from 'react-router'
 
 
 
@@ -272,7 +275,7 @@ const ManageProjects = () => {
         title: yup.string().required("Title is required"),
         id: yup.number().positive().integer().required("Please Enter a valid ID"),
         description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
+        date: yup.string().required("Please Enter a valid date")
     });
 
     const {register, handleSubmit, formState: {errors}} = useForm({
@@ -298,7 +301,7 @@ const ManageProjects = () => {
         setCancel(!cancel)
     }
 
-
+// fetch the project
     const { data, isLoading, isError, error  }  = useQuery({
         queryKey: ['data'],
         queryFn: () => fetchEvent(),
@@ -306,6 +309,66 @@ const ManageProjects = () => {
     })
 
     console.log(data)
+
+
+    // and new project project
+
+    const {mutate, isPending} = useMutation({
+        mutationFn: createNewProject,
+        onSuccess: () => {
+            // to refatch the data
+            queryClient.invalidateQueries({queryKey:['data']});
+            console.log("sucsess");
+            Navigate('/')
+        }
+    })
+
+    async function handleSubmitAddNewProject(formData){
+    mutate({
+        title: formData.title,
+        description: formData.description,
+        deadline: formData.date,
+        managerID: formData.id
+})
+
+// const formdataa = {
+//             title: formData.title,
+//             description: formData.description,
+//             deadline: formData.date,
+//             managerID: formData.id
+//     }
+
+// try {
+//     const response = await fetch(`http://3.126.203.127:8084/projects`, {
+//       method: 'POST',
+//       body: JSON.stringify(formdataa),
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxMTU0MzYsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.6rLm2vqvePM52amb_CgLfBEf6gC5UU3Sk5hghIXGRps'}`, 
+//       },
+//     });
+    
+
+//     if (!response.status === 200) {
+//       const error = new Error('An error occurred while creating the project');
+//       error.code = response.status;
+//       error.info = await response.json();
+//       console.error('Error:', error);
+//       throw error;
+//     }
+
+//     const { newproject } = await response.json();
+
+
+//     return newproject;
+//   } catch (error) {
+//     console.error('Unexpected error:', error);
+//     throw error;
+//   }
+
+console.log("**********");
+console.log(formData);
+    }
 
     return (
 
@@ -359,20 +422,20 @@ const ManageProjects = () => {
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
         <FormHeading2>Project No: #1555236</FormHeading2>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter your Title ' {...register("title")} />
+        <Input type='text' placeholder='Enter your Title 'name='title' id='title' {...register("title")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Manager ID</Label>
-        <Input type='number' placeholder='Enter your  User ID' {...register("id")}/>
+        <Input type='number' placeholder='Enter your  User ID' name='id' id='id' {...register("id")}/>
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
@@ -381,24 +444,33 @@ const ManageProjects = () => {
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Date</Label>
-        <Input type='clender' placeholder='....\....\....'{...register("date")} />
+        <Input type='text' placeholder='....\....\....' name='date' id='date' {...register("date")} />
         <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter your Description'{...register("description")} />
+        <Input type='text' placeholder='Enter your Description' name='description' id='description' {...register("description")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         </InputformWrapper>
+
+        {isError &&(
+        <ErrorBlock title="Failed to create new project" message={error.info?.message || 
+            'faild to create project. please try again later.'} />
+        )}
         </InputFormWrapperParent>
 
-        <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
-        </FormWrapperBtns>
+                        {/* {isPending && 'Submitting...'} */}
+                        
+                            <FormWrapperBtns>
+                            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+                            <ButtonSky400  type="submit">Save</ButtonSky400>
+                        </FormWrapperBtns>
+                    
+    
 
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>

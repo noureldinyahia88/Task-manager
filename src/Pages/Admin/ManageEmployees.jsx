@@ -321,7 +321,7 @@ const ManageEmployees = () => {
 
     //react query
     const { data, isLoading, isError, error  }  = useQuery({
-        queryKey: ['data'],
+        queryKey: ['employee'],
         queryFn: () => fetchEmployees(),
         staleTime: 5000,
     })

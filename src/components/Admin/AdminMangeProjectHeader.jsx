@@ -44,10 +44,10 @@ const AdminMangeHeader = () => {
     <MangeProjectHeader>
         <HeaderTitle>ID</HeaderTitle>
         <HeaderTitle>Title</HeaderTitle>
+        <HeaderTitle>Progress</HeaderTitle>
         <HeaderTitle>Email</HeaderTitle>
-        {/* <HeaderTitle>Manager</HeaderTitle> */}
-        <HeaderTitle>Phone Number</HeaderTitle>
-        {/* <HeaderTitle>Deadline</HeaderTitle> */}
+        {/* <HeaderTitle>Phone Number</HeaderTitle> */}
+        <HeaderTitle>Deadline</HeaderTitle>
 
         <MangeWrapper>
             <ButtonSetting>

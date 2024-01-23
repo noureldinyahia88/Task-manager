@@ -6,9 +6,9 @@ import ManagePMs from "./Pages/Admin/ManagePMs";
 import MyAccountAdmin from "./Pages/Admin/MyAccountAdmin";
 import LoginPage from "./Pages/LoginPage";
 
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./components/Uitily/http/http";
 
-const queryClient = new QueryClient();
 
 function App() {
   return (
