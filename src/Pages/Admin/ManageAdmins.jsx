@@ -377,12 +377,14 @@ const ManageAdmins = () => {
                     {data && data.map((project) => (
                         <ManageAdminCard
                             key={project.staffId}
+                            id={project.staffId}
                             staffId={project.staffId}
                             firstName={project.firstName}
                             email={project.email}
                             startDate={project.startDate}
                             phoneNo={project.phoneNo}
                             imgSrc={project.imgSrc}
+                            onClick={(projectId) => console.log(projectId)}
                         />
                     ))}
             

@@ -357,6 +357,7 @@ const ManageEmployees = () => {
                             email={project.email}
                             phoneNo={project.phoneNo}
                             imgSrc={project.imgSrc}
+                            onClick={(staffId) => console.log(staffId)}
                         />
                     ))}
 

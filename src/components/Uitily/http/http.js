@@ -29,7 +29,7 @@ export async function fetchEvent() {
     const response = await fetch('http://3.126.203.127:8084/projects', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYwODg3OTksInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.91WAyzOYGUjMXRrhIPhE9BS7uzaL5-mG4QsHlikObzA'}`,
+        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`,
       },
     });
 
@@ -76,7 +76,7 @@ export async function createNewProject(projectData) {
       body: JSON.stringify(projectData),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxMTU0MzYsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.6rLm2vqvePM52amb_CgLfBEf6gC5UU3Sk5hghIXGRps'}`, 
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`, 
       },
     });
     
@@ -102,27 +102,70 @@ export async function createNewProject(projectData) {
 
 
 
-export async function fetchToken(email, password) {
+// export async function fetchToken(email, password) {
 
-    const response = await fetch('http://3.126.203.127:8084/auth/login', {
-      method: 'POST',
+//     const response = await fetch('http://3.126.203.127:8084/auth/login', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         email: email, 
+//         password: password
+//       }),
+//     });
+  
+//     if (!response.ok) {
+//       const error = new Error('An error occurred while fetching the token');
+//       error.code = response.status;
+//       error.info = await response.json();
+//       throw error;
+//     }
+  
+//     const { token } = await response.json();
+//     // setToken(token);
+//     return token;
+//   }
+
+
+  // delete Project
+
+  export async function deleteProject({ id }) {
+    const response = await fetch(`http://3.126.203.127:8084/projects/${id}`, {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`, 
       },
-      body: JSON.stringify({
-        email: email, 
-        password: password
-      }),
     });
   
     if (!response.ok) {
-      const error = new Error('An error occurred while fetching the token');
+      const error = new Error('An error occurred while deleting the event');
       error.code = response.status;
       error.info = await response.json();
       throw error;
     }
   
-    const { token } = await response.json();
-    // setToken(token);
-    return token;
+    return response.json();
+  }
+
+  // update project
+  export async function updateProject({ id, event }) {
+    const response = await fetch(`http://3.126.203.127:8084/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ event }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`,
+      },
+    });
+  
+    if (!response.ok) {
+      const error = new Error('An error occurred while updating the event');
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+  
+    return response.json();
   }

@@ -9,6 +9,9 @@ import adminImg from '../../img/adminpng.png';
 import { IoSettings } from "react-icons/io5";
 import { MdModeEditOutline } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../Uitily/http/http';
+import { deleteEmployee } from '../Uitily/http/AdminApi/ManageEmployeesApi';
 
 
 const theme = {
@@ -305,7 +308,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc}) => {
+const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick}) => {
 
     //React Hook Form
     const validationSchema = yup.object().shape({
@@ -326,8 +329,13 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc}) => {
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
 
+    // clicked projectCard ID state
+    const [projectId, setProjectId] = useState()
+
     const handleClick = () => {
+        setProjectId(staffId)
         setChoose(!choose)
+        onClick(staffId);
     }
 
     const handleclickUpdateForm = () => {
@@ -338,6 +346,23 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc}) => {
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
+    }
+
+    // to delete Project
+    const { mutate: deleteMutate } = useMutation({
+        mutationFn: deleteEmployee,
+        onSuccess: () =>{
+            queryClient.invalidateQueries({
+                queryKey: ['data']
+            })
+        }
+    });
+
+    function handleDelete() {
+        deleteMutate({ id: projectId});
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     }
 
   return (
@@ -440,7 +465,7 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc}) => {
         <Header2confirmationSetting>Setting</Header2confirmationSetting>
         <ConfimationBtnsWrapper>
             <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
-            <ButtonSky100 onClick={handleClick}>Delete</ButtonSky100>
+            <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>
     </MangeProjectHeader>

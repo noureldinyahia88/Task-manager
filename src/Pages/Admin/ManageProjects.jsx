@@ -15,6 +15,7 @@ import { createNewProject, fetchEvent, queryClient } from '../../components/Uiti
 
 import { useMutation } from '@tanstack/react-query'
 import { Navigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 
 
@@ -365,10 +366,8 @@ const ManageProjects = () => {
 //     console.error('Unexpected error:', error);
 //     throw error;
 //   }
-
-console.log("**********");
-console.log(formData);
     }
+
 
     return (
 
@@ -408,6 +407,7 @@ console.log(formData);
                             progress={project.progress}
                             managerName={project.managerName}
                             managerImg={project.managerImg}
+                            onClick={(projectId) => console.log(projectId)}
                         />
                     ))}
             

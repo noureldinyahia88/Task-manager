@@ -8,9 +8,10 @@ import {yupResolver} from '@hookform/resolvers/yup'
 
 import { FaCalendarMinus } from "react-icons/fa6";
 import { IoSettings } from "react-icons/io5";
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
-import { fetchEvent } from '../Uitily/http/http'
+import { deleteProject, queryClient, updateProject } from '../Uitily/http/http'
+import { useNavigate } from 'react-router';
 
 
 const theme = {
@@ -264,14 +265,15 @@ const ButtonSky100 = styled.button`
 // *********************
 
 
-const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDate, deadline, managerName}) => {
+const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDate, deadline, managerName, onClick}) => {
 
+    const navigate = useNavigate()
     //React Hook Form
     const validationSchema = yup.object().shape({
         title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
+        managerid: yup.number().positive().integer().required("Please Enter a valid ID"),
         description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
+        date: yup.string().required("Please Enter a valid date")
     });
 
     const {register, handleSubmit, formState: {errors}} = useForm({
@@ -285,8 +287,13 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
 
+    // clicked projectCard ID state
+    const [projectId, setProjectId] = useState()
+    
     const handleClick = () => {
+        setProjectId(id)
         setChoose(!choose)
+        onClick(id);
     }
 
     const handleclickUpdateForm = () => {
@@ -297,6 +304,38 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
+    }
+
+
+    // to delete Project
+    const { mutate: deleteMutate } = useMutation({
+        mutationFn: deleteProject,
+        onSuccess: () =>{
+            queryClient.invalidateQueries({
+                queryKey: ['data']
+            })
+        }
+    });
+
+    function handleDelete() {
+        deleteMutate({ id: projectId});
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    // update Project
+    const { mutate: updateMutate  } = useMutation({
+        mutationFn: updateProject,
+    })
+
+    function handleSubmitUpdate(formData) {
+        updateMutate({id: projectId, 
+            title: formData.title,
+            description: formData.description,
+            deadline: formData.date,
+            managerID: formData.managerid
+        })
     }
 
     return (
@@ -317,19 +356,19 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormHeading2>Project No: #1555236</FormHeading2>
+        <FormHeading2>Project No: #{projectId}</FormHeading2>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter your Title ' {...register("title")} />
+        <Input type='text' placeholder='Enter your Title ' name='title' id='title' {...register("title")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Manager ID</Label>
-        <Input type='number' placeholder='Enter your  User ID' {...register("id")} />
+        <Input type='number' placeholder='Enter your  User ID' name='managerid' id='managerid' {...register("managerid")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
@@ -338,14 +377,14 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Date</Label>
-        <Input type='clender' placeholder='....\....\....' {...register("date")}/>
+        <Input type='text' placeholder='....\....\....' name='date' id='date' {...register("date")}/>
         <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter your Description' {...register("description")} />
+        <Input type='text' placeholder='Enter your Description'name='description' id='description' {...register("description")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
@@ -354,7 +393,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
 
         <FormWrapperBtns>
             <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}
@@ -373,7 +412,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         <Header2confirmationSetting>Setting</Header2confirmationSetting>
         <ConfimationBtnsWrapper>
             <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
-            <ButtonSky100 onClick={handleClick}>Delete</ButtonSky100>
+            <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>
     </MangeProjectHeader>

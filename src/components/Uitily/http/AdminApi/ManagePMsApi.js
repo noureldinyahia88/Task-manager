@@ -4,7 +4,7 @@ export async function fetchPMs() {
       const response = await fetch('http://3.126.203.127:8084/managers', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYwODg3OTksInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.91WAyzOYGUjMXRrhIPhE9BS7uzaL5-mG4QsHlikObzA'}`,
+          Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`,
         },
       });
   
@@ -24,12 +24,25 @@ export async function fetchPMs() {
 
   export async function createNewPMs(projectData) {
     try {
+
+      //**edit1 */
+    const formData = new FormData();
+    formData.append('firstName', projectData.FirstName);
+    formData.append('lastName', projectData.lastName);
+    formData.append('email', projectData.email);
+    formData.append('password', projectData.password);
+    formData.append('confirmPass', projectData.confirmPass);
+    formData.append('phoneNo', projectData.phoneNumber);
+
+    //**edit1 */
+
       const response = await fetch(`http://3.126.203.127:8084/managers`, {
         method: 'POST',
-        body: JSON.stringify(projectData),
+        body: formData,
+        // body: JSON.stringify(projectData),
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxMTU0MzYsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.6rLm2vqvePM52amb_CgLfBEf6gC5UU3Sk5hghIXGRps'}`, 
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`, 
         },
       });
       
@@ -52,3 +65,46 @@ export async function fetchPMs() {
     }
   }
   
+
+
+  // delete PMS
+
+  export async function deletePMs({ id }) {
+    const response = await fetch(`http://3.126.203.127:8084/managers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`, 
+      },
+    });
+  
+    if (!response.ok) {
+      const error = new Error('An error occurred while deleting the event');
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+  
+    return response.json();
+  }
+
+  // update PMs
+  export async function updateManager({ id, event }) {
+    const response = await fetch(`http://3.126.203.127:8084/managers/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ event }),
+      headers: {
+        'Content-Type': 'application/form-data',
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`,
+      },
+    });
+  
+    if (!response.ok) {
+      const error = new Error('An error occurred while updating the event');
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+  
+    return response.json();
+  }

@@ -8,6 +8,9 @@ import { IoSettings } from "react-icons/io5";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import { MdModeEditOutline } from "react-icons/md";
 import { set } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../Uitily/http/http';
+import { deletePMs, updateManager } from '../Uitily/http/AdminApi/ManagePMsApi';
 
 
 
@@ -306,7 +309,7 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
+const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick}) => {
 
     //React Hook Form
 
@@ -321,8 +324,13 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
 
+    // clicked projectCard ID state
+    const [projectId, setProjectId] = useState()
+    
     const handleClick = () => {
+        setProjectId(staffId)
         setChoose(!choose)
+        onClick(staffId);
     }
 
     const handleclickUpdateForm = () => {
@@ -333,6 +341,37 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
+    }
+
+    // to delete Project
+    const { mutate: deleteMutate } = useMutation({
+        mutationFn: deletePMs,
+        onSuccess: () =>{
+            queryClient.invalidateQueries({
+                queryKey: ['pms']
+            })
+        }
+    });
+
+    function handleDelete() {
+        deleteMutate({ id: projectId});
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    // update Project
+    const { mutate: updateMutate  } = useMutation({
+        mutationFn: updateManager,
+    })
+
+    function handleSubmitUpdate(formData) {
+        updateMutate({id: projectId, 
+            title: formData.title,
+            description: formData.description,
+            deadline: formData.date,
+            managerID: formData.managerid
+        })
     }
 
     return (
@@ -364,8 +403,8 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
-            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
-            <AdminId>ID: #7821</AdminId>
+            <FormHeading2>{firstName}</FormHeading2>
+            <AdminId>ID: #{staffId}</AdminId>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
 
@@ -423,8 +462,8 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}
@@ -443,7 +482,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc}) => {
         <Header2confirmationSetting>Setting</Header2confirmationSetting>
         <ConfimationBtnsWrapper>
             <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
-            <ButtonSky100 onClick={handleClick}>Delete</ButtonSky100>
+            <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>
     </MangePMSHeader>

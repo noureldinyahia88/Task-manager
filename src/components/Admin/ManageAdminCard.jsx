@@ -9,6 +9,9 @@ import adminImg from '../../img/adminpng.png'
 
 import { IoSettings } from "react-icons/io5";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../Uitily/http/http';
+import { deleteAdmin, updateAdmin } from '../Uitily/http/AdminApi/ManageAdminsApi';
 
 
 const theme = {
@@ -290,13 +293,15 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 
-const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}) => {
+const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo, onClick, id}) => {
     //React Hook Form
     const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
+        fristName: yup.string().required("Title is required"),
+        email: yup.string().required("Please Enter a valid Email"),
+        pass: yup.number().required("Passwprd is required"),
+        lastName: yup.string().required("Please Enter a last name"),
+        phoneNum: yup.number().required("Please Enter a phone number"),
+        confirmPass: yup.number().required("Please Enter a phone number"),
     });
 
     const {register, handleSubmit, formState: {errors}} = useForm({
@@ -310,8 +315,12 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
 
+// clicked projectCard ID state
+    const [projectId, setProjectId] = useState()
     const handleClick = () => {
+        setProjectId(id)
         setChoose(!choose)
+        onClick(id);
     }
 
     const handleclickUpdateForm = () => {
@@ -322,6 +331,40 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
+    }
+
+    // to delete Admin
+
+    const { mutate: deleteMutate } = useMutation({
+        mutationFn: deleteAdmin,
+        onSuccess: () =>{
+            queryClient.invalidateQueries({
+                queryKey: ['data']
+            })
+        }
+    });
+
+    function handleDelete() {
+        deleteMutate({ id: projectId});
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    // update admin
+    const { mutate: updateMutate  } = useMutation({
+        mutationFn: updateAdmin,
+    })
+
+    function handleSubmitUpdate(formData) {
+        updateMutate({id: projectId, 
+            firstName: formData.fristName,
+            email: formData.email,
+            password: formData.pass,
+            lastName: formData.lastName
+        })
+        setUpdateFrom(!showUpdateForm)
+        setChoose(false)
     }
 
     return (
@@ -348,8 +391,8 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
-            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
-            <AdminId>ID: #7821</AdminId>
+            <FormHeading2>{firstName}</FormHeading2>
+            <AdminId>ID: #{id}</AdminId>
             <TypeOfAdmin>Global Admin</TypeOfAdmin>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
@@ -358,19 +401,19 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
+        <Input type='text' placeholder='Enter your first name' name='fristName' id='fristName' {...register("fristName")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type='email' placeholder='Enter your e-mail' name='email' id='email' {...register("email")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <Input type='clender' placeholder='Enter your new password'name='pass' id='pass' {...register("pass")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -380,19 +423,19 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
+        <Input type='text' placeholder='Enter your last name' name='lastName' id='lastName' {...register("lastName")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Input type='text' placeholder='Enter Phone Number'name='phoneNum' id='phoneNum' {...register("phoneNum")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <Input type='clender' placeholder='Confirm your new password' name='confirmPass' id='confirmPass' {...register("confirmPass")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -401,8 +444,8 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}
@@ -420,8 +463,8 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo}
         <ConFarimationBoxSetting className={choose ? 'show': ''}>
         <Header2confirmationSetting>Setting</Header2confirmationSetting>
         <ConfimationBtnsWrapper>
-            <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
-            <ButtonSky100 onClick={handleClick}>Delete</ButtonSky100>
+            <ButtonSky400  onClick={handleclickUpdateForm}>Update</ButtonSky400>
+            <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>
     </MangeAdminsHeader>
