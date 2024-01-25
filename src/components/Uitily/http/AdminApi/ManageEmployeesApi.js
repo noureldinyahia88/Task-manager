@@ -4,7 +4,7 @@ export async function fetchEmployees() {
       const response = await fetch('http://3.126.203.127:8084/employees', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
   
@@ -29,7 +29,7 @@ export async function fetchEmployees() {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`, 
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, 
       },
     });
   

@@ -8,6 +8,7 @@ import LoginPage from "./Pages/LoginPage";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./components/Uitily/http/http";
+import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 
 
 function App() {
@@ -15,8 +16,9 @@ function App() {
     <QueryClientProvider client={queryClient}>    
     <BrowserRouter>
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<ManageProjects />} />
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
+      <Route path="/ManageProjects" element={<ManageProjects />} />
       <Route path="/manageAdmin" element={<ManageAdmins />} />
       <Route path="/manageEmployees" element={<ManageEmployees />} />
       <Route path="/managePMS" element={<ManagePMs />} />

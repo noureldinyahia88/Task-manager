@@ -29,7 +29,7 @@ export async function fetchEvent() {
     const response = await fetch('http://3.126.203.127:8084/projects', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`,
+        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`,
       },
     });
 
@@ -76,7 +76,7 @@ export async function createNewProject(projectData) {
       body: JSON.stringify(projectData),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxODA1NzcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.5OV8dTxxcNjoXQjoXvQU2Jwf83gqGryQTwTG_Xqe0gk'}`, 
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`, 
       },
     });
     
@@ -102,30 +102,27 @@ export async function createNewProject(projectData) {
 
 
 
-// export async function fetchToken(email, password) {
+export async function Login(userData) {
 
-//     const response = await fetch('http://3.126.203.127:8084/auth/login', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({
-//         email: email, 
-//         password: password
-//       }),
-//     });
+    const response = await fetch('http://3.126.203.127:8084/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
   
-//     if (!response.ok) {
-//       const error = new Error('An error occurred while fetching the token');
-//       error.code = response.status;
-//       error.info = await response.json();
-//       throw error;
-//     }
+    if (!response.status === 200) {
+      const error = new Error('An error occurred while fetching the token');
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
   
-//     const { token } = await response.json();
-//     // setToken(token);
-//     return token;
-//   }
+    const { token } = await response.json();
+    // setToken(token);
+    return token;
+  }
 
 
   // delete Project
@@ -135,7 +132,7 @@ export async function createNewProject(projectData) {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`, 
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`, 
       },
     });
   
@@ -150,13 +147,13 @@ export async function createNewProject(projectData) {
   }
 
   // update project
-  export async function updateProject({ id, event }) {
+  export async function updateProject({ id, projectData }) {
     const response = await fetch(`http://3.126.203.127:8084/projects/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ event }),
+      body: JSON.stringify( projectData ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxOTEzMzQsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.uhYPyZO3IIwuSxV402g-rdMBZAQeLErHrmBFDlYpX3k'}`,
+        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`,
       },
     });
   

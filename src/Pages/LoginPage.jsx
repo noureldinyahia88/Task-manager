@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import loginimg from '../img/Office workplace.png'
-import { useQuery } from '@tanstack/react-query';
-import { fetchEvent } from '../components/Uitily/http/http.js'
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Login, fetchEvent, queryClient } from '../components/Uitily/http/http.js'
+import { NavLink, useNavigate } from "react-router-dom";
+import { useForm } from 'react-hook-form';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -140,12 +142,44 @@ const LongninBtn = styled.button`
     font-size: 20px;
     cursor: pointer;
 `
-
+const ErorrFrpm = styled.span`
+  color: red;
+`
 
 // Login Page component
 const LoginPage = () => {
 
-    
+  const navigate = useNavigate();
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = (data) => {
+    // Handle form submission logic here
+    console.log(data);
+  };
+
+  // login
+
+  const {mutate, isPending} = useMutation({
+    mutationFn: Login,
+    onSuccess: (data) => {
+        // to refatch the data
+        queryClient.invalidateQueries({queryKey:['data']});
+        console.log("sucsess");
+        console.log(data);
+        localStorage.setItem('token', data)
+        navigate('/ManageProjects')
+    }
+})
+
+async function handleSubmitLogin(formData){
+mutate({
+  email: formData.email,
+  password: formData.password,
+})
+
+}
+
     return (
     <LoginPagestyle>
         {/* <Container> */}
@@ -154,28 +188,47 @@ const LoginPage = () => {
         <LoginImg src={loginimg} alt='' />
       </LoginWrapperImage>
       <LoginWrapper>
-        <Form>
+        <Form onSubmit={handleSubmit(handleSubmitLogin)}>
           <FormHeading2>Log In</FormHeading2>
 
           <InputWrapper>
-            <Label>Email</Label>
-            <Input placeholder="Enter Your E-mail" />
-          </InputWrapper>
+              <Label>Email</Label>
+              <Input
+                {...register("email", {
+                  required: "Invalid email",
+                })}
+                placeholder="Enter Your E-mail"
+                name='email'
+                id='email'
+              />
+              {errors.email && <ErorrFrpm>{errors.email.message}</ErorrFrpm>}
+            </InputWrapper>
 
-          <InputWrapper>
-            <Label>Password</Label>
-            <Input placeholder="Enter Your Password" />
-          </InputWrapper>
+            <InputWrapper>
+              <Label>Password</Label>
+              <Input
+                {...register("password", {
+                  required: "Invalid password",
+                })}
+                type="password"
+                placeholder="Enter Your Password"
+                name='password'
+                id='password'
+              />
+              {errors.password && <ErorrFrpm>{errors.password.message}</ErorrFrpm>}
+            </InputWrapper>
 
           <WrapperRememberMeAndForgetPassword>
             <WrapperRememberMe>
               <CheckBoxInput type="checkbox" />
               <Label>Remember me</Label>
             </WrapperRememberMe>
+            <NavLink className="navLink" to="/forgetpassword" style={{ textDecoration: 'none' }}>
             <LinkForgetYourPass>Forget password</LinkForgetYourPass>
+            </NavLink>
           </WrapperRememberMeAndForgetPassword>
 
-          <LongninBtn type="submint">Log in</LongninBtn>
+          <LongninBtn type="submit">Log in</LongninBtn>
         </Form>
       </LoginWrapper>
       </LoginPageWrapper>

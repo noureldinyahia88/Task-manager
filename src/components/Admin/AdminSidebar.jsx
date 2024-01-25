@@ -94,6 +94,10 @@ const Button = styled.button`
 
 
 const AdminSidebar = () => {
+
+    const logedout = () => {
+        localStorage.removeItem('token')
+    }
 return (
     <SidebarWrapper>
         <LogoWrapper>
@@ -105,7 +109,7 @@ return (
         </AdminInfoWrapper>
     <BtnsWrapper>
     
-    <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>
+    <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
         <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
     </NavLink>
 
@@ -125,8 +129,8 @@ return (
         <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
     </NavLink>
 
-    <NavLink className="navLink" to="/LoginPage" style={{ textDecoration: 'none' }}>
-        <Button><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
+    <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>
+        <Button onClick={logedout}><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
     </NavLink>
     </BtnsWrapper>
     </SidebarWrapper>

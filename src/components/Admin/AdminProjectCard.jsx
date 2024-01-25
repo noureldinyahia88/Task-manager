@@ -326,7 +326,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
 
     // update Project
     const { mutate: updateMutate  } = useMutation({
-        mutationFn: updateProject,
+        mutationFn:()=> updateProject(),
     })
 
     function handleSubmitUpdate(formData) {
