@@ -346,6 +346,7 @@ const ManageProjects = () => {
     function handleSubmitSearch(event) {
         event.preventDefault();
         setSearchTerm(searchElement.current.value);
+        console.log("search");
     }
 
     let content = <p>Please enter a search term and to find projects</p>
@@ -354,10 +355,10 @@ const ManageProjects = () => {
         content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Faild to fetch events.'} />
     }
 
-    if(searchData) {
-        content = searchData.map((event)=>(
-                <AdminProjectCard key={event.projectId} 
-                event={event}
+    if (searchData) {
+        content = searchData.map((event) => (
+            <AdminProjectCard
+                key={event.projectId}
                 id={event.projectId}
                 title={event.title}
                 description={event.description}
@@ -365,8 +366,30 @@ const ManageProjects = () => {
                 progress={event.progress}
                 managerName={event.managerName}
                 managerImg={event.managerImg}
-                />
-            ))
+            />
+        ));
+    } else {
+        content = (
+            <>
+                {isLoading && <h2>Loading...</h2>}
+                {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+
+                {data &&
+                    data.map((project) => (
+                        <AdminProjectCard
+                            key={project.projectId}
+                            id={project.projectId}
+                            title={project.title}
+                            description={project.description}
+                            deadline={project.deadline}
+                            progress={project.progress}
+                            managerName={project.managerName}
+                            managerImg={project.managerImg}
+                            onClick={(projectId) => console.log(projectId)}
+                        />
+                    ))}
+            </>
+        );
     }
 
     return (
@@ -380,9 +403,9 @@ const ManageProjects = () => {
                 <AdminProjectSummery />
             <WrapperChild>
                 <ManageProjectsInputs>
-                    <FormWrapper onSubmit={handleSubmitSearch}>
+                    <FormWrapper >
                     <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' ref={searchElement} />
-                    <SearchBtn type="submit" className="searchButton">Go</SearchBtn>
+                    <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton">Go</SearchBtn>
                     </FormWrapper>
 
                     <BtnsWrapper>
@@ -393,9 +416,11 @@ const ManageProjects = () => {
             </WrapperChild>
 
             <AdminMangeHeader />
-
+            {content}            
+{/* 
         {
-            searchData? (content):(<>
+            searchData? (content):(
+            <>
 
 {isLoading && <h2>Loading...</h2>}
         {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
@@ -414,8 +439,8 @@ const ManageProjects = () => {
             />
         ))}
             </>)
-        }
-            
+        } */}
+
             </Wrapper>
 
             
