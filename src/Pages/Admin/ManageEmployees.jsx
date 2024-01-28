@@ -11,9 +11,11 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import MangeEmloyeeCard from '../../components/Admin/MangeEmloyeeCard' 
 import ManageAdminHeaderpage from '../../components/Admin/ManageAdminHeaderpage';
 import { MdModeEditOutline } from "react-icons/md";
-import { fetchEmployees } from '../../components/Uitily/http/AdminApi/ManageEmployeesApi';
+import { createNewEmlployee, fetchEmployees } from '../../components/Uitily/http/AdminApi/ManageEmployeesApi';
 
 import { useQuery } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
+import { queryClient } from '../../components/Uitily/http/http';
 
 
 const theme = {
@@ -326,7 +328,32 @@ const ManageEmployees = () => {
         staleTime: 5000,
     })
 
-    console.log(data)
+
+
+
+    // post data
+    // const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
+    //     mutationFn: createNewEmlployee,
+    //     onSuccess: () => {
+    //         // to refatch the data
+    //         queryClient.invalidateQueries({queryKey:['pms']});
+    //         console.log("sucsess");
+    //     }
+    // })
+    
+    // async function handleSubmitAddNewProject(formData){
+    //     await mutate({
+    //         firstName: formData.FirstName,
+    //         lastName: formData.lastName,
+    //         email: formData.email,
+    //         password: formData.password,
+    //         confirmPass: formData.confirmPass,
+    //         phoneNo: formData.phoneNumber
+    //     })
+    // }
+    
+    
+    localStorage.removeItem('EmployeeError');
 
     return (
         <AdminManageEmployees>
@@ -428,13 +455,13 @@ const ManageEmployees = () => {
 
         <FormWrapperBtns>
             <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>No</ButtonSky400>
             <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>

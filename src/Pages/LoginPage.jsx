@@ -168,7 +168,8 @@ const LoginPage = () => {
         console.log("sucsess");
         console.log(data);
         localStorage.setItem('token', data)
-        navigate('/ManageProjects')
+        navigate('/manageProjects')
+
     }
 })
 
@@ -179,6 +180,10 @@ mutate({
 })
 
 }
+
+setTimeout(() => {
+  localStorage.removeItem('token')
+}, 12 * 60 * 60 * 1000);
 
     return (
     <LoginPagestyle>

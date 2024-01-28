@@ -4,7 +4,7 @@ export async function fetchPMs() {
       const response = await fetch('http://3.126.203.127:8084/managers', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
   
@@ -42,7 +42,7 @@ export async function fetchPMs() {
         // body: JSON.stringify(projectData),
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`, 
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
         },
       });
       
@@ -52,9 +52,9 @@ export async function fetchPMs() {
         error.code = response.status;
         error.info = await response.json();
         console.error('Error:', error);
+  
         throw error;
       }
-  
       const { newproject } = await response.json();
   
   

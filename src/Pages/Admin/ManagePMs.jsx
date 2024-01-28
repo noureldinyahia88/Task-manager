@@ -267,9 +267,9 @@ const ManagePMs = () => {
     });
     //End of React Hook Form
 
-    const onSubmit = (data) => {
-        console.log(data);
-    }
+    // const onSubmit = (data) => {
+        
+    // }
 
     const [showUpdateForm, setUpdateFrom] = useState(false)
     const [cancel, setCancel] = useState(false)
@@ -292,35 +292,35 @@ const ManagePMs = () => {
         staleTime: 5000,
     })
 
-    console.log(data)
 
 
     // post data
-    const {mutate, isPending} = useMutation({
+    const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
         mutationFn: createNewPMs,
         onSuccess: () => {
             // to refatch the data
             queryClient.invalidateQueries({queryKey:['pms']});
             console.log("sucsess");
             Navigate('/managePMS')
+        }, onError: (PostError) =>{
+            localStorage.setItem('PMsError', 'You are not allowed to create PMs');
+            window.alert(localStorage.getItem('PMsError'));
         }
     })
-
+    
     async function handleSubmitAddNewProject(formData){
-        mutate({
+        await mutate({
             firstName: formData.FirstName,
             lastName: formData.lastName,
             email: formData.email,
             password: formData.password,
             confirmPass: formData.confirmPass,
             phoneNo: formData.phoneNumber
-    })
+        })
+    }
     
-    console.log("**********");
-    console.log(formData);
-        }
-
-
+    
+    localStorage.removeItem('PMsError');
 
     return (
         <MangeProjectWrapper>
@@ -346,7 +346,7 @@ const ManagePMs = () => {
                     
                     {data && data.map((project) => (
                         <AdminManagePMSCARD
-                            key={project.projectId}
+                            key={project.staffId}
                             staffId={project.staffId}
                             firstName={project.firstName}
                             email={project.email}
@@ -415,15 +415,15 @@ const ManagePMs = () => {
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
             <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         </Form>

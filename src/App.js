@@ -11,22 +11,26 @@ import { queryClient } from "./components/Uitily/http/http";
 import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 
 
+
 function App() {
+  // const isLoggedIn = localStorage.getItem('token');
   return (
     <QueryClientProvider client={queryClient}>    
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route index element={<LoginPage />} />
+
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
       <Route path="/ManageProjects" element={<ManageProjects />} />
       <Route path="/manageAdmin" element={<ManageAdmins />} />
       <Route path="/manageEmployees" element={<ManageEmployees />} />
       <Route path="/managePMS" element={<ManagePMs />} />
       <Route path="/myAccountAdmin" element={<MyAccountAdmin />} />
-      <Route path="/LoginPage" element={<LoginPage />} />
+      
     </Routes>
     </BrowserRouter>
     </QueryClientProvider>
+
   );
 }
 

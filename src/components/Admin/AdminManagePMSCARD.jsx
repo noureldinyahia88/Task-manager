@@ -361,8 +361,16 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
     }
 
     // update Project
-    const { mutate: updateMutate  } = useMutation({
+    const { mutate: updateMutate , isError: updateIsError, error: updateError } = useMutation({
         mutationFn: updateManager,
+        onSuccess: () => {
+            // to refatch the data
+            queryClient.invalidateQueries({queryKey:['pms']});
+            console.log("sucsess");
+        }, onError: (updateError) =>{
+            localStorage.setItem('PMsError', 'You are not allowed to Update PMs');
+            window.alert(localStorage.getItem('PMsError'));
+        }
     })
 
     function handleSubmitUpdate(formData) {
@@ -470,8 +478,8 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky400 type="reset"  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         {/* End Of confirm cancel */}

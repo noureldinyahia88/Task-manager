@@ -24,12 +24,44 @@ export const queryClient = new QueryClient();
 //     }
 // }
 
-export async function fetchEvent() {
+export async function fetchEvent({ signal, searchTerm }) {
+
+  // let url = 'http://3.126.203.127:8084/projects'
+  // if(searchTerm){
+  //   url += '?search' + searchTerm
+  // }
+  // try {
+  //   const response = await fetch(url,{signal: signal}, {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //     },
+  //   });
+
+  //   if (!response.ok) {
+  //     // Handle non-successful responses here
+  //     throw new Error(`HTTP error! Status: ${response.status}`);
+  //   }
+
+  //   return response.json();
+  // } catch (error) {
+  //   console.error('Error fetching projects:', error);
+  //   // Handle other errors here
+  //   throw error;
+  // }
+  let url = 'http://3.126.203.127:8084/projects';
+
+  if (searchTerm) {
+    url += url.includes('?') ? `&search=${searchTerm}` : `?search=${searchTerm}`;
+  }
+
+  console.log(searchTerm);
   try {
-    const response = await fetch('http://3.126.203.127:8084/projects', {
+    const response = await fetch(url, {
+      signal: signal,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
 
@@ -76,7 +108,7 @@ export async function createNewProject(projectData) {
       body: JSON.stringify(projectData),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`, 
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, 
       },
     });
     
@@ -132,7 +164,7 @@ export async function Login(userData) {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`, 
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, 
       },
     });
   
@@ -153,7 +185,7 @@ export async function Login(userData) {
       body: JSON.stringify( projectData ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYyNzQ1ODcsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.fRCHtPCBhlbW32yCHXVVQq2MdgW-c9ieMxM22EExP-c'}`,
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
     });
   

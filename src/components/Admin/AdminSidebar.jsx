@@ -107,7 +107,7 @@ return (
         <AdminImg src={adminImg} alt='' />
         <Header3>Vivian R.  Lloyd</Header3>
         </AdminInfoWrapper>
-    <BtnsWrapper>
+        <BtnsWrapper>
     
     <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
         <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
@@ -133,6 +133,8 @@ return (
         <Button onClick={logedout}><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
     </NavLink>
     </BtnsWrapper>
+
+
     </SidebarWrapper>
 )
 }

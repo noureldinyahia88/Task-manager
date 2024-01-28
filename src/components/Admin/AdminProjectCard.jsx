@@ -11,7 +11,7 @@ import { IoSettings } from "react-icons/io5";
 import { useMutation } from '@tanstack/react-query';
 
 import { deleteProject, queryClient, updateProject } from '../Uitily/http/http'
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 
 const theme = {
@@ -293,7 +293,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
     const handleClick = () => {
         setProjectId(id)
         setChoose(!choose)
-        onClick(id);
+        // onClick(id);
     }
 
     const handleclickUpdateForm = () => {
@@ -326,16 +326,25 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
 
     // update Project
     const { mutate: updateMutate  } = useMutation({
-        mutationFn:()=> updateProject(),
+        mutationFn: updateProject,
+        onSuccess: () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
     })
 
-    function handleSubmitUpdate(formData) {
-        updateMutate({id: projectId, 
-            title: formData.title,
-            description: formData.description,
-            deadline: formData.date,
-            managerID: formData.managerid
+async function handleSubmitUpdate(formData) {
+    await updateMutate({
+            id: projectId,
+            projectData: {
+                title: formData.title,
+                description: formData.description,
+                deadline: formData.date,
+                managerID: formData.managerid,
+            },
         })
+        console.log("clicked");
     }
 
     return (
@@ -355,7 +364,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(handleSubmitUpdate)}>
         <FormHeading2>Project No: #{projectId}</FormHeading2>
 
         <InputFormWrapperParent>
@@ -411,7 +420,7 @@ const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDa
         <ConFarimationBoxSetting className={choose ? 'show': ''}>
         <Header2confirmationSetting>Setting</Header2confirmationSetting>
         <ConfimationBtnsWrapper>
-            <ButtonSky400 onClick={handleclickUpdateForm}>Update</ButtonSky400>
+            <ButtonSky400 type="submit" onClick={handleclickUpdateForm}>Update</ButtonSky400>
             <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBoxSetting>

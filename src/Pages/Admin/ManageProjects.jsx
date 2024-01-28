@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 import AdminProjectCard from '../../components/Admin/AdminProjectCard'
 import styled from 'styled-components'
@@ -155,7 +155,7 @@ const Input = styled.input`
     }
 `
 
-const FormWrapperBtns = styled.div`
+const FormWrapperBtns = styled.form`
     position: absolute;
     bottom: 40px;
     right: 40px;
@@ -332,42 +332,42 @@ const ManageProjects = () => {
         managerID: formData.id
 })
 
-// const formdataa = {
-//             title: formData.title,
-//             description: formData.description,
-//             deadline: formData.date,
-//             managerID: formData.id
-//     }
-
-// try {
-//     const response = await fetch(`http://3.126.203.127:8084/projects`, {
-//       method: 'POST',
-//       body: JSON.stringify(formdataa),
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDYxMTU0MzYsInN1YiI6IjYiLCJlbWFpbCI6ImVtaWx5LmRhdmlzQGV4YW1wbGUuY29tIiwibmFtZSI6IkVtaWx5IiwiaW1hZ2UiOiJ1c2VyLmpwZyIsInJvbGUiOlsiUk9MRV9HTE9CQUxfQURNSU4iXX0.6rLm2vqvePM52amb_CgLfBEf6gC5UU3Sk5hghIXGRps'}`, 
-//       },
-//     });
-    
-
-//     if (!response.status === 200) {
-//       const error = new Error('An error occurred while creating the project');
-//       error.code = response.status;
-//       error.info = await response.json();
-//       console.error('Error:', error);
-//       throw error;
-//     }
-
-//     const { newproject } = await response.json();
-
-
-//     return newproject;
-//   } catch (error) {
-//     console.error('Unexpected error:', error);
-//     throw error;
-//   }
     }
 
+    // for search input
+    const searchElement = useRef();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const { data: searchData, isPending: searchIsPending, isError: searchIsError, error: searchError } = useQuery({
+        queryKey: ['data', { search: searchTerm }],
+        queryFn: ({signal}) => fetchEvent({signal, searchTerm}),
+    });
+
+    function handleSubmitSearch(event) {
+        event.preventDefault();
+        setSearchTerm(searchElement.current.value);
+    }
+
+    let content = <p>Please enter a search term and to find projects</p>
+
+    if(searchIsError) {
+        content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Faild to fetch events.'} />
+    }
+
+    if(searchData) {
+        content = searchData.map((event)=>(
+                <AdminProjectCard key={event.projectId} 
+                event={event}
+                id={event.projectId}
+                title={event.title}
+                description={event.description}
+                deadline={event.deadline}
+                progress={event.progress}
+                managerName={event.managerName}
+                managerImg={event.managerImg}
+                />
+            ))
+    }
 
     return (
 
@@ -380,9 +380,9 @@ const ManageProjects = () => {
                 <AdminProjectSummery />
             <WrapperChild>
                 <ManageProjectsInputs>
-                    <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' />
-                    <SearchBtn className="searchButton">Go</SearchBtn>
+                    <FormWrapper onSubmit={handleSubmitSearch}>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' ref={searchElement} />
+                    <SearchBtn type="submit" className="searchButton">Go</SearchBtn>
                     </FormWrapper>
 
                     <BtnsWrapper>
@@ -394,22 +394,27 @@ const ManageProjects = () => {
 
             <AdminMangeHeader />
 
-            {isLoading && <h2>Loading...</h2>}
-                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-                    
-                    {data && data.map((project) => (
-                        <AdminProjectCard
-                            key={project.projectId}
-                            id={project.projectId}
-                            title={project.title}
-                            description={project.description}
-                            deadline={project.deadline}
-                            progress={project.progress}
-                            managerName={project.managerName}
-                            managerImg={project.managerImg}
-                            onClick={(projectId) => console.log(projectId)}
-                        />
-                    ))}
+        {
+            searchData? (content):(<>
+
+{isLoading && <h2>Loading...</h2>}
+        {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+        
+        {data && data.map((project) => (
+            <AdminProjectCard
+                key={project.projectId}
+                id={project.projectId}
+                title={project.title}
+                description={project.description}
+                deadline={project.deadline}
+                progress={project.progress}
+                managerName={project.managerName}
+                managerImg={project.managerImg}
+                onClick={(projectId) => console.log(projectId)}
+            />
+        ))}
+            </>)
+        }
             
             </Wrapper>
 

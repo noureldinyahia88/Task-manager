@@ -20,6 +20,36 @@ export async function fetchEmployees() {
       throw error;
     }
   }
+  // creat new employee
+  export async function createNewEmlployee(projectData) {
+    try {
+      const response = await fetch(`http://3.126.203.127:8084/employees`, {
+        method: 'POST',
+        body: JSON.stringify(projectData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+        },
+      });
+      
+  
+      if (!response.status === 200) {
+        const error = new Error('An error occurred while creating the project');
+        error.code = response.status;
+        error.info = await response.json();
+        console.error('Error:', error);
+        throw error;
+      }
+  
+      const { newproject } = await response.json();
+  
+  
+      return newproject;
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      throw error;
+    }
+  }
   
 
   // delete Project
