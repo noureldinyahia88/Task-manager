@@ -55,7 +55,7 @@ export async function fetchEvent({ signal, searchTerm }) {
     url += url.includes('?') ? `&search=${searchTerm}` : `?search=${searchTerm}`;
   }
 
-  console.log(searchTerm);
+  // console.log(searchTerm);
   try {
     const response = await fetch(url, {
       signal: signal,

@@ -165,10 +165,10 @@ const FormWrapperBtns = styled.form`
 const FormHeading2 = styled.h2`
     
     font-weight: 600;
-    color: ${theme.gray800};
+    color: transparent;
     font-size: 60px;
     margin: 0;
-    border-bottom: 2px solid ${theme.inputColor};
+    border-bottom: 2px solid transparent;
     width: 1130px;
     padding-bottom: 60px;
 `
@@ -309,7 +309,7 @@ const ManageProjects = () => {
         staleTime: 5000,
     })
 
-    console.log(data)
+
 
 
     // and new project project
@@ -336,61 +336,63 @@ const ManageProjects = () => {
 
     // for search input
     const searchElement = useRef();
-    const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-    const { data: searchData, isPending: searchIsPending, isError: searchIsError, error: searchError } = useQuery({
-        queryKey: ['data', { search: searchTerm }],
-        queryFn: ({signal}) => fetchEvent({signal, searchTerm}),
-    });
+  const { data: searchData, isPending: searchIsPending, isError: searchIsError, error: searchError } = useQuery({
+    queryKey: ['data', { search: searchTerm }],
+    queryFn: ({ signal }) => fetchEvent({ signal, searchTerm }),
+  });
 
-    function handleSubmitSearch(event) {
-        event.preventDefault();
-        setSearchTerm(searchElement.current.value);
-        console.log("search");
-    }
+  function handleSubmitSearch(event) {
+    event.preventDefault();
+    setSearchTerm(searchElement.current.value);
+    console.log('search');
+}
+// const foundedId = searchData.find((item) => item.projectId == searchElement.current.value)?.projectId;
+// console.log(foundedId);
 
-    let content = <p>Please enter a search term and to find projects</p>
 
-    if(searchIsError) {
-        content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Faild to fetch events.'} />
-    }
-
-    if (searchData) {
-        content = searchData.map((event) => (
-            <AdminProjectCard
-                key={event.projectId}
-                id={event.projectId}
-                title={event.title}
-                description={event.description}
-                deadline={event.deadline}
-                progress={event.progress}
-                managerName={event.managerName}
-                managerImg={event.managerImg}
-            />
-        ));
-    } else {
-        content = (
-            <>
-                {isLoading && <h2>Loading...</h2>}
-                {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-
-                {data &&
-                    data.map((project) => (
-                        <AdminProjectCard
-                            key={project.projectId}
-                            id={project.projectId}
-                            title={project.title}
-                            description={project.description}
-                            deadline={project.deadline}
-                            progress={project.progress}
-                            managerName={project.managerName}
-                            managerImg={project.managerImg}
-                            onClick={(projectId) => console.log(projectId)}
-                        />
-                    ))}
-            </>
-        );
-    }
+  let content = <p>Please enter a search term and to find projects</p>;
+  const foundedProject = searchData?.find(item => item.projectId == searchElement.current.value);
+  if (searchIsError) {
+    content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Failed to fetch events.'} />;
+} else if (foundedProject) {
+    // If a project is found, display it
+    content = (
+        <AdminProjectCard
+            key={foundedProject.projectId}
+            id={foundedProject.projectId}
+            title={foundedProject.title}
+            description={foundedProject.description}
+            deadline={foundedProject.deadline}
+            progress={foundedProject.progress}
+            managerName={foundedProject.managerName}
+            managerImg={foundedProject.managerImg}
+        />
+    );
+} else if (searchData) {
+    // If no project is found but searchData exists, display the list of projects
+    content = searchData.map((event) => (
+        <AdminProjectCard
+            key={event.projectId}
+            id={event.projectId}
+            title={event.title}
+            description={event.description}
+            deadline={event.deadline}
+            progress={event.progress}
+            managerName={event.managerName}
+            managerImg={event.managerImg}
+        />
+    ));
+} else {
+    // Display loading or error for initial load
+    content = (
+        <>
+            {isLoading && <h2>Loading...</h2>}
+            {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+        </>
+    );
+}
 
     return (
 
@@ -453,7 +455,7 @@ const ManageProjects = () => {
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
-        <FormHeading2>Project No: #1555236</FormHeading2>
+        <FormHeading2>Add a new Project</FormHeading2>
 
         <InputFormWrapperParent>
         <InputformWrapper>

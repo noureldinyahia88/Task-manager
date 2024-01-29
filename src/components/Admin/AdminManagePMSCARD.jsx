@@ -368,8 +368,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
             queryClient.invalidateQueries({queryKey:['pms']});
             console.log("sucsess");
         }, onError: (updateError) =>{
-            localStorage.setItem('PMsError', 'You are not allowed to Update PMs');
-            window.alert(localStorage.getItem('PMsError'));
+            console.log(updateError);;
         }
     })
 
@@ -439,7 +438,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='password' placeholder='Enter your new password' name='password'/>
+        <Input type='text' placeholder='Enter your new password' name='password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         {/* <Span>{errors.date?.message}</Span> */}
         </InputWrapper>

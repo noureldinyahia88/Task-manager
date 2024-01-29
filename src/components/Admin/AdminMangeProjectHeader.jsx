@@ -45,7 +45,7 @@ const AdminMangeHeader = () => {
         <HeaderTitle>ID</HeaderTitle>
         <HeaderTitle>Title</HeaderTitle>
         <HeaderTitle>Progress</HeaderTitle>
-        <HeaderTitle>Email</HeaderTitle>
+        <HeaderTitle>Name</HeaderTitle>
         {/* <HeaderTitle>Phone Number</HeaderTitle> */}
         <HeaderTitle>Deadline</HeaderTitle>
 

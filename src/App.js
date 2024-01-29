@@ -14,7 +14,6 @@ import PrivetRoutes from "./Pages/PrivetRoutes";
 
 
 function App() {
-  // const isLoggedIn = localStorage.getItem('token');
   return (
     <QueryClientProvider client={queryClient}>    
     <BrowserRouter>

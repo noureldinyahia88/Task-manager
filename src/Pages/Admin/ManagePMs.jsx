@@ -253,12 +253,15 @@ const ButtonSky100 = styled.button`
 const ManagePMs = () => {
     //React Hook Form
     const validationSchema = yup.object().shape({
-        FirstName: yup.string().required("First Name is required"),
-        email: yup.string().email().required("Please Enter a valid email"),
-        lastName: yup.string().required("Last Name is required"),
-        password: yup.string().required("Password is required"),
-        confirmPass: yup.string().required("Password confirmation is required").oneOf([yup.ref('password'), null], 'Passwords must match'),
-        phoneNumber: yup.number().required("Phone number is required")
+        firstNameuser: yup.string().required('First Name is required'),
+        emailUser: yup.string().email('Please enter a valid email').required('Email is required'),
+        lastNameUser: yup.string().required('Last Name is required'),
+        passwordUser: yup.string().required('Password is required'),
+        confirmPassUser: yup
+            .string()
+            .required('Password confirmation is required')
+            .oneOf([yup.ref('passwordUser'), null], 'Passwords must match'),
+        phoneNumberUser: yup.string().required('Phone number is required'),
     });
 
 
@@ -296,31 +299,35 @@ const ManagePMs = () => {
 
     // post data
     const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
-        mutationFn: createNewPMs,
+        mutationFn: ()=>createNewPMs(),
         onSuccess: () => {
             // to refatch the data
             queryClient.invalidateQueries({queryKey:['pms']});
             console.log("sucsess");
-            Navigate('/managePMS')
-        }, onError: (PostError) =>{
-            localStorage.setItem('PMsError', 'You are not allowed to create PMs');
-            window.alert(localStorage.getItem('PMsError'));
-        }
+        },onError: (error) => {
+            console.error("Error:", error);
+            // Handle error as needed
+        },
     })
     
-    async function handleSubmitAddNewProject(formData){
-        await mutate({
-            firstName: formData.FirstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-            confirmPass: formData.confirmPass,
-            phoneNo: formData.phoneNumber
-        })
+    async function handleSubmitAddNewProject(formData) {
+        formData.preventDefault()
+        try {
+            await mutate({
+                firstName: formData.firstNameUser,
+                lastName: formData.lastNameUser,
+                email: formData.emailUser,
+                password: formData.passwordUser,
+                phoneNo: formData.phoneNumberUser,
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
     }
     
     
-    localStorage.removeItem('PMsError');
+    
 
     return (
         <MangeProjectWrapper>
@@ -365,26 +372,26 @@ const ManagePMs = () => {
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
+        <Form onSubmit={handleSubmitAddNewProject}>
 
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' name='FirstName' id='FirstName' {...register("FirstName")} />
+        <Input type='text' placeholder='Enter your first name' name='firstNameuser' id='firstNameuser' {...register("firstNameuser")} />
         <Span>{errors.firstName?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address</Label>
-        <Input type='email' placeholder='Enter your e-mail' id='email' name='email' {...register("email")} />
+        <Input type='email' placeholder='Enter your e-mail' id='emailUser' name='emailUser' {...register("emailUser")} />
         <Span>{errors.email?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' id='password' name='password' {...register("password")}/>
+        <Input type="text" placeholder='Enter your new password' id='passwordUser' name='passwordUser' {...register("passwordUser")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.password?.message}</Span>
         </InputWrapper>
@@ -394,19 +401,19 @@ const ManagePMs = () => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' id='lastName' name='lastName'{...register("lastName")} />
+        <Input type='text' placeholder='Enter your last name' id='lastNameUser' name='lastNameUser'{...register("lastNameUser")} />
         <Span>{errors.lastName?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' id='phoneNumber' name='phoneNumber' {...register("phoneNumber")} />
+        <Input type='text' placeholder='Enter Phone Number' id='phoneNumberUser' name='phoneNumberUser' {...register("phoneNumberUser")} />
         <Span>{errors.phoneNo?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' id='confirmPass' name='confirmPass' {...register("confirmPass")}/>
+        <Input type='text' placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.password?.message}</Span>
         </InputWrapper>
@@ -422,7 +429,7 @@ const ManagePMs = () => {
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>No</ButtonSky400>
             <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
