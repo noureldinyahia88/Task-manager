@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 import AdminProjectCard from '../../components/Admin/AdminProjectCard'
 import styled from 'styled-components'
@@ -309,9 +309,6 @@ const ManageProjects = () => {
         staleTime: 5000,
     })
 
-
-
-
     // and new project project
 
     const {mutate, isPending} = useMutation({
@@ -331,10 +328,9 @@ const ManageProjects = () => {
         deadline: formData.date,
         managerID: formData.id
 })
-
     }
 
-    // for search input
+    // for search input***************************************
     const searchElement = useRef();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -348,51 +344,73 @@ const ManageProjects = () => {
     setSearchTerm(searchElement.current.value);
     console.log('search');
 }
-// const foundedId = searchData.find((item) => item.projectId == searchElement.current.value)?.projectId;
-// console.log(foundedId);
 
-
-  let content = <p>Please enter a search term and to find projects</p>;
-  const foundedProject = searchData?.find(item => item.projectId == searchElement.current.value);
+useEffect(() => {
+    // Fetch data based on the updated searchTerm
+    // Ensure that the searchTerm is not an empty string before triggering the search
+    if (searchTerm.trim() !== '') {
+      // Fetch data here
+    }
+  }, [searchTerm]);
+  
+  let content;
+  
+  const foundedProject = searchData?.find(item => item.projectId === parseInt(searchTerm, 10));
+  const foundedProjectTitle = searchData?.find(item => item.title === searchTerm);
+  
   if (searchIsError) {
     content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Failed to fetch events.'} />;
-} else if (foundedProject) {
-    // If a project is found, display it
+  } else if (foundedProject) {
+    // If a project is found based on ID, display it
     content = (
-        <AdminProjectCard
-            key={foundedProject.projectId}
-            id={foundedProject.projectId}
-            title={foundedProject.title}
-            description={foundedProject.description}
-            deadline={foundedProject.deadline}
-            progress={foundedProject.progress}
-            managerName={foundedProject.managerName}
-            managerImg={foundedProject.managerImg}
-        />
+      <AdminProjectCard
+        key={foundedProject.projectId}
+        id={foundedProject.projectId}
+        title={foundedProject.title}
+        description={foundedProject.description}
+        deadline={foundedProject.deadline}
+        progress={foundedProject.progress}
+        managerName={foundedProject.managerName}
+        managerImg={foundedProject.managerImg}
+      />
     );
-} else if (searchData) {
+  } else if (foundedProjectTitle) {
+    // If a project is found based on title, display it
+    content = (
+      <AdminProjectCard
+        key={foundedProjectTitle.projectId}
+        id={foundedProjectTitle.projectId}
+        title={foundedProjectTitle.title}
+        description={foundedProjectTitle.description}
+        deadline={foundedProjectTitle.deadline}
+        progress={foundedProjectTitle.progress}
+        managerName={foundedProjectTitle.managerName}
+        managerImg={foundedProjectTitle.managerImg}
+      />
+    );
+  } else if (searchData) {
     // If no project is found but searchData exists, display the list of projects
     content = searchData.map((event) => (
-        <AdminProjectCard
-            key={event.projectId}
-            id={event.projectId}
-            title={event.title}
-            description={event.description}
-            deadline={event.deadline}
-            progress={event.progress}
-            managerName={event.managerName}
-            managerImg={event.managerImg}
-        />
+      <AdminProjectCard
+        key={event.projectId}
+        id={event.projectId}
+        title={event.title}
+        description={event.description}
+        deadline={event.deadline}
+        progress={event.progress}
+        managerName={event.managerName}
+        managerImg={event.managerImg}
+      />
     ));
-} else {
+  } else {
     // Display loading or error for initial load
     content = (
-        <>
-            {isLoading && <h2>Loading...</h2>}
-            {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-        </>
+      <>
+        {searchIsPending && <h2>Loading...</h2>}
+        {searchIsError && <h2>Error: {searchError.info?.message || 'Failed to fetch Projects.'}</h2>}
+      </>
     );
-}
+  }
 
     return (
 
@@ -400,7 +418,6 @@ const ManageProjects = () => {
         <AdminSidebar />
         <MangeProjectPage>
             <Header2>Manage Projects</Header2>
-
             <Wrapper >
                 <AdminProjectSummery />
             <WrapperChild>
@@ -416,43 +433,12 @@ const ManageProjects = () => {
                     </BtnsWrapper>
                 </ManageProjectsInputs>
             </WrapperChild>
-
             <AdminMangeHeader />
             {content}            
-{/* 
-        {
-            searchData? (content):(
-            <>
-
-{isLoading && <h2>Loading...</h2>}
-        {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-        
-        {data && data.map((project) => (
-            <AdminProjectCard
-                key={project.projectId}
-                id={project.projectId}
-                title={project.title}
-                description={project.description}
-                deadline={project.deadline}
-                progress={project.progress}
-                managerName={project.managerName}
-                managerImg={project.managerImg}
-                onClick={(projectId) => console.log(projectId)}
-            />
-        ))}
-            </>)
-        } */}
-
             </Wrapper>
-
-            
-
         </MangeProjectPage>
 
 {/* ********************Add New Project form************** */}
-    
-        
-        
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
         <FormHeading2>Add a new Project</FormHeading2>
