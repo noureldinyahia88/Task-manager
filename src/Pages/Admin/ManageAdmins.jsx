@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 
@@ -160,7 +160,7 @@ const Input = styled.input`
     }
 `
 
-const FormWrapperBtns = styled.div`
+const FormWrapperBtns = styled.form`
     position: absolute;
     bottom: 40px;
     right: 40px;
@@ -351,7 +351,20 @@ const ManageAdmins = () => {
 
     console.log(data)
 
-    // post data
+    // for search input***************************************
+    const searchElement = useRef();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const { data: searchData, isPending: searchIsPending, isError: searchIsError, error: searchError } = useQuery({
+    queryKey: ['admins', { search: searchTerm }],
+    queryFn: ({ signal }) => fetchAdmins({ signal, searchTerm }),
+  });
+
+  function handleSubmitSearch(event) {
+    event.preventDefault();
+    setSearchTerm(searchElement.current.value);
+    console.log('search');
+}
 
     return (
     <ManageAdminsWrapper>
@@ -364,8 +377,8 @@ const ManageAdmins = () => {
                 <ManageProjectsInputs>
                 <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Admin</Button>
                     <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
-                    <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' ref={searchElement} />
+                    <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
                 </ManageProjectsInputs>
 

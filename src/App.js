@@ -10,6 +10,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./components/Uitily/http/http";
 import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import PrivetRoutes from "./Pages/PrivetRoutes";
+import MangeProjectPagePM from "./Pages/PM/MangeProjectPagePM";
 
 
 
@@ -24,9 +25,11 @@ function App() {
         <Route path="/manageEmployees" element={<ManageEmployees />} />
         <Route path="/managePMS" element={<ManagePMs />} />
         <Route path="/myAccountAdmin" element={<MyAccountAdmin />} />
+
       </Route>
       <Route index element={<LoginPage />} />
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
+      <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
     </Routes>
     </BrowserRouter>
     </QueryClientProvider>

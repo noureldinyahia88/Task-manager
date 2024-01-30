@@ -1,9 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import grid from '../../img/grid.svg'
-
-
 import logo from '../../img/logo.png'
 import adminImg from '../../img/adminpng.png'
 
@@ -15,6 +12,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { LuLayoutGrid } from "react-icons/lu";
 import { NavLink } from 'react-router-dom'
 
+import { GrGroup } from "react-icons/gr";
 
 
 
@@ -31,6 +29,7 @@ const SidebarWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 `
 
 const LogoWrapper = styled.div``
@@ -54,10 +53,11 @@ const Header3 = styled.h3`
 const BtnsWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 100px;
+    justify-content: space-between;
+    margin-top: 20px;
     padding-left: 35px;
     padding-right: 35px;
-    height: 100vh;
+    height: 65%;
     gap: 40px;
 
 `
@@ -90,16 +90,31 @@ const Button = styled.button`
         padding-left: 20px;
     }
 `
+const BtnsWrapperChiled = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+`
+const ButtonLogout = styled.button`
+    width: 86px;
+    height: 40px;
+    border-radius: 100px;
+    background-color: ${theme.sky50};
+    color: ${theme.fontColor};
+    border: none;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+`
 
-
-
-const AdminSidebar = () => {
+const SidebarPM = () => {
 
     const logedout = () => {
         localStorage.removeItem('token')
     }
-    
-return (
+
+  return (
     <SidebarWrapper>
         <LogoWrapper>
             <Logo src={logo} alt='' />
@@ -108,30 +123,20 @@ return (
         <AdminImg src={adminImg} alt='' />
         <Header3>Vivian R.  Lloyd</Header3>
         </AdminInfoWrapper>
-        <BtnsWrapper>
+
+    <BtnsWrapper>
+        <BtnsWrapperChiled>
+            <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
+                <Button className="active"><GrGroup style={{fontSize:"16px"}} /> Manage Projects</Button>
+            </NavLink>
+
+            <NavLink className="navLink" to="/myAccount" style={{ textDecoration: 'none' }}>
+                <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
+            </NavLink>
+        </BtnsWrapperChiled>
     
-    <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
-        <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
-    </NavLink>
-
-    <NavLink className="navLink" to="/manageAdmin" style={{ textDecoration: 'none' }}>
-        <Button><FaUserGroup style={{fontSize:"16px"}} /> Manage Admins</Button>
-    </NavLink>
-
-    <NavLink className="navLink" to="/manageEmployees" style={{ textDecoration: 'none' }}>
-        <Button><MdGroups style={{fontSize:"16px"}} /> Manage Employees</Button>
-    </NavLink>
-
-    <NavLink className="navLink" to="/managePMS" style={{ textDecoration: 'none' }}>
-        <Button><FaFolder style={{fontSize:"16px"}} /> Manage PMs</Button>
-    </NavLink>
-
-    <NavLink className="navLink" to="/myAccountAdmin" style={{ textDecoration: 'none' }}>
-        <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
-    </NavLink>
-
     <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>
-        <Button onClick={logedout}><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
+        <ButtonLogout onClick={logedout}>Log Out</ButtonLogout>
     </NavLink>
     </BtnsWrapper>
 
@@ -140,4 +145,4 @@ return (
 )
 }
 
-export default AdminSidebar
+export default SidebarPM

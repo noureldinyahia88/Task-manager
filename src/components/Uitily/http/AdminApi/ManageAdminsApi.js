@@ -1,7 +1,13 @@
 // get Admins
-export async function fetchAdmins() {
+export async function fetchAdmins({ signal, searchTerm }) {
+
+  let url = 'http://3.126.203.127:8084/employees'
+  if (searchTerm) {
+    url += url.includes('?') ? `&search=${searchTerm}` : `?search=${searchTerm}`;
+  }
     try {
-      const response = await fetch('http://3.126.203.127:8084/employees', {
+      const response = await fetch(url, {
+        signal: signal,
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
