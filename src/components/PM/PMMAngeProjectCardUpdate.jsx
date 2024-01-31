@@ -82,39 +82,11 @@ const Form = styled.form`
     flex-direction: column;
     background-color: ${theme.white};
     width: 1130px;
-    height: 768px;
+    height: 685px;
     border-radius: 40px;
     gap: 80px;
     position: relative;
 `
-const FormHeadingWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-bottom: 1px solid #9CA3AF;
-`
-const ImageWrapper = styled.div`
-    padding-top: 15px;
-`
-const AdminImage = styled.img`
-    border-radius: 50%;
-`
-const AdminheaderDeatials = styled.div`
-    color: ${theme.sky900Color};
-`
-
-const AdminId = styled.p`
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
-`
-
-const TypeOfAdmin =styled.h4`
-    font-size: 24px;
-    margin: 0;
-    font-weight: bold;
-`
-
 const InputFormWrapperParent = styled.div`
     display: flex;
     align-items: center;
@@ -155,13 +127,15 @@ const FormWrapperBtns = styled.div`
     gap: 10px;
 `
 const FormHeading2 = styled.h2`
-    font-weight: 400;
-    color: ${theme.sky900Color};
-    font-size: 49px;
+    font-weight: 600;
+    color: ${theme.fontColor};
+    font-size: 60px;
     margin: 0;
-    /* border-bottom: 2px solid ${theme.inputColor}; */
+    border-bottom: 2px solid #9CA3AF;
     width: 1130px;
+    padding-bottom: 60px;
 `
+
 const OverlayDiv2 = styled.div`
     position: fixed;
     width: 100%;
@@ -185,37 +159,8 @@ const InputWrapper = styled.div`
     position: relative;
 `
 const Span = styled.span``
-// ********ConFarimation Box Setting**************
-const ConFarimationBoxSetting =styled.div`
-    width: 320px;
-    height: 148px;
-    background-color: ${theme.white};
-    padding: 5px;
-    display: none;
-    flex-direction: column;
-    justify-content:center;
-    align-items: center;
-    border-radius: 10px;
-    text-align: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
-    z-index:100;
 
-    &.show{
-        display: flex;
-    }
-`
-const Header2confirmationSetting = styled.div`
-    font-size: 30px;
-    font-weight: bold;
-    color: #463F3F;
-    border-bottom: 1px solid ${theme.black};
-    padding-bottom: 15px;
-    width: 100%;
-    margin: 0;
-`
+// ********ConFarimation Box Setting**************
 
 const ButtonSky400 = styled.button`
     border: none;
@@ -238,11 +183,48 @@ const ButtonSky100 = styled.button`
     background-color: #38BDF8;
     color: ${theme.gray800};
     font-size: 20px;
-    font-size: bold;
+    font-weight: 600;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     cursor: pointer;
     z-index: 100;
 `
+// ConFarimationBox Cancel
+const ConFarimationBox = styled.div`
+    width: 320px;
+    height: 148px;
+    background-color: ${theme.white};
+    padding: 5px;
+    display: none;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    border-radius: 10px;
+    text-align: center;
+    position: absolute;
+    bottom: 33px;
+    right: 31px;
+    z-index: 200;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    &.show{
+        display: flex;
+    }
+`
+const Header2confirmation = styled.h2`
+    font-size: 30px;
+    font-weight: bold;
+    color: #463F3F;
+    border-bottom: 1px solid ${theme.black};
+    padding-bottom: 15px;
+    width: 100%;
+    margin: 0;
+`
+const ConfimationBtnsWrapper = styled.div`
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+`
+
 
 const PMMAngeProjectCardUpdate = () => {
 
@@ -266,6 +248,18 @@ const PMMAngeProjectCardUpdate = () => {
 
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
+    const [cancel, setCancel] = useState(false)
+
+
+    const handleClick = () => {
+        // setProjectId(id)
+        setChoose(!choose)
+        // onClick(id);
+    }
+
+    const confarimationHandleCancel = () => {
+        setCancel(!cancel)
+    }
 
 // clicked projectCard ID state
     // const [projectId, setProjectId] = useState()
@@ -285,39 +279,22 @@ const PMMAngeProjectCardUpdate = () => {
     //     setCancel(!cancel)
     // }
 
-    // to delete Admin
-
-    // const { mutate: deleteMutate } = useMutation({
-    //     mutationFn: deleteAdmin,
-    //     onSuccess: () =>{
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['data']
-    //         })
-    //     }
-    // });
-
-    // function handleDelete() {
-    //     deleteMutate({ id: projectId});
-    //     setTimeout(() => {
-    //         window.location.reload();
-    //     }, 1000);
-    // }
 
     // update admin
     // const { mutate: updateMutate  } = useMutation({
     //     mutationFn: updateAdmin,
     // })
 
-    // function handleSubmitUpdate(formData) {
-    //     updateMutate({id: projectId, 
-    //         firstName: formData.fristName,
-    //         email: formData.email,
-    //         password: formData.pass,
-    //         lastName: formData.lastName
-    //     })
-    //     setUpdateFrom(!showUpdateForm)
-    //     setChoose(false)
-    // }
+    function handleSubmitUpdate(formData) {
+        // updateMutate({id: projectId, 
+        //     firstName: formData.fristName,
+        //     email: formData.email,
+        //     password: formData.pass,
+        //     lastName: formData.lastName
+        // })
+        setUpdateFrom(!showUpdateForm)
+        setChoose(false)
+    }
 
     return (
         <MangeProjectHeader>
@@ -329,64 +306,42 @@ const PMMAngeProjectCardUpdate = () => {
         <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
     
         <MangeWrapper>
-            <ButtonSetting>Update</ButtonSetting>
+            <ButtonSetting onClick={handleclickUpdateForm}>Update</ButtonSetting>
         </MangeWrapper>
 
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
         <Form onSubmit={handleSubmit(onSubmit)}>
 
-            <FormHeadingWrapper>
-                <ImageWrapper>
-                    <AdminImage src={adminImg} alt=''/>
-                </ImageWrapper>
-
-                <AdminheaderDeatials>
-            <FormHeading2></FormHeading2>
-            <AdminId>ID: #2</AdminId>
-            <TypeOfAdmin>Global Admin</TypeOfAdmin>
-                </AdminheaderDeatials>
-            </FormHeadingWrapper>
+        <FormHeading2>Update Task</FormHeading2>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' name='fristName' id='fristName' {...register("fristName")} />
+        <Label htmlFor="">Title</Label>
+        <Input type='text' placeholder='Enter Your Title' name='title' id='title' {...register("title")} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' name='email' id='email' {...register("email")} />
+        <Label htmlFor="">Description</Label>
+        <Input type='text' placeholder='Enter The Description' name='description' id='description' {...register("description")} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
-        <InputWrapper>
-        <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password'name='pass' id='pass' {...register("pass")}/>
-        {/* <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} /> */}
-        <Span>{errors.date?.message}</Span>
-        </InputWrapper>
         </InputformWrapper>
 
         <InputformWrapper>
-
-        <InputWrapper>
-        <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' name='lastName' id='lastName' {...register("lastName")} />
-        <Span>{errors.description?.message}</Span>
-        </InputWrapper>
         
         <InputWrapper>
-        <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number'name='phoneNum' id='phoneNum' {...register("phoneNum")} />
+        <Label htmlFor="">employee ID</Label>
+        <Input type='number' placeholder='Enter Employee ID'name='id' id='id' {...register("id")} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' name='confirmPass' id='confirmPass' {...register("confirmPass")}/>
+        <Label htmlFor="">DeadLine</Label>
+        <Input type='text' placeholder='../../....' name='deadLine' id='deadLine' {...register("deadLine")}/>
         {/* <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} /> */}
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -394,30 +349,22 @@ const PMMAngeProjectCardUpdate = () => {
         </InputformWrapper>
         </InputFormWrapperParent>
 
-        {/* <FormWrapperBtns>
+        <FormWrapperBtns>
+            <ButtonSky100  type="submit" onClick={handleSubmitUpdate}>Finish</ButtonSky100>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
-        </FormWrapperBtns> */}
+        </FormWrapperBtns>
 
         {/* confirm cancel */}
-        {/* <ConFarimationBox className={cancel? "show":""}>
+        <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
             <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky100  onClick={confarimationHandleCancel}>No</ButtonSky100>
         </ConfimationBtnsWrapper>
-        </ConFarimationBox> */}
+        </ConFarimationBox>
         {/* End Of confirm cancel */}
         </Form>
         </OverlayDiv2>
-
-        <ConFarimationBoxSetting className={choose ? 'show': ''}>
-        <Header2confirmationSetting>Setting</Header2confirmationSetting>
-        {/* <ConfimationBtnsWrapper>
-            <ButtonSky400  onClick={handleclickUpdateForm}>Update</ButtonSky400>
-            <ButtonSky100 onClick={handleDelete}>Delete</ButtonSky100>
-        </ConfimationBtnsWrapper> */}
-        </ConFarimationBoxSetting>
     </MangeProjectHeader>
 )
 }

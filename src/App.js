@@ -12,6 +12,7 @@ import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import PrivetRoutes from "./Pages/PrivetRoutes";
 import MangeProjectPagePM from "./Pages/PM/MangeProjectPagePM";
 import PMProjectPageSetting from "./components/PM/PMProjectPageSetting";
+import ManageTaskEmplyee from "./Pages/Emplyee/ManageTaskEmplyee";
 
 
 
@@ -32,6 +33,7 @@ function App() {
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
       <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
       <Route path="/ProjectPageSetting" element={<PMProjectPageSetting />} />
+      <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} />
     </Routes>
     </BrowserRouter>
     </QueryClientProvider>

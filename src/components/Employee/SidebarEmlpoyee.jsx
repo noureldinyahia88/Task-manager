@@ -3,15 +3,9 @@ import styled from 'styled-components'
 
 import logo from '../../img/logo.png'
 import adminImg from '../../img/adminpng.png'
-
-import { IoPersonSharp } from "react-icons/io5";
-
-import { NavLink } from 'react-router-dom'
-
+import { NavLink } from 'react-router-dom';
 import { GrGroup } from "react-icons/gr";
-
-
-
+import { IoPersonSharp } from "react-icons/io5";
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -104,8 +98,7 @@ const ButtonLogout = styled.button`
     cursor: pointer;
 `
 
-const SidebarPM = () => {
-
+const SidebarEmlpoyee = () => {
     const logedout = () => {
         localStorage.removeItem('token')
     }
@@ -123,7 +116,7 @@ const SidebarPM = () => {
     <BtnsWrapper>
         <BtnsWrapperChiled>
             <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
-                <Button className="active"><GrGroup style={{fontSize:"16px"}} /> Manage Projects</Button>
+                <Button className="active"><GrGroup style={{fontSize:"16px"}} />Manage  Tasks</Button>
             </NavLink>
 
             <NavLink className="navLink" to="/myAccount" style={{ textDecoration: 'none' }}>
@@ -141,4 +134,4 @@ const SidebarPM = () => {
 )
 }
 
-export default SidebarPM
+export default SidebarEmlpoyee

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import manger from '../../img/manger.png'
-import { NavLink } from 'react-router-dom';
+
 
 
 
@@ -32,6 +32,21 @@ const ButtonSetting = styled.button`
     padding: 12px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    &.submit{
+        background-color: #F87171;
+        display: none;
+    }
+    &.submit.show{
+        display: block;
+    }
+    &.hide{
+        display: none;
+    }
+    &.done{
+        background-color: #E5E7EB;
+        display: none;
+    }
 `
 
 const MangeProjectHeader = styled.div`
@@ -72,13 +87,17 @@ const MangeWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    /* width: 60px; */
-    
 `
 
-const PMMangeProjectCard = () => {
+const EmplyeeManageTaskCard = () => {
+
+    const [StartAction, setStartAction] = useState(false)
+    const StartActionHandle = () =>{
+        setStartAction(true)
+    }
+
     return (
-        <MangeProjectHeader>
+    <MangeProjectHeader>
         <HeaderTitle>#123</HeaderTitle>
         <HeaderTitle>Fake Title</HeaderTitle>
         <HeaderTitle>lorem ipsum...</HeaderTitle>
@@ -87,14 +106,15 @@ const PMMangeProjectCard = () => {
         <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
     
         <MangeWrapper>
-        <NavLink className="navLink" to="/ProjectPageSetting" style={{ textDecoration: 'none' }}>
-            <ButtonSetting>Manage</ButtonSetting>
-            </NavLink>
+        
+            <ButtonSetting onClick={StartActionHandle} className={`${StartAction ? 'hide' : ''}`}>Start</ButtonSetting>
+            <ButtonSetting className={`submit ${StartAction ? 'show' : ''}`}>Submit</ButtonSetting>
+            <ButtonSetting className="done">Done</ButtonSetting>
+            
         </MangeWrapper>
 
     </MangeProjectHeader>
-    
 )
 }
 
-export default PMMangeProjectCard
+export default EmplyeeManageTaskCard
