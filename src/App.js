@@ -11,6 +11,7 @@ import { queryClient } from "./components/Uitily/http/http";
 import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import PrivetRoutes from "./Pages/PrivetRoutes";
 import MangeProjectPagePM from "./Pages/PM/MangeProjectPagePM";
+import PMProjectPageSetting from "./components/PM/PMProjectPageSetting";
 
 
 
@@ -30,6 +31,7 @@ function App() {
       <Route index element={<LoginPage />} />
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
       <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
+      <Route path="/ProjectPageSetting" element={<PMProjectPageSetting />} />
     </Routes>
     </BrowserRouter>
     </QueryClientProvider>
