@@ -23,38 +23,38 @@ export async function fetchPMs() {
 
   //post pms
   export async function createNewPMs(projectData) {
-    try {
-      const formData = new FormData();
-      formData.append('firstName', projectData.firstNameUser);
-      formData.append('lastName', projectData.lastNameUser);
-      formData.append('email', projectData.emailUser);
-      formData.append('password', projectData.passwordUser);
-      formData.append('phoneNo', projectData.phoneNumberUser);
+    // try {
+    //   const formData = new FormData();
+    //   formData.append('firstName', projectData.firstNameUser);
+    //   formData.append('lastName', projectData.lastNameUser);
+    //   formData.append('email', projectData.emailUser);
+    //   formData.append('password', projectData.passwordUser);
+    //   formData.append('phoneNo', projectData.phoneNumberUser);
 
-      const response = await fetch(`http://3.126.203.127:8084/managers`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          // 'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
-        },
-      });
+    //   const response = await fetch(`http://3.126.203.127:8084/managers`, {
+    //     method: 'POST',
+    //     body: formData,
+    //     headers: {
+    //       // 'Content-Type': 'application/json',
+    //       'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+    //     },
+    //   });
       
-      if (!response.status === 200) {
-        const error = new Error('An error occurred while creating the project');
-        error.code = response.status;
-        error.info = await response.json();
-        console.error('Error:', error);
-        throw error;
-      }
-      const { newproject } = await response.json();
-      return newproject;
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      throw error;
-    }
+    //   if (!response.status === 200) {
+    //     const error = new Error('An error occurred while creating the project');
+    //     error.code = response.status;
+    //     error.info = await response.json();
+    //     console.error('Error:', error);
+    //     throw error;
+    //   }
+    //   const { newproject } = await response.json();
+    //   return newproject;
+    // } catch (error) {
+    //   console.error('Unexpected error:', error);
+    //   throw error;
+    // }
   }
-  
+
 
 
   // delete PMS

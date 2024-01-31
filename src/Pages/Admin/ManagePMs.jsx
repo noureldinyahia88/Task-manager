@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 import { IoMdSearch } from "react-icons/io";
+import axios from 'axios';
 
 import styled from 'styled-components'
 import { AiFillEyeInvisible } from "react-icons/ai";
@@ -252,22 +253,23 @@ const ButtonSky100 = styled.button`
 
 const ManagePMs = () => {
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        firstNameuser: yup.string().required('First Name is required'),
-        emailUser: yup.string().email('Please enter a valid email').required('Email is required'),
-        lastNameUser: yup.string().required('Last Name is required'),
-        passwordUser: yup.string().required('Password is required'),
-        confirmPassUser: yup
-            .string()
-            .required('Password confirmation is required')
-            .oneOf([yup.ref('passwordUser'), null], 'Passwords must match'),
-        phoneNumberUser: yup.string().required('Phone number is required'),
-    });
+    // const validationSchema = yup.object().shape({
+    //     firstName: yup.string().required('First Name is required'),
+    //     email: yup.string().email('Please enter a valid email').required('Email is required'),
+    //     lastName: yup.string().required('Last Name is required'),
+    //     password: yup.string().required('Password is required'),
+    //     confirmPassUser: yup
+    //         .string()
+    //         .required('Password confirmation is required')
+    //         .oneOf([yup.ref('passwordUser'), null], 'Passwords must match'),
+    //         phoneNo: yup.string().required('Phone number is required'),
+    // });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    // const {register, handleSubmit, formState: {errors}} = useForm({
+    //     resolver: yupResolver(validationSchema),
+    // });
     //End of React Hook Form
 
     // const onSubmit = (data) => {
@@ -298,6 +300,42 @@ const ManagePMs = () => {
 
 
     // post data
+
+    /// try
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: ''
+    });
+
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+
+    const handlePost = async (event) => {
+        event.preventDefault();
+        console.log(post);
+        try {
+            const response = await axios.post(
+                'http://3.126.203.127:8084/managers',
+                post,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            
+            console.log(response);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    // *********************
+
     const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
         mutationFn: ()=>createNewPMs(),
         onSuccess: () => {
@@ -372,26 +410,26 @@ const ManagePMs = () => {
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmitAddNewProject}>
+        <Form onSubmit={handlePost}>
 
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' name='firstNameuser' id='firstNameuser' {...register("firstNameuser")} />
+        <Input type="text" placeholder='Enter your first name' name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName} />
         <Span>{errors.firstName?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address</Label>
-        <Input type='email' placeholder='Enter your e-mail' id='emailUser' name='emailUser' {...register("emailUser")} />
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
         <Span>{errors.email?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type="text" placeholder='Enter your new password' id='passwordUser' name='passwordUser' {...register("passwordUser")}/>
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password} />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.password?.message}</Span>
         </InputWrapper>
@@ -401,19 +439,19 @@ const ManagePMs = () => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' id='lastNameUser' name='lastNameUser'{...register("lastNameUser")} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.lastName?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' id='phoneNumberUser' name='phoneNumberUser' {...register("phoneNumberUser")} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.phoneNo?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='text' placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")}/>
+        <Input type="text" placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")} />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.password?.message}</Span>
         </InputWrapper>
