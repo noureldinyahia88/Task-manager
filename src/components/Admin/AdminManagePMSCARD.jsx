@@ -388,7 +388,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
     // }
 
 
-    // ****************
+    // ****************update******
     const [post, setPost] = useState({
         firstName: '',
         lastName: '',
@@ -485,13 +485,13 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
         <Span>{errors.id?.message}</Span> 
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='text' placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}  />
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}  />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -501,19 +501,19 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='number' placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='password' placeholder='Confirm your new password'/>
+        <Input type="text" placeholder='Confirm your new password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>

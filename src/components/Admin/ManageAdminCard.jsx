@@ -295,18 +295,7 @@ const ButtonSky100 = styled.button`
 
 const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo, onClick, id}) => {
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        fristName: yup.string().required("Title is required"),
-        email: yup.string().required("Please Enter a valid Email"),
-        pass: yup.number().required("Passwprd is required"),
-        lastName: yup.string().required("Please Enter a last name"),
-        phoneNum: yup.number().required("Please Enter a phone number"),
-        confirmPass: yup.number().required("Please Enter a phone number"),
-    });
-
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (data) => {
         console.log(data);

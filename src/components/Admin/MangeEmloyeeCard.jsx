@@ -12,7 +12,7 @@ import { AiFillEyeInvisible } from "react-icons/ai";
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../Uitily/http/http';
 import { deleteEmployee } from '../Uitily/http/AdminApi/ManageEmployeesApi';
-
+import axios from 'axios';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -147,7 +147,7 @@ const Form = styled.form`
 const FormHeadingWrapper = styled.div`
     display: flex;
     align-items: center;
-    gap: 20px;
+    /* gap: 20px; */
     border-bottom: 1px solid #9CA3AF;
 `
 const ImageWrapper = styled.div`
@@ -159,20 +159,24 @@ const ImageWrapper = styled.div`
 `
 
 const EditBtnWrapper = styled.div`
-    position: absolute;
+    position: relative;
     background-color: #F3F4F6;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    right: 7px;
-    bottom: 20px;
+    right: 34px;
+    bottom: -18px;
     display: grid;
     place-items: center;
 `
-const EditBtn = styled.button`
+const EditBtn = styled.input`
     border: none;
     background-color: transparent;
     cursor: pointer;
+    color: transparent;
+    position: absolute;
+    left: -10px;
+    opacity: 0;
 `
 const AdminImage = styled.img`
     border-radius: 50%;
@@ -311,16 +315,7 @@ const ButtonSky100 = styled.button`
 const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick}) => {
 
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
-    });
-
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (data) => {
         console.log(data);
@@ -331,9 +326,11 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
 
     // clicked projectCard ID state
     const [projectId, setProjectId] = useState()
+    const [name, setName] = useState()
 
     const handleClick = () => {
         setProjectId(staffId)
+        setName(firstName)
         setChoose(!choose)
         onClick(staffId);
     }
@@ -365,6 +362,56 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         }, 1000);
     }
 
+    // ****************update******
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '',
+        img:'',
+    });
+
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+
+    const handlePost = async (event, id) => {
+        event.preventDefault();
+        // Create a FormData object
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+  formData.append('img', post.img);
+
+  // Append the rest of the data to the FormData object
+  formData.append('firstName', post.firstName);
+  formData.append('lastName', post.lastName);
+  formData.append('email', post.email);
+  formData.append('password', post.password);
+  formData.append('phoneNo', post.phoneNo);
+
+  try {
+    const response = await axios.put(
+      `http://3.126.203.127:8084/employees/${id}`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  setProjectId(staffId);
+  onClick(staffId);
+    };
+
   return (
     <MangeProjectHeader>
         <HeaderTitle>#{staffId}</HeaderTitle>
@@ -382,19 +429,19 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
 
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={(e) => handlePost(e, projectId)}>
 
         <FormHeadingWrapper>
                 <ImageWrapper>
-                    <AdminImage src={adminImg} alt=''/>
+                <AdminImage src={adminImg} alt=''/>
                     <EditBtnWrapper>
-                        <EditBtn><MdModeEditOutline style={{'font-size': '16px'}} /></EditBtn>
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInput}  value={post.img} /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
-            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
-            <AdminId>ID: #7821</AdminId>
+            <FormHeading2>{name}</FormHeading2>
+            <AdminId>ID: #{projectId}</AdminId>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
 
@@ -402,19 +449,19 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
+        <Input type="text" placeholder='Enter your first name' name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -424,19 +471,19 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <Input type="text" placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -445,8 +492,8 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit' onClick={handleclickUpdateForm}>Save</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky400  type="submit" onClick={handleclickUpdateForm}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}
@@ -454,7 +501,7 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
             <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         {/* End Of confirm cancel */}

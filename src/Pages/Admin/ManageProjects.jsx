@@ -440,7 +440,7 @@ useEffect(() => {
 
 {/* ********************Add New Project form************** */}
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
+        <Form >
         <FormHeading2>Add a new Project</FormHeading2>
 
         <InputFormWrapperParent>
@@ -485,7 +485,7 @@ useEffect(() => {
                         
                             <FormWrapperBtns>
                             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-                            <ButtonSky400  type="submit">Save</ButtonSky400>
+                            <ButtonSky400  type="submit" onClick={handleSubmitAddNewProject}>Save</ButtonSky400>
                         </FormWrapperBtns>
                     
     
@@ -493,8 +493,8 @@ useEffect(() => {
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         </Form>

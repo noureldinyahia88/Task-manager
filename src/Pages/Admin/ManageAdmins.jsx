@@ -14,6 +14,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import placeHoderImage from '../../img/image-fill.png';
 import { fetchAdmins } from '../../components/Uitily/http/AdminApi/ManageAdminsApi';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 
 
@@ -313,16 +314,7 @@ const LabelForRatio = styled.label`
 `
 const ManageAdmins = () => {
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
-    });
-
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
     //End of React Hook Form
 
     const onSubmit = (data) => {
@@ -369,6 +361,41 @@ const ManageAdmins = () => {
 
     const handleInputSearch = (event) => {
         setSearchInput(event.target.value);
+    };
+
+    // post data
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '', 
+        global: 'true'
+    });
+
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+
+    const handlePost = async (event) => {
+        event.preventDefault();
+        console.log(post);
+        try {
+            const response = await axios.post(
+                'http://3.126.203.127:8084/admins',
+                post,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            
+            console.log(response);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -434,25 +461,25 @@ const ManageAdmins = () => {
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handlePost}>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
+        <Input type="text" placeholder='Enter your first name' name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password' {...register("date")}/>
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -488,19 +515,19 @@ const ManageAdmins = () => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' {...register("date")}/>
+        <Input type="text" placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -509,15 +536,15 @@ const ManageAdmins = () => {
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100 onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type='submit'>Save</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
+            <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  type='submit' onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         </Form>
