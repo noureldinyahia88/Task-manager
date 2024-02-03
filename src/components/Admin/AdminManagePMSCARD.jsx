@@ -11,6 +11,7 @@ import { set } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../Uitily/http/http';
 import { deletePMs, updateManager } from '../Uitily/http/AdminApi/ManagePMsApi';
+import axios from 'axios';
 
 
 
@@ -159,20 +160,24 @@ const ImageWrapper = styled.div`
 `
 
 const EditBtnWrapper = styled.div`
-    position: absolute;
+    position: relative;
     background-color: #F3F4F6;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    right: 7px;
-    bottom: 20px;
+    right: 34px;
+    bottom: -18px;
     display: grid;
     place-items: center;
 `
-const EditBtn = styled.button`
+const EditBtn = styled.input`
     border: none;
     background-color: transparent;
     cursor: pointer;
+    color: transparent;
+    position: absolute;
+    left: -10px;
+    opacity: 0;
 `
 const AdminImage = styled.img`
     border-radius: 50%;
@@ -312,8 +317,7 @@ const ButtonSky100 = styled.button`
 const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick}) => {
 
     //React Hook Form
-
-    const {register, reset, errors, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
 
 
@@ -324,14 +328,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
 
-    // clicked projectCard ID state
-    const [projectId, setProjectId] = useState()
     
-    const handleClick = () => {
-        setProjectId(staffId)
-        setChoose(!choose)
-        onClick(staffId);
-    }
 
     const handleclickUpdateForm = () => {
         setUpdateFrom(!showUpdateForm)
@@ -341,6 +338,15 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
+    }
+
+    // clicked projectCard ID state
+    const [projectId, setProjectId] = useState()
+    
+    const handleClick = () => {
+        setProjectId(staffId)
+        setChoose(!choose)
+        onClick(staffId);
     }
 
     // to delete Project
@@ -361,25 +367,77 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
     }
 
     // update Project
-    const { mutate: updateMutate , isError: updateIsError, error: updateError } = useMutation({
-        mutationFn: updateManager,
-        onSuccess: () => {
-            // to refatch the data
-            queryClient.invalidateQueries({queryKey:['pms']});
-            console.log("sucsess");
-        }, onError: (updateError) =>{
-            console.log(updateError);;
-        }
-    })
+    // const { mutate: updateMutate , isError: updateIsError, error: updateError } = useMutation({
+    //     mutationFn: updateManager,
+    //     onSuccess: () => {
+    //         // to refatch the data
+    //         queryClient.invalidateQueries({queryKey:['pms']});
+    //         console.log("sucsess");
+    //     }, onError: (updateError) =>{
+    //         console.log(updateError);;
+    //     }
+    // })
 
-    function handleSubmitUpdate(formData) {
-        updateMutate({id: projectId, 
-            title: formData.title,
-            description: formData.description,
-            deadline: formData.date,
-            managerID: formData.managerid
-        })
-    }
+    // function handleSubmitUpdate(formData) {
+    //     updateMutate({id: projectId, 
+    //         title: formData.title,
+    //         description: formData.description,
+    //         deadline: formData.date,
+    //         managerID: formData.managerid
+    //     })
+    // }
+
+
+    // ****************
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '',
+        img:'',
+    });
+
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+
+    const handlePost = async (event, id) => {
+        event.preventDefault();
+        // Create a FormData object
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+  formData.append('img', post.img);
+
+  // Append the rest of the data to the FormData object
+  formData.append('firstName', post.firstName);
+  formData.append('lastName', post.lastName);
+  formData.append('email', post.email);
+  formData.append('password', post.password);
+  formData.append('phoneNo', post.phoneNo);
+
+  try {
+    const response = await axios.put(
+      `http://3.126.203.127:8084/managers/${id}`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  setProjectId(staffId);
+  onClick(staffId);
+    };
+
 
     return (
 
@@ -399,13 +457,13 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
 
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={(e) => handlePost(e, projectId)}>
 
         <FormHeadingWrapper>
                 <ImageWrapper>
                     <AdminImage src={adminImg} alt=''/>
                     <EditBtnWrapper>
-                        <EditBtn><MdModeEditOutline style={{'font-size': '16px'}} /></EditBtn>
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInput}  value={post.img} /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
 
@@ -418,13 +476,8 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <label htmlFor="firstName">First Name</label>
-        <Input
-                    type="text"
-                    name="firstName"
-                    placeholder="Enter your first name"
-                    {...register('firstName', { required: 'First Name is required' })}
-                />
+        <Label htmlFor="firstName">First Name</Label>
+        <Input type="text" name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName}/>
                 {errors?.firstName && (
             <span>{errors.firstName.message}</span>
         )}
@@ -432,15 +485,15 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' name='email' />
-        {/* <Span>{errors.id?.message}</Span> */}
+        <Input type='email' placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
+        <Span>{errors.id?.message}</Span> 
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='text' placeholder='Enter your new password' name='password'/>
+        <Input type='text' placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}  />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        {/* <Span>{errors.date?.message}</Span> */}
+        <Span>{errors.date?.message}</Span>
         </InputWrapper>
         </InputformWrapper>
 
@@ -448,21 +501,21 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' name='lastName' />
-        {/* <Span>{errors.description?.message}</Span> */}
+        <Input type='text' placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
+        <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='number' placeholder='Enter Phone Number' />
-        {/* <Span>{errors.description?.message}</Span> */}
+        <Input type='number' placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
+        <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
         <Input type='password' placeholder='Confirm your new password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        {/* <Span>{errors.date?.message}</Span> */}
+        <Span>{errors.date?.message}</Span>
         </InputWrapper>
 
         </InputformWrapper>
@@ -470,7 +523,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
         <FormWrapperBtns>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
+            <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}

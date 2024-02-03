@@ -351,6 +351,27 @@ const ManageEmployees = () => {
     //         phoneNo: formData.phoneNumber
     //     })
     // }
+
+    // *********************search*****************
+    const [searchInput, setSearchInput] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+
+    const handleSearch = () => {
+        // Implement your search logic here
+        const filteredResults = data.filter(
+            (project) =>
+                String(project.staffId) === searchInput ||
+                project.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                project.email.toLowerCase().includes(searchInput.toLowerCase())
+        );
+    
+        setSearchResults(filteredResults);
+    };
+
+    const handleInputSearch = (event) => {
+        setSearchInput(event.target.value);
+    };
+
     
     
     localStorage.removeItem('EmployeeError');
@@ -366,18 +387,38 @@ const ManageEmployees = () => {
                 <ManageProjectsInputs>
                 <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Employee</Button>
                     <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
-                    <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' value={searchInput} onChange={handleInputSearch} />
+                    <SearchBtn onClick={handleSearch} type="submit" className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
                 </ManageProjectsInputs>
 
             <ManageAdminHeaderpage />
 
-            {isLoading && <h2>Loading...</h2>}
-                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-                    
-                    {data && data.map((project) => (
+
+{searchResults.length > 0 && (
+                <Wrapper>
+                    {searchResults.map((project) => (
                         <MangeEmloyeeCard
+                        key={project.staffId}
+                        staffId={project.staffId}
+                        firstName={project.firstName}
+                        email={project.email}
+                        phoneNo={project.phoneNo}
+                        imgSrc={project.imgSrc}
+                        onClick={(staffId) => console.log(staffId)}
+                    />
+                    ))}
+                </Wrapper>
+            )}
+                    
+                     {/* Display all data if no search or if search results are empty */}
+            {!searchResults.length && (
+                <Wrapper>
+                    {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    {data &&
+                        data.map((project) => (
+                            <MangeEmloyeeCard
                             key={project.staffId}
                             staffId={project.staffId}
                             firstName={project.firstName}
@@ -386,7 +427,9 @@ const ManageEmployees = () => {
                             imgSrc={project.imgSrc}
                             onClick={(staffId) => console.log(staffId)}
                         />
-                    ))}
+                        ))}
+                </Wrapper>
+            )}
 
 
             

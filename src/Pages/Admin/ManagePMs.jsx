@@ -253,23 +253,9 @@ const ButtonSky100 = styled.button`
 
 const ManagePMs = () => {
     //React Hook Form
-    // const validationSchema = yup.object().shape({
-    //     firstName: yup.string().required('First Name is required'),
-    //     email: yup.string().email('Please enter a valid email').required('Email is required'),
-    //     lastName: yup.string().required('Last Name is required'),
-    //     password: yup.string().required('Password is required'),
-    //     confirmPassUser: yup
-    //         .string()
-    //         .required('Password confirmation is required')
-    //         .oneOf([yup.ref('passwordUser'), null], 'Passwords must match'),
-    //         phoneNo: yup.string().required('Phone number is required'),
-    // });
+    
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-
-    // const {register, handleSubmit, formState: {errors}} = useForm({
-    //     resolver: yupResolver(validationSchema),
-    // });
     //End of React Hook Form
 
     // const onSubmit = (data) => {
@@ -300,8 +286,6 @@ const ManagePMs = () => {
 
 
     // post data
-
-    /// try
     const [post, setPost] = useState({
         firstName: '',
         lastName: '',
@@ -334,38 +318,26 @@ const ManagePMs = () => {
             console.error('Error:', error);
         }
     };
-    // *********************
 
-    const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
-        mutationFn: ()=>createNewPMs(),
-        onSuccess: () => {
-            // to refatch the data
-            queryClient.invalidateQueries({queryKey:['pms']});
-            console.log("sucsess");
-        },onError: (error) => {
-            console.error("Error:", error);
-            // Handle error as needed
-        },
-    })
-    
-    async function handleSubmitAddNewProject(formData) {
-        formData.preventDefault()
-        try {
-            await mutate({
-                firstName: formData.firstNameUser,
-                lastName: formData.lastNameUser,
-                email: formData.emailUser,
-                password: formData.passwordUser,
-                phoneNo: formData.phoneNumberUser,
-            });
-        } catch (error) {
-            console.error('Error:', error);
-        }
+    // *********************search*****************
+    const [searchInput, setSearchInput] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
-    }
+    const handleSearch = () => {
+        // Implement your search logic here
+        const filteredResults = data.filter(
+            (project) =>
+                String(project.staffId) === searchInput ||
+                project.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                project.email.toLowerCase().includes(searchInput.toLowerCase())
+        );
     
-    
-    
+        setSearchResults(filteredResults);
+    };
+
+    const handleInputSearch = (event) => {
+        setSearchInput(event.target.value);
+    };
 
     return (
         <MangeProjectWrapper>
@@ -378,18 +350,18 @@ const ManagePMs = () => {
             <ManageProjectsInputs>
                 <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New PM</Button>
                     <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' />
-                    <SearchBtn className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail'  value={searchInput} onChange={handleInputSearch} />
+                    <SearchBtn className="searchButton" onClick={handleSearch}><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
                 </ManageProjectsInputs>
 
             <AdminMangeHeader />
 
 
-            {isLoading && <h2>Loading...</h2>}
-                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-                    
-                    {data && data.map((project) => (
+                    {/* Display search results if available */}
+            {searchResults.length > 0 && (
+                <Wrapper>
+                    {searchResults.map((project) => (
                         <AdminManagePMSCARD
                             key={project.staffId}
                             staffId={project.staffId}
@@ -400,7 +372,28 @@ const ManagePMs = () => {
                             onClick={(staffId) => console.log(staffId)}
                         />
                     ))}
+                </Wrapper>
+            )}
                     
+                     {/* Display all data if no search or if search results are empty */}
+            {!searchResults.length && (
+                <Wrapper>
+                    {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    {data &&
+                        data.map((project) => (
+                            <AdminManagePMSCARD
+                                key={project.staffId}
+                                staffId={project.staffId}
+                                firstName={project.firstName}
+                                email={project.email}
+                                phoneNo={project.phoneNo}
+                                imgSrc={project.imgSrc}
+                                onClick={(staffId) => console.log(staffId)}
+                            />
+                        ))}
+                </Wrapper>
+            )}
             
             </Wrapper>
         </MangeProjectPage>

@@ -351,20 +351,25 @@ const ManageAdmins = () => {
 
     console.log(data)
 
-    // for search input***************************************
-    const searchElement = useRef();
-  const [searchTerm, setSearchTerm] = useState('');
+    // *********************search*****************
+    const [searchInput, setSearchInput] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
-  const { data: searchData, isPending: searchIsPending, isError: searchIsError, error: searchError } = useQuery({
-    queryKey: ['admins', { search: searchTerm }],
-    queryFn: ({ signal }) => fetchAdmins({ signal, searchTerm }),
-  });
+    const handleSearch = () => {
+        // Implement your search logic here
+        const filteredResults = data.filter(
+            (project) =>
+                String(project.staffId) === searchInput ||
+                project.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                project.email.toLowerCase().includes(searchInput.toLowerCase())
+        );
+    
+        setSearchResults(filteredResults);
+    };
 
-  function handleSubmitSearch(event) {
-    event.preventDefault();
-    setSearchTerm(searchElement.current.value);
-    console.log('search');
-}
+    const handleInputSearch = (event) => {
+        setSearchInput(event.target.value);
+    };
 
     return (
     <ManageAdminsWrapper>
@@ -377,18 +382,40 @@ const ManageAdmins = () => {
                 <ManageProjectsInputs>
                 <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Admin</Button>
                     <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' ref={searchElement} />
-                    <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
+                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or e-mail' value={searchInput} onChange={handleInputSearch} />
+                    <SearchBtn onClick={handleSearch} type="submit" className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
                 </ManageProjectsInputs>
 
             <ManageAdminHeaderpage />
 
-            {isLoading && <h2>Loading...</h2>}
-                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
-                    
-                    {data && data.map((project) => (
+
+{searchResults.length > 0 && (
+                <Wrapper>
+                    {searchResults.map((project) => (
                         <ManageAdminCard
+                        key={project.staffId}
+                        id={project.staffId}
+                        staffId={project.staffId}
+                        firstName={project.firstName}
+                        email={project.email}
+                        startDate={project.startDate}
+                        phoneNo={project.phoneNo}
+                        imgSrc={project.imgSrc}
+                        onClick={(projectId) => console.log(projectId)}
+                    />
+                    ))}
+                </Wrapper>
+            )}
+                    
+                     {/* Display all data if no search or if search results are empty */}
+            {!searchResults.length && (
+                <Wrapper>
+                    {isLoading && <h2>Loading...</h2>}
+                    {isError && <h2>Error: {error.info?.message || 'Failed to fetch Projects.'}</h2>}
+                    {data &&
+                        data.map((project) => (
+                            <ManageAdminCard
                             key={project.staffId}
                             id={project.staffId}
                             staffId={project.staffId}
@@ -399,7 +426,9 @@ const ManageAdmins = () => {
                             imgSrc={project.imgSrc}
                             onClick={(projectId) => console.log(projectId)}
                         />
-                    ))}
+                        ))}
+                </Wrapper>
+            )}
             
             </Wrapper>
         </MangeProjectPage>
