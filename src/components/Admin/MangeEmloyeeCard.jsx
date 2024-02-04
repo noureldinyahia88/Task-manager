@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../Uitily/http/http';
 import { deleteEmployee } from '../Uitily/http/AdminApi/ManageEmployeesApi';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -314,6 +315,8 @@ const ButtonSky100 = styled.button`
 
 const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick}) => {
 
+    // const navagite = Navigate()
+
     //React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -335,10 +338,7 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         onClick(staffId);
     }
 
-    const handleclickUpdateForm = () => {
-        setUpdateFrom(!showUpdateForm)
-        setChoose(false)
-    }
+    
 
     const [cancel, setCancel] = useState(false)
     const confarimationHandleCancel = () => {
@@ -369,11 +369,14 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
         email: '',
         password: '',
         phoneNo: '',
-        img:'',
+        img:null,
     });
 
     const handleInput = (event) => {
         setPost({ ...post, [event.target.name]: event.target.value });
+    };
+    const handleInputImage = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.files[0] });
     };
 
     const handlePost = async (event, id) => {
@@ -410,7 +413,17 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
 
   setProjectId(staffId);
   onClick(staffId);
+  console.log(post);
+  setTimeout(() => {
+        window.location.reload();
+    }, 1500);
     };
+
+
+    const handleclickUpdateForm = () => {
+        setUpdateFrom(!showUpdateForm)
+        setChoose(false)
+    }
 
   return (
     <MangeProjectHeader>
@@ -435,7 +448,7 @@ const MangeEmloyeeCard = ({staffId, firstName, email, phoneNo, imgSrc, onClick})
                 <ImageWrapper>
                 <AdminImage src={adminImg} alt=''/>
                     <EditBtnWrapper>
-                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInput}  value={post.img} /><MdModeEditOutline style={{'font-size': '16px'}} />
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage}   /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
 

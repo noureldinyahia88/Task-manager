@@ -395,11 +395,15 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
         email: '',
         password: '',
         phoneNo: '',
-        img:'',
+        img:null,
     });
+    
 
     const handleInput = (event) => {
         setPost({ ...post, [event.target.name]: event.target.value });
+    };
+    const handleInputImage = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.files[0] });
     };
 
     const handlePost = async (event, id) => {
@@ -436,6 +440,8 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
 
   setProjectId(staffId);
   onClick(staffId);
+
+  console.log(post);
     };
 
 
@@ -463,7 +469,7 @@ const AdminManagePMSCARD = ({staffId, firstName, email, phoneNo, imgSrc, onClick
                 <ImageWrapper>
                     <AdminImage src={adminImg} alt=''/>
                     <EditBtnWrapper>
-                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInput}  value={post.img} /><MdModeEditOutline style={{'font-size': '16px'}} />
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage} /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
 

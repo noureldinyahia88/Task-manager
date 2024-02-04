@@ -61,7 +61,7 @@ const BtnsWrapper = styled.div`
     gap: 40px;
 
 `
-const Button = styled.button`
+const Button = styled(NavLink)`
     background-color: ${theme.sky50};
     width: 200px;
     height: 50px;
@@ -110,29 +110,41 @@ return (
         </AdminInfoWrapper>
         <BtnsWrapper>
     
-    <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
-        <Button className='active'><LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects</Button>
-    </NavLink>
+    <Button className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
+        
+            <LuLayoutGrid style={{fontSize:"16px"}} /> Manage Projects
+            
+    </Button>
 
-    <NavLink className="navLink" to="/manageAdmin" style={{ textDecoration: 'none' }}>
-        <Button><FaUserGroup style={{fontSize:"16px"}} /> Manage Admins</Button>
-    </NavLink>
+    <Button className="navLink" to="/manageAdmin" style={{ textDecoration: 'none' }}>
+        
+            <FaUserGroup style={{fontSize:"16px"}} /> Manage Admins
+            
+    </Button>
 
-    <NavLink className="navLink" to="/manageEmployees" style={{ textDecoration: 'none' }}>
-        <Button><MdGroups style={{fontSize:"16px"}} /> Manage Employees</Button>
-    </NavLink>
+    <Button className="navLink" to="/manageEmployees" style={{ textDecoration: 'none' }}>
+        
+            <MdGroups style={{fontSize:"16px"}} /> Manage Employees
+            
+    </Button>
 
-    <NavLink className="navLink" to="/managePMS" style={{ textDecoration: 'none' }}>
-        <Button><FaFolder style={{fontSize:"16px"}} /> Manage PMs</Button>
-    </NavLink>
+    <Button className="navLink" to="/managePMS" style={{ textDecoration: 'none' }}>
+        
+            <FaFolder style={{fontSize:"16px"}} /> Manage PMs
+        
+    </Button>
 
-    <NavLink className="navLink" to="/myAccountAdmin" style={{ textDecoration: 'none' }}>
-        <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
-    </NavLink>
+    <Button className="navLink" to="/myAccountAdmin" style={{ textDecoration: 'none' }}>
+        
+            <IoPersonSharp style={{fontSize:"20px"}} /> My Account
+        
+    </Button>
 
-    <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>
-        <Button onClick={logedout}><RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out</Button>
-    </NavLink>
+    
+        <Button onClick={logedout} to="/" style={{ textDecoration: 'none' , backgroundColor:'#F0F9FF', color:'#0D1C2E'}}>
+            <RiLogoutBoxLine style={{fontSize:"20px"}} /> Log Out
+            
+    </Button>
     </BtnsWrapper>
 
 

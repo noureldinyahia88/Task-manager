@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 
@@ -8,10 +8,9 @@ import { IoMdSearch } from "react-icons/io";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
 import { useForm } from 'react-hook-form';
-import  * as yup from 'yup';
-import {yupResolver} from '@hookform/resolvers/yup'
+
 import { MdModeEditOutline } from "react-icons/md";
-import placeHoderImage from '../../img/image-fill.png';
+import placeHoderImage from '../../img/placeholder.png';
 import { fetchAdmins } from '../../components/Uitily/http/AdminApi/ManageAdminsApi';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -262,7 +261,7 @@ const ImageWrapper = styled.div`
     width: 146px;
     height: 146px;
     border-radius: 50%;
-    background-color: #D1D5DB;
+    /* background-color: #D1D5DB; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -270,21 +269,28 @@ const ImageWrapper = styled.div`
 `
 
 const EditBtnWrapper = styled.div`
-    position: absolute;
+    position: relative;
     background-color: #F3F4F6;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    right: 7px;
-    bottom: 10px;
+    right: 24px;
+    bottom: -42px;
+    padding: 4px;
     display: grid;
     place-items: center;
+    cursor: pointer;
 `
-const EditBtn = styled.button`
+const EditBtn = styled.input`
     border: none;
     background-color: transparent;
     cursor: pointer;
+    color: transparent;
+    position: absolute;
+    left: -10px;
+    opacity: 0;
 `
+
 const OptionsWrapperParent = styled.div`
     display: flex;
     flex-direction: column;
@@ -317,9 +323,7 @@ const ManageAdmins = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     //End of React Hook Form
 
-    const onSubmit = (data) => {
-        console.log(data);
-    }
+
 
     const [showUpdateForm, setUpdateFrom] = useState(false)
     const [cancel, setCancel] = useState(false)
@@ -363,40 +367,72 @@ const ManageAdmins = () => {
         setSearchInput(event.target.value);
     };
 
-    // post data
+    
+    // ****************update******
+
+    const [adminType, setAdminType] = useState('');
+
+    
+
     const [post, setPost] = useState({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
-        phoneNo: '', 
-        global: 'true'
+        phoneNo: '',
+        global: '',
+        // img:null,
     });
 
     const handleInput = (event) => {
         setPost({ ...post, [event.target.name]: event.target.value });
     };
-
-    const handlePost = async (event) => {
-        event.preventDefault();
-        console.log(post);
-        try {
-            const response = await axios.post(
-                'http://3.126.203.127:8084/admins',
-                post,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
-            
-            console.log(response);
-        } catch (error) {
-            console.error('Error:', error);
-        }
+    const handleInputImage = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.files[0] });
     };
+    const handleAdminTypeChange = (event) => {
+        setAdminType(event.target.value);
+    };
+
+    const handlePost = async (e) => {
+        e.preventDefault();
+        // Create a FormData object
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+//   formData.append('img', post.img);
+
+  // Append the rest of the data to the FormData object
+  formData.append('firstName', post.firstName);
+  formData.append('lastName', post.lastName);
+  formData.append('email', post.email);
+  formData.append('password', post.password);
+  formData.append('global', post.global);
+  formData.append('phoneNo', post.phoneNo);
+
+  try {
+    const response = await axios.post(
+      `http://3.126.203.127:8084/admins`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  console.log(post);
+        window.location.reload();
+    };
+
+
+    
 
     return (
     <ManageAdminsWrapper>
@@ -461,7 +497,7 @@ const ManageAdmins = () => {
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handlePost}>
+        <Form onSubmit={(e) => handlePost(e)}>
 
         <InputFormWrapperParent>
         <InputformWrapper>
@@ -487,25 +523,38 @@ const ManageAdmins = () => {
 
         <FormHeadingWrapper>
         <OptionsWrapperParent>
-        <Label>Select Admin Type</Label>
-        <OptionsWrapper>
-            <RatioInput type='radio' name="adminType" value="global" />
-            <LabelForRatio htmlFor="global">Global</LabelForRatio>
-        </OptionsWrapper>
+            <Label>Select Admin Type</Label>
 
-        <OptionsWrapper>
-            <RatioInput type='radio' name="adminType" value="local" />
-            <LabelForRatio htmlFor="local">Local</LabelForRatio>
-        </OptionsWrapper>
-        
-        <Span>{errors.AdminType?.message}</Span>
-    </OptionsWrapperParent> 
+            <OptionsWrapper>
+                <RatioInput
+                    type='radio'
+                    name="adminType"
+                    value="global"
+                    onChange={handleAdminTypeChange}
+                    checked={adminType === 'global'}
+                />
+                <LabelForRatio htmlFor="global">Global</LabelForRatio>
+            </OptionsWrapper>
+
+            <OptionsWrapper>
+                <RatioInput
+                    type='radio'
+                    name="adminType"
+                    value="local"
+                    onChange={handleAdminTypeChange}
+                    checked={adminType === 'local'}
+                />
+                <LabelForRatio htmlFor="local">Local</LabelForRatio>
+            </OptionsWrapper>
+            
+            <Span>{errors.AdminType?.message}</Span>
+        </OptionsWrapperParent> 
 
 
                 <ImageWrapper>
-                    <AdminImage src={placeHoderImage} alt=''/>
+                <AdminImage src={placeHoderImage} alt=''/>
                     <EditBtnWrapper>
-                        <EditBtn><MdModeEditOutline style={{'font-size': '16px'}} /></EditBtn>
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage}   /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
             </FormHeadingWrapper>

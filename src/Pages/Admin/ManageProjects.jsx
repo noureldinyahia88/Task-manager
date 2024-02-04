@@ -354,6 +354,7 @@ useEffect(() => {
   }, [searchTerm]);
   
   let content;
+  let adminProjectCardCount = 0;
   
   const foundedProject = searchData?.find(item => item.projectId === parseInt(searchTerm, 10));
   const foundedProjectTitle = searchData?.find(item => item.title === searchTerm);
@@ -361,7 +362,6 @@ useEffect(() => {
   if (searchIsError) {
     content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Failed to fetch events.'} />;
   } else if (foundedProject) {
-    // If a project is found based on ID, display it
     content = (
       <AdminProjectCard
         key={foundedProject.projectId}
@@ -374,8 +374,8 @@ useEffect(() => {
         managerImg={foundedProject.managerImg}
       />
     );
+    adminProjectCardCount += 1; // Increment the counter
   } else if (foundedProjectTitle) {
-    // If a project is found based on title, display it
     content = (
       <AdminProjectCard
         key={foundedProjectTitle.projectId}
@@ -388,20 +388,23 @@ useEffect(() => {
         managerImg={foundedProjectTitle.managerImg}
       />
     );
+    adminProjectCardCount += 1; // Increment the counter
   } else if (searchData) {
-    // If no project is found but searchData exists, display the list of projects
-    content = searchData.map((event) => (
-      <AdminProjectCard
-        key={event.projectId}
-        id={event.projectId}
-        title={event.title}
-        description={event.description}
-        deadline={event.deadline}
-        progress={event.progress}
-        managerName={event.managerName}
-        managerImg={event.managerImg}
-      />
-    ));
+    content = searchData.map((event) => {
+      adminProjectCardCount += 1; // Increment the counter
+      return (
+        <AdminProjectCard
+          key={event.projectId}
+          id={event.projectId}
+          title={event.title}
+          description={event.description}
+          deadline={event.deadline}
+          progress={event.progress}
+          managerName={event.managerName}
+          managerImg={event.managerImg}
+        />
+      );
+    });
   } else {
     // Display loading or error for initial load
     content = (
@@ -410,8 +413,11 @@ useEffect(() => {
         {searchIsError && <h2>Error: {searchError.info?.message || 'Failed to fetch Projects.'}</h2>}
       </>
     );
+
+    
   }
 
+  console.log("ds",adminProjectCardCount);
     return (
 
     <MangeProjectWrapper>
@@ -419,7 +425,7 @@ useEffect(() => {
         <MangeProjectPage>
             <Header2>Manage Projects</Header2>
             <Wrapper >
-                <AdminProjectSummery />
+                <AdminProjectSummery adminProjectCardCount={adminProjectCardCount} />
             <WrapperChild>
                 <ManageProjectsInputs>
                     <FormWrapper >

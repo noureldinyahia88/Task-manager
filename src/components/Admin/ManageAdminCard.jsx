@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import manger from '../../img/manger.png'
 import { useForm } from 'react-hook-form';
-import  * as yup from 'yup';
-import {yupResolver} from '@hookform/resolvers/yup'
+import { MdModeEditOutline } from "react-icons/md";
 
 import adminImg from '../../img/adminpng.png'
 
@@ -11,7 +9,8 @@ import { IoSettings } from "react-icons/io5";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../Uitily/http/http';
-import { deleteAdmin, updateAdmin } from '../Uitily/http/AdminApi/ManageAdminsApi';
+import { deleteAdmin } from '../Uitily/http/AdminApi/ManageAdminsApi';
+import axios from 'axios';
 
 
 const theme = {
@@ -152,6 +151,27 @@ const FormHeadingWrapper = styled.div`
 `
 const ImageWrapper = styled.div`
     padding-top: 15px;
+    position: relative;
+`
+const EditBtnWrapper = styled.div`
+    position: absolute;
+    background-color: #F3F4F6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    right: 5px;
+    bottom: 26px;
+    display: grid;
+    place-items: center;
+`
+const EditBtn = styled.input`
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: transparent;
+    position: absolute;
+    left: -10px;
+    opacity: 0;
 `
 const AdminImage = styled.img`
     border-radius: 50%;
@@ -340,21 +360,63 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
         }, 1000);
     }
 
-    // update admin
-    const { mutate: updateMutate  } = useMutation({
-        mutationFn: updateAdmin,
-    })
+    // ****************update******
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '',
+        img:null,
+    });
+    
 
-    function handleSubmitUpdate(formData) {
-        updateMutate({id: projectId, 
-            firstName: formData.fristName,
-            email: formData.email,
-            password: formData.pass,
-            lastName: formData.lastName
-        })
-        setUpdateFrom(!showUpdateForm)
-        setChoose(false)
-    }
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+    const handleInputImage = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.files[0] });
+    };
+
+    const handlePost = async (event, id) => {
+        event.preventDefault();
+        // Create a FormData object
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+  formData.append('img', post.img);
+
+  // Append the rest of the data to the FormData object
+  formData.append('firstName', post.firstName);
+  formData.append('lastName', post.lastName);
+  formData.append('email', post.email);
+  formData.append('password', post.password);
+  formData.append('phoneNo', post.phoneNo);
+
+  try {
+    const response = await axios.put(
+      `http://3.126.203.127:8084/admins/${id}`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+    setProjectId(staffId);
+    onClick(staffId);
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 1500);
+    };
 
     return (
     <MangeAdminsHeader>
@@ -372,37 +434,41 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
         
         
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={(e) => handlePost(e, projectId)}>
 
-            <FormHeadingWrapper>
+        <FormHeadingWrapper>
                 <ImageWrapper>
                     <AdminImage src={adminImg} alt=''/>
+                    <EditBtnWrapper>
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage} /><MdModeEditOutline style={{'font-size': '16px'}} />
+                    </EditBtnWrapper>
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
             <FormHeading2>{firstName}</FormHeading2>
-            <AdminId>ID: #{id}</AdminId>
-            <TypeOfAdmin>Global Admin</TypeOfAdmin>
+            <AdminId>ID: #{staffId}</AdminId>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
-        <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' name='fristName' id='fristName' {...register("fristName")} />
-        <Span>{errors.title?.message}</Span>
+        <Label htmlFor="firstName">First Name</Label>
+        <Input type="text" name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName}/>
+                {errors?.firstName && (
+            <span>{errors.firstName.message}</span>
+        )}
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' name='email' id='email' {...register("email")} />
-        <Span>{errors.id?.message}</Span>
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
+        <Span>{errors.id?.message}</Span> 
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
-        <Input type='clender' placeholder='Enter your new password'name='pass' id='pass' {...register("pass")}/>
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}  />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -412,19 +478,19 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' name='lastName' id='lastName' {...register("lastName")} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number'name='phoneNum' id='phoneNum' {...register("phoneNum")} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
-        <Input type='clender' placeholder='Confirm your new password' name='confirmPass' id='confirmPass' {...register("confirmPass")}/>
+        <Input type="text" placeholder='Confirm your new password'/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
@@ -434,15 +500,15 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
 
         <FormWrapperBtns>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type="submit" onClick={handleSubmitUpdate}>Save</ButtonSky400>
+            <ButtonSky400  type="submit">Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky400  onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky400 type="reset"  onClick={confarimationHandleCancel}>No</ButtonSky400>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         {/* End Of confirm cancel */}

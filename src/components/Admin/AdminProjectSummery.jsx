@@ -108,7 +108,7 @@ const CardContent = styled.div`
     justify-content: center;
 `
 
-const AdminProjectSummery = () => {
+const AdminProjectSummery = ({adminProjectCardCount}) => {
     return (
     <Wrapper>
         <Card>
@@ -120,7 +120,7 @@ const AdminProjectSummery = () => {
                 </ImgWrapper>
                 </ImgwrapperParent>
             <P>All Projects</P>
-            <Header2>50</Header2>
+            <Header2>{adminProjectCardCount}</Header2>
             </CardContent>
             <Leftframe></Leftframe>
         </Card>
