@@ -24,41 +24,11 @@ export const queryClient = new QueryClient();
 //     }
 // }
 
-export async function fetchEvent({ signal, searchTerm }) {
+export async function fetchEvent() {
 
-  // let url = 'http://3.126.203.127:8084/projects'
-  // if(searchTerm){
-  //   url += '?search' + searchTerm
-  // }
-  // try {
-  //   const response = await fetch(url,{signal: signal}, {
-  //     method: 'GET',
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`,
-  //     },
-  //   });
-
-  //   if (!response.ok) {
-  //     // Handle non-successful responses here
-  //     throw new Error(`HTTP error! Status: ${response.status}`);
-  //   }
-
-  //   return response.json();
-  // } catch (error) {
-  //   console.error('Error fetching projects:', error);
-  //   // Handle other errors here
-  //   throw error;
-  // }
   let url = 'http://3.126.203.127:8084/projects';
-
-  if (searchTerm) {
-    url += url.includes('?') ? `&search=${searchTerm}` : `?search=${searchTerm}`;
-  }
-
-  // console.log(searchTerm);
   try {
     const response = await fetch(url, {
-      signal: signal,
       method: 'GET',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

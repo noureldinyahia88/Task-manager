@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import grid from '../../img/grid.svg'
@@ -14,6 +14,7 @@ import { IoPersonSharp } from "react-icons/io5";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { LuLayoutGrid } from "react-icons/lu";
 import { NavLink } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
 
 
 
@@ -95,10 +96,17 @@ const Button = styled(NavLink)`
 
 const AdminSidebar = () => {
 
+    const [name, setName] = useState()
+    const [imgeProfile, setImageProifile] = useState()
+
+    useEffect(() => {
+    setName(jwtDecode(localStorage.getItem('token')).name)
+    setImageProifile(jwtDecode(localStorage.getItem('token')).image)
+    }, [name,imgeProfile])
+
     const logedout = () => {
         localStorage.removeItem('token')
     }
-    
 return (
     <SidebarWrapper>
         <LogoWrapper>
@@ -106,7 +114,7 @@ return (
         </LogoWrapper>
         <AdminInfoWrapper>
         <AdminImg src={adminImg} alt='' />
-        <Header3>Vivian R.  Lloyd</Header3>
+        <Header3>{name}</Header3>
         </AdminInfoWrapper>
         <BtnsWrapper>
     

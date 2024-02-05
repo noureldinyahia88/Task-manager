@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 import adminImg from '../../img/adminpng.png'
@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 
 
@@ -277,17 +279,18 @@ const ImageWrapper = styled.div`
 
 const MyAccountAdmin = () => {
 
-    //React Hook Form
-    const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.date().required("Please Enter a valid date")
-    });
+    const [name, setName] = useState()
+    const [imgeProfile, setImageProifile] = useState()
+    const [sub, setSub] = useState()
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    useEffect(() => {
+    setName(jwtDecode(localStorage.getItem('token')).name)
+    setImageProifile(jwtDecode(localStorage.getItem('token')).image)
+    setSub(jwtDecode(localStorage.getItem('token')).sub)
+    }, [name,imgeProfile,sub])
+
+    //React Hook Form
+    const { register, handleSubmit, formState: { errors } } = useForm();
     //End of React Hook Form
 
     const onSubmit = (data) => {
@@ -308,6 +311,62 @@ const MyAccountAdmin = () => {
         setCancel(!cancel)
     }
     
+
+    const [post, setPost] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '',
+        img:null,
+    });
+    
+
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    };
+    const handleInputImage = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.files[0] });
+    };
+
+    const handlePost = async (event, id) => {
+        event.preventDefault();
+        // Create a FormData object
+  const formData = new FormData();
+
+  // Append the file to the FormData object
+  formData.append('img', post.img);
+
+  // Append the rest of the data to the FormData object
+  formData.append('firstName', post.firstName);
+  formData.append('lastName', post.lastName);
+  formData.append('email', post.email);
+  formData.append('password', post.password);
+  formData.append('phoneNo', post.phoneNo);
+
+  try {
+    const response = await axios.put(
+      `http://3.126.203.127:8084/admins/${id}`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+//   setProjectId(staffId);
+//   onClick(sub);
+
+  console.log(post);
+    };
+
     return (
         <ManageAdminsWrapper>
         <AdminSidebar />
@@ -316,7 +375,7 @@ const MyAccountAdmin = () => {
             <Header2>My Profile</Header2>
         </MangeProjectPage>
 
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form  onSubmit={(e) => handlePost(e, sub)}>
 
         <FormHeadingWrapper>
                 <ImageWrapper>
@@ -324,8 +383,8 @@ const MyAccountAdmin = () => {
                 </ImageWrapper>
 
                 <AdminheaderDeatials>
-            <FormHeading2>Vivian R.  Lloyd</FormHeading2>
-            <AdminId>ID: #7821</AdminId>
+            <FormHeading2>{name}</FormHeading2>
+            <AdminId>ID: #{sub}</AdminId>
                 </AdminheaderDeatials>
             </FormHeadingWrapper>
 
@@ -333,19 +392,19 @@ const MyAccountAdmin = () => {
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
-        <Input type='text' placeholder='Enter your first name' {...register("title")} />
+        <Input type="text" placeholder='Enter your first name' name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
-        <Input type='email' placeholder='Enter your e-mail' {...register("id")} />
+        <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
         <Span>{errors.id?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Password</Label>
-        <Input type='clender' placeholder='Enter your password' {...register("date")}/>
+        <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
 
@@ -355,13 +414,13 @@ const MyAccountAdmin = () => {
 
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
-        <Input type='text' placeholder='Enter your last name' {...register("description")} />
+        <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
-        <Input type='text' placeholder='Enter Phone Number' {...register("description")} />
+        <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
         <Span>{errors.description?.message}</Span>
         </InputWrapper>
 
@@ -369,7 +428,7 @@ const MyAccountAdmin = () => {
 
         </InputFormWrapperParent>
                 <ManageProjectsInputs>
-                <Button className='blueBtn' onClick={handleclickUpdateForm}>Update</Button>
+                <Button className='blueBtn' type="submit">Update</Button>
                 </ManageProjectsInputs>
         </Form>
         </MyAcountPageWarpper>

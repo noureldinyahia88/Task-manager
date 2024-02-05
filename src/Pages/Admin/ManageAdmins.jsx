@@ -331,6 +331,9 @@ const ManageAdmins = () => {
     const handleclickUpdateForm = () => {
         setUpdateFrom(!showUpdateForm)
         setCancel(false)
+        setTimeout(() => {
+            window.location.reload()
+        }, 1000);
     }
 
     // for confirmation function
@@ -368,12 +371,7 @@ const ManageAdmins = () => {
     };
 
     
-    // ****************update******
-
-    const [adminType, setAdminType] = useState('');
-
-    
-
+    // ****************update**********
     const [post, setPost] = useState({
         firstName: '',
         lastName: '',
@@ -381,7 +379,7 @@ const ManageAdmins = () => {
         password: '',
         phoneNo: '',
         global: '',
-        // img:null,
+        img:null,
     });
 
     const handleInput = (event) => {
@@ -391,45 +389,54 @@ const ManageAdmins = () => {
         setPost({ ...post, [event.target.name]: event.target.files[0] });
     };
     const handleAdminTypeChange = (event) => {
-        setAdminType(event.target.value);
+        const { name, value } = event.target;
+    
+    // Update global property based on adminType value
+    const globalValue = value === 'global' ? 'true' : 'false';
+
+    setPost((prevPost) => ({
+        ...prevPost,
+        [name]: value,
+        global: globalValue,
+    }));
+
     };
 
     const handlePost = async (e) => {
         e.preventDefault();
         // Create a FormData object
-  const formData = new FormData();
+        const formData = new FormData();
 
-  // Append the file to the FormData object
-//   formData.append('img', post.img);
+        // Append the file to the FormData object
+        formData.append('img', post.img);
 
-  // Append the rest of the data to the FormData object
-  formData.append('firstName', post.firstName);
-  formData.append('lastName', post.lastName);
-  formData.append('email', post.email);
-  formData.append('password', post.password);
-  formData.append('global', post.global);
-  formData.append('phoneNo', post.phoneNo);
+        // Append the rest of the data to the FormData object
+        formData.append('firstName', post.firstName);
+        formData.append('lastName', post.lastName);
+        formData.append('email', post.email);
+        formData.append('password', post.password);
+        formData.append('global', post.global);
+        formData.append('phoneNo', post.phoneNo);
 
-  try {
-    const response = await axios.post(
-      `http://3.126.203.127:8084/admins`,
-      formData,
-      {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
+        try {
+            const response = await axios.post(
+            `http://3.126.203.127:8084/admins`,
+            formData,
+            {
+                headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data',
+                },
+            }
+            );
 
-    console.log(response);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-
-  console.log(post);
-        window.location.reload();
-    };
+            console.log(response);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+            console.log(post);
+            handleclickUpdateForm()
+};
 
 
     
@@ -497,7 +504,7 @@ const ManageAdmins = () => {
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={(e) => handlePost(e)}>
+        <Form >
 
         <InputFormWrapperParent>
         <InputformWrapper>
@@ -519,36 +526,36 @@ const ManageAdmins = () => {
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
-
-
         <FormHeadingWrapper>
+
         <OptionsWrapperParent>
-            <Label>Select Admin Type</Label>
+        <Label>Select Admin Type</Label>
 
-            <OptionsWrapper>
-                <RatioInput
-                    type='radio'
-                    name="adminType"
-                    value="global"
-                    onChange={handleAdminTypeChange}
-                    checked={adminType === 'global'}
-                />
-                <LabelForRatio htmlFor="global">Global</LabelForRatio>
-            </OptionsWrapper>
+        <OptionsWrapper>
+          <RatioInput
+            type="radio"
+            {...register('adminType', { required: 'Admin Type is required' })}
+            value="global"
+            checked={post.adminType  === 'global'}
+            onChange={handleAdminTypeChange}
+          />
+          <LabelForRatio htmlFor="global">Global</LabelForRatio>
+        </OptionsWrapper>
 
-            <OptionsWrapper>
-                <RatioInput
-                    type='radio'
-                    name="adminType"
-                    value="local"
-                    onChange={handleAdminTypeChange}
-                    checked={adminType === 'local'}
-                />
-                <LabelForRatio htmlFor="local">Local</LabelForRatio>
-            </OptionsWrapper>
-            
-            <Span>{errors.AdminType?.message}</Span>
-        </OptionsWrapperParent> 
+        <OptionsWrapper>
+          <RatioInput
+            type="radio"
+            {...register('adminType', { required: 'Admin Type is required' })}
+            value="local"
+            checked={post.adminType  === 'local'}
+            onChange={handleAdminTypeChange}
+          />
+          <LabelForRatio htmlFor="local">Local</LabelForRatio>
+        </OptionsWrapper>
+
+
+        <Span>{errors.adminType?.message}</Span>
+      </OptionsWrapperParent>
 
 
                 <ImageWrapper>
@@ -586,7 +593,7 @@ const ManageAdmins = () => {
 
         <FormWrapperBtns>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type="submit">Save</ButtonSky400>
+            <ButtonSky400  onClick={handlePost}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>

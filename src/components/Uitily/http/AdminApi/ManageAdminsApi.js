@@ -1,7 +1,7 @@
 // get Admins
 export async function fetchAdmins() {
 
-  let url = 'http://3.126.203.127:8084/employees'
+  let url = 'http://3.126.203.127:8084/admins'
   // if (searchTerm) {
   //   url += url.includes('?') ? `&search=${searchTerm}` : `?search=${searchTerm}`;
   // }

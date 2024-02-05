@@ -44,7 +44,8 @@ const MangeProjectPage = styled.div`
     padding: 20px 60px 20px 60px;
 `
 const Wrapper = styled.div`
-margin-top: 50px;
+    margin-top: 50px;
+
 `
 const WrapperChild = styled.div`
 margin-top: 50px;
@@ -312,16 +313,17 @@ const ManageProjects = () => {
     // and new project project
 
     const {mutate, isPending} = useMutation({
-        mutationFn: createNewProject,
+        mutationFn:()=> createNewProject(),
         onSuccess: () => {
             // to refatch the data
             queryClient.invalidateQueries({queryKey:['data']});
             console.log("sucsess");
-            Navigate('/')
+            // Navigate('/')
         }
     })
 
-    async function handleSubmitAddNewProject(formData){
+    async function handleSubmitAddNewProject( formData){
+        // e.preventDefault()
     mutate({
         title: formData.title,
         description: formData.description,
@@ -345,51 +347,18 @@ const ManageProjects = () => {
     console.log('search');
 }
 
-useEffect(() => {
-    // Fetch data based on the updated searchTerm
-    // Ensure that the searchTerm is not an empty string before triggering the search
-    if (searchTerm.trim() !== '') {
-      // Fetch data here
-    }
-  }, [searchTerm]);
+// useEffect(() => {
+//     // Fetch data based on the updated searchTerm
+//     // Ensure that the searchTerm is not an empty string before triggering the search
+//     if (searchTerm.trim() !== '') {
+//       // Fetch data here
+//     }
+//   }, [searchTerm]);
   
   let content;
   let adminProjectCardCount = 0;
   
-  const foundedProject = searchData?.find(item => item.projectId === parseInt(searchTerm, 10));
-  const foundedProjectTitle = searchData?.find(item => item.title === searchTerm);
-  
-  if (searchIsError) {
-    content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Failed to fetch events.'} />;
-  } else if (foundedProject) {
-    content = (
-      <AdminProjectCard
-        key={foundedProject.projectId}
-        id={foundedProject.projectId}
-        title={foundedProject.title}
-        description={foundedProject.description}
-        deadline={foundedProject.deadline}
-        progress={foundedProject.progress}
-        managerName={foundedProject.managerName}
-        managerImg={foundedProject.managerImg}
-      />
-    );
-    adminProjectCardCount += 1; // Increment the counter
-  } else if (foundedProjectTitle) {
-    content = (
-      <AdminProjectCard
-        key={foundedProjectTitle.projectId}
-        id={foundedProjectTitle.projectId}
-        title={foundedProjectTitle.title}
-        description={foundedProjectTitle.description}
-        deadline={foundedProjectTitle.deadline}
-        progress={foundedProjectTitle.progress}
-        managerName={foundedProjectTitle.managerName}
-        managerImg={foundedProjectTitle.managerImg}
-      />
-    );
-    adminProjectCardCount += 1; // Increment the counter
-  } else if (searchData) {
+  if (searchData) {
     content = searchData.map((event) => {
       adminProjectCardCount += 1; // Increment the counter
       return (
@@ -417,7 +386,7 @@ useEffect(() => {
     
   }
 
-  console.log("ds",adminProjectCardCount);
+  
     return (
 
     <MangeProjectWrapper>
@@ -428,7 +397,7 @@ useEffect(() => {
                 <AdminProjectSummery adminProjectCardCount={adminProjectCardCount} />
             <WrapperChild>
                 <ManageProjectsInputs>
-                    <FormWrapper >
+                    <FormWrapper>
                     <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' ref={searchElement} />
                     <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton">Go</SearchBtn>
                     </FormWrapper>
@@ -446,7 +415,7 @@ useEffect(() => {
 
 {/* ********************Add New Project form************** */}
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form >
+        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
         <FormHeading2>Add a new Project</FormHeading2>
 
         <InputFormWrapperParent>
@@ -491,7 +460,7 @@ useEffect(() => {
                         
                             <FormWrapperBtns>
                             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-                            <ButtonSky400  type="submit" onClick={handleSubmitAddNewProject}>Save</ButtonSky400>
+                            <ButtonSky400  type="submit" >Save</ButtonSky400>
                         </FormWrapperBtns>
                     
     
