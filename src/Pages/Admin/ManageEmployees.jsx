@@ -329,31 +329,7 @@ const ManageEmployees = () => {
         queryFn: () => fetchEmployees(),
         staleTime: 5000,
     })
-
-
-
-
-    // post data
-    // const {mutate, isPending, isError: PostIsError, error: PostError} = useMutation({
-    //     mutationFn: createNewEmlployee,
-    //     onSuccess: () => {
-    //         // to refatch the data
-    //         queryClient.invalidateQueries({queryKey:['pms']});
-    //         console.log("sucsess");
-    //     }
-    // })
     
-    // async function handleSubmitAddNewProject(formData){
-    //     await mutate({
-    //         firstName: formData.FirstName,
-    //         lastName: formData.lastName,
-    //         email: formData.email,
-    //         password: formData.password,
-    //         confirmPass: formData.confirmPass,
-    //         phoneNo: formData.phoneNumber
-    //     })
-    // }
-
     // post data
     const [post, setPost] = useState({
         firstName: '',

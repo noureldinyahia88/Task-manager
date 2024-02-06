@@ -4,9 +4,7 @@ import AdminSidebar from '../../components/Admin/AdminSidebar'
 import adminImg from '../../img/adminpng.png'
 
 import { useForm } from 'react-hook-form';
-import  * as yup from 'yup';
-import {yupResolver} from '@hookform/resolvers/yup'
-import { AiFillEyeInvisible } from "react-icons/ai";
+import { MdModeEditOutline } from "react-icons/md";
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
@@ -92,7 +90,7 @@ const Button = styled.button`
 `
 
 const Form = styled.form`
-    /* max-width: 1050px; */
+    max-width: 1250px;
     display: flex;
     flex-direction: column;
     border-radius: 40px;
@@ -104,7 +102,7 @@ const FormHeadingWrapper = styled.div`
     align-items: center;
     border-bottom: 1px solid ${theme.inputColor};
     padding-bottom: 15px;
-    gap: 20px;
+    /* gap: 20px; */
     margin-bottom: 70px;
 `
 const AdminImage = styled.img`
@@ -224,56 +222,35 @@ const InputWrapper = styled.div`
     position: relative;
 `
 
-const Header2confirmation = styled.h2`
-    font-size: 30px;
-    font-weight: bold;
-    color: #463F3F;
-    border-bottom: 1px solid ${theme.black};
-    padding-bottom: 15px;
-    width: 100%;
-    margin: 0;
-`
-const ConfimationBtnsWrapper = styled.div`
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-`
 const Span = styled.span`
     color: red;
 
-`
-
-const ButtonSky400 = styled.button`
-    border: none;
-    border-radius: 10px;
-    width: 150px;
-    height: 50px;
-    background-color: #E0F2FE;
-    color: ${theme.gray800};
-    font-size: 20px;
-    font-size: bold;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    cursor: pointer;
-    z-index: 100;
-`
-const ButtonSky100 = styled.button`
-    border-radius: 10px;
-    border: none;
-    width: 150px;
-    height: 50px;
-    background-color: #38BDF8;
-    color: ${theme.gray800};
-    font-size: 20px;
-    font-size: bold;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    cursor: pointer;
-    z-index: 100;
 `
 const ImageWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+`
+const EditBtnWrapper = styled.div`
+    position: relative;
+    background-color: #F3F4F6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    right: 34px;
+    bottom: -18px;
+    display: grid;
+    place-items: center;
+`
+const EditBtn = styled.input`
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: transparent;
+    position: absolute;
+    left: -10px;
+    opacity: 0;
 `
 
 
@@ -318,7 +295,7 @@ const MyAccountAdmin = () => {
         email: '',
         password: '',
         phoneNo: '',
-        img:null,
+        // img:null,
     });
     
 
@@ -335,7 +312,7 @@ const MyAccountAdmin = () => {
   const formData = new FormData();
 
   // Append the file to the FormData object
-  formData.append('img', post.img);
+//   formData.append('img', post.img);
 
   // Append the rest of the data to the FormData object
   formData.append('firstName', post.firstName);
@@ -380,6 +357,9 @@ const MyAccountAdmin = () => {
         <FormHeadingWrapper>
                 <ImageWrapper>
                     <AdminImage src={adminImg} alt=''/>
+                    <EditBtnWrapper>
+                        <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage} /><MdModeEditOutline style={{'font-size': '16px'}} />
+                    </EditBtnWrapper>
                 </ImageWrapper>
 
                 <AdminheaderDeatials>

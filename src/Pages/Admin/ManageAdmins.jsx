@@ -331,9 +331,9 @@ const ManageAdmins = () => {
     const handleclickUpdateForm = () => {
         setUpdateFrom(!showUpdateForm)
         setCancel(false)
-        setTimeout(() => {
-            window.location.reload()
-        }, 1000);
+        // setTimeout(() => {
+        //     window.location.reload()
+        // }, 1000);
     }
 
     // for confirmation function
