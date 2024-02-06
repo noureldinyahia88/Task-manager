@@ -94,11 +94,13 @@ export async function createNewProject(projectData) {
     const { newproject } = await response.json();
 
 
+    console.log(projectData);
     return newproject;
   } catch (error) {
     console.error('Unexpected error:', error);
     throw error;
   }
+  
 }
 
 
@@ -114,7 +116,7 @@ export async function Login(userData) {
       body: JSON.stringify(userData),
     });
   
-    if (!response.status === 200) {
+    if (!response.ok) {
       const error = new Error('An error occurred while fetching the token');
       error.code = response.status;
       error.info = await response.json();

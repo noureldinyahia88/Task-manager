@@ -3,19 +3,19 @@ import AdminSidebar from '../../components/Admin/AdminSidebar'
 import AdminProjectCard from '../../components/Admin/AdminProjectCard'
 import styled from 'styled-components'
 import AdminProjectSummery from '../../components/Admin/AdminProjectSummery'
-
-import { FaCalendarMinus } from "react-icons/fa6";
 import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup'
+import { FaCalendarMinus } from "react-icons/fa6";
+// import { useForm } from 'react-hook-form';
+
 import AdminMangeHeader from '../../components/Admin/AdminMangeProjectHeader'
 
 import { useQuery } from '@tanstack/react-query';
 import { createNewProject, fetchEvent, queryClient } from '../../components/Uitily/http/http'
 
 import { useMutation } from '@tanstack/react-query'
-import { Navigate } from 'react-router'
-import { Link } from 'react-router-dom'
+
 
 
 
@@ -271,8 +271,8 @@ const LoadingIndicator = styled.div`
 `
 
 const ManageProjects = () => {
+    // React Hook Form
 
-    //React Hook Form
     const validationSchema = yup.object().shape({
         title: yup.string().required("Title is required"),
         id: yup.number().positive().integer().required("Please Enter a valid ID"),
@@ -283,55 +283,50 @@ const ManageProjects = () => {
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
     });
-    //End of React Hook Form
-
-    const onSubmit = (data) => {
-        console.log(data);
-    }
-
-    const [showUpdateForm, setUpdateFrom] = useState(false)
-    const [cancel, setCancel] = useState(false)
-
+  
+  
+    const [showUpdateForm, setUpdateFrom] = useState(false);
+    const [cancel, setCancel] = useState(false);
+  
     const handleclickUpdateForm = () => {
-        setUpdateFrom(!showUpdateForm)
-        setCancel(false)
-    }
-
-    // for confirmation function
-    
+      setUpdateFrom(!showUpdateForm);
+      setCancel(false);
+    };
+  
     const confarimationHandleCancel = () => {
-        setCancel(!cancel)
-    }
-
-// fetch the project
-    const { data, isLoading, isError, error  }  = useQuery({
-        queryKey: ['data'],
-        queryFn: () => fetchEvent(),
-        staleTime: 5000,
-    })
-
-    // and new project project
-
-    const {mutate, isPending} = useMutation({
-        mutationFn:()=> createNewProject(),
-        onSuccess: () => {
-            // to refatch the data
-            queryClient.invalidateQueries({queryKey:['data']});
-            console.log("sucsess");
-            // Navigate('/')
+      setCancel(!cancel);
+    };
+  
+    const { data, isLoading, isError, error } = useQuery({
+      queryKey: ['data'],
+      queryFn: () => fetchEvent(),
+      staleTime: 5000,
+    });
+  // add a new project
+    const { mutate, isPending } = useMutation({
+      mutationFn: createNewProject,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['data'] });
+        console.log('success');
+        handleclickUpdateForm()
+      },
+    });
+  
+    async function handleSubmitAddNewProject(formData) {
+        try {
+             await mutate({
+              title: formData.title,
+              description: formData.description,
+              deadline: formData.date,
+              managerID: formData.id,
+            });
+        } catch (error) {
+            console.error('Mutation error:', error);
         }
-    })
-
-    async function handleSubmitAddNewProject( formData){
-        // e.preventDefault()
-    mutate({
-        title: formData.title,
-        description: formData.description,
-        deadline: formData.date,
-        managerID: formData.id
-})
+     // Assuming 'result' contains the data from the mutation
     }
 
+//   ****search*******
     // for search input***************************************
     const searchElement = useRef();
   const [searchTerm, setSearchTerm] = useState('');
@@ -347,33 +342,65 @@ const ManageProjects = () => {
     console.log('search');
 }
 
-// useEffect(() => {
-//     // Fetch data based on the updated searchTerm
-//     // Ensure that the searchTerm is not an empty string before triggering the search
-//     if (searchTerm.trim() !== '') {
-//       // Fetch data here
-//     }
-//   }, [searchTerm]);
+useEffect(() => {
+    // Fetch data based on the updated searchTerm
+    // Ensure that the searchTerm is not an empty string before triggering the search
+    if (searchTerm.trim() !== '') {
+      // Fetch data here
+    }
+  }, [searchTerm]);
   
   let content;
   let adminProjectCardCount = 0;
   
-  if (searchData) {
-    content = searchData.map((event) => {
-      adminProjectCardCount += 1; // Increment the counter
-      return (
-        <AdminProjectCard
-          key={event.projectId}
-          id={event.projectId}
-          title={event.title}
-          description={event.description}
-          deadline={event.deadline}
-          progress={event.progress}
-          managerName={event.managerName}
-          managerImg={event.managerImg}
-        />
-      );
-    });
+  const foundedProject = searchData?.find(item => item.projectId === parseInt(searchTerm, 10));
+  const foundedProjectTitle = searchData?.find(item => item.title === searchTerm);
+  
+  if (searchIsError) {
+    content = <ErrorBlock title="An error occurred" message={searchError.info?.message || 'Failed to fetch events.'} />;
+  } else if (foundedProject) {
+    // If a project is found based on ID, display it
+    content = (
+      <AdminProjectCard
+        key={foundedProject.projectId}
+        id={foundedProject.projectId}
+        title={foundedProject.title}
+        description={foundedProject.description}
+        deadline={foundedProject.deadline}
+        progress={foundedProject.progress}
+        managerName={foundedProject.managerName}
+        managerImg={foundedProject.managerImg}
+      />
+    );
+    
+  } else if (foundedProjectTitle) {
+    // If a project is found based on title, display it
+    content = (
+      <AdminProjectCard
+        key={foundedProjectTitle.projectId}
+        id={foundedProjectTitle.projectId}
+        title={foundedProjectTitle.title}
+        description={foundedProjectTitle.description}
+        deadline={foundedProjectTitle.deadline}
+        progress={foundedProjectTitle.progress}
+        managerName={foundedProjectTitle.managerName}
+        managerImg={foundedProjectTitle.managerImg}
+      />
+    );
+  } else if (searchData) {
+    // If no project is found but searchData exists, display the list of projects
+    content = searchData.map((event) => (
+      <AdminProjectCard
+        key={event.projectId}
+        id={event.projectId}
+        title={event.title}
+        description={event.description}
+        deadline={event.deadline}
+        progress={event.progress}
+        managerName={event.managerName}
+        managerImg={event.managerImg}
+      />
+    ));
   } else {
     // Display loading or error for initial load
     content = (
@@ -382,103 +409,101 @@ const ManageProjects = () => {
         {searchIsError && <h2>Error: {searchError.info?.message || 'Failed to fetch Projects.'}</h2>}
       </>
     );
-
-    
   }
-
   
     return (
-
-    <MangeProjectWrapper>
+      <MangeProjectWrapper>
         <AdminSidebar />
         <MangeProjectPage>
-            <Header2>Manage Projects</Header2>
-            <Wrapper >
-                <AdminProjectSummery adminProjectCardCount={adminProjectCardCount} />
+          <Header2>Manage Projects</Header2>
+          <Wrapper>
+            <AdminProjectSummery adminProjectCardCount={adminProjectCardCount} />
             <WrapperChild>
-                <ManageProjectsInputs>
-                    <FormWrapper>
-                    <InputSearch type="text" className="mangeProjectSearch" placeholder='Search by ID or Title' ref={searchElement} />
-                    <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton">Go</SearchBtn>
-                    </FormWrapper>
-
-                    <BtnsWrapper>
-                        <Button >Generate Reports</Button>
-                        <Button className='blueBtn' onClick={handleclickUpdateForm}>Add New Projects</Button>
-                    </BtnsWrapper>
-                </ManageProjectsInputs>
+              <ManageProjectsInputs>
+                <FormWrapper>
+                  <InputSearch type="text" className="manageProjectSearch" placeholder="Search by ID or Title" ref={searchElement} />
+                  <SearchBtn onClick={handleSubmitSearch} type="submit" className="searchButton">
+                    Go
+                  </SearchBtn>
+                </FormWrapper>
+                <BtnsWrapper>
+                  <Button>Generate Reports</Button>
+                  <Button className="blueBtn" onClick={handleclickUpdateForm}>
+                    Add New Projects
+                  </Button>
+                </BtnsWrapper>
+              </ManageProjectsInputs>
             </WrapperChild>
             <AdminMangeHeader />
-            {content}            
-            </Wrapper>
+            {content}
+          </Wrapper>
+  
+          {/* Add New Project form */}
+          <OverlayDiv2 className={showUpdateForm ? 'show' : ''}>
+            <Form onSubmit={handleSubmitAddNewProject}>
+              <FormHeading2>Add a new Project</FormHeading2>
+  
+              <InputFormWrapperParent>
+                <InputformWrapper>
+                  <InputWrapper>
+                    <Label htmlFor="title">Title</Label>
+                    <Input type="text" placeholder="Enter your Title" name="title" id="title" {...register('title')} />
+                    <Span>{errors.title?.message}</Span>
+                  </InputWrapper>
+  
+                  <InputWrapper>
+                    <Label htmlFor="id">Manager ID</Label>
+                    <Input type="number" placeholder="Enter your User ID" name="id" id="id" {...register('id')} />
+                    <Span>{errors.id?.message}</Span>
+                  </InputWrapper>
+                </InputformWrapper>
+  
+                <InputformWrapper>
+                  <InputWrapper>
+                    <Label htmlFor="date">Date</Label>
+                    <Input type="text" placeholder="....\....\...." name="date" id="date" {...register('date')} />
+                    <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color: '#0D1C2E' }} />
+                    <Span>{errors.date?.message}</Span>
+                  </InputWrapper>
+  
+                  <InputWrapper>
+                    <Label htmlFor="description">Description</Label>
+                    <Input type="text" placeholder="Enter your Description" name="description" id="description" {...register('description')} />
+                    <Span>{errors.description?.message}</Span>
+                  </InputWrapper>
+                </InputformWrapper>
+  
+                {isError && (
+                  <ErrorBlock
+                    title="Failed to create new project"
+                    message={error.info?.message || 'Failed to create a project. Please try again later.'}
+                  />
+                )}
+              </InputFormWrapperParent>
+  
+              <FormWrapperBtns>
+                <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>
+                  Cancel
+                </ButtonSky100>
+                <ButtonSky400 type="button" onClick={handleSubmit(handleSubmitAddNewProject)}>
+                  Save
+                </ButtonSky400>
+              </FormWrapperBtns>
+  
+              <ConFarimationBox className={cancel ? 'show' : ''}>
+                <Header2confirmation>Are you sure you want to cancel the update?</Header2confirmation>
+                <ConfimationBtnsWrapper>
+                  <ButtonSky400 onClick={confarimationHandleCancel}>No</ButtonSky400>
+                  <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>
+                    Yes
+                  </ButtonSky100>
+                </ConfimationBtnsWrapper>
+              </ConFarimationBox>
+            </Form>
+          </OverlayDiv2>
         </MangeProjectPage>
-
-{/* ********************Add New Project form************** */}
-        <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
-        <FormHeading2>Add a new Project</FormHeading2>
-
-        <InputFormWrapperParent>
-        <InputformWrapper>
-        <InputWrapper>
-        <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter your Title 'name='title' id='title' {...register("title")} />
-        <Span>{errors.title?.message}</Span>
-        </InputWrapper>
-
-        <InputWrapper>
-        <Label htmlFor="">Manager ID</Label>
-        <Input type='number' placeholder='Enter your  User ID' name='id' id='id' {...register("id")}/>
-        <Span>{errors.id?.message}</Span>
-        </InputWrapper>
-        
-        </InputformWrapper>
-
-        <InputformWrapper>
-        <InputWrapper>
-        <Label htmlFor="">Date</Label>
-        <Input type='text' placeholder='....\....\....' name='date' id='date' {...register("date")} />
-        <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
-        <Span>{errors.date?.message}</Span>
-        </InputWrapper>
-
-        <InputWrapper>
-        <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter your Description' name='description' id='description' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
-        </InputWrapper>
-        
-        </InputformWrapper>
-
-        {isError &&(
-        <ErrorBlock title="Failed to create new project" message={error.info?.message || 
-            'faild to create project. please try again later.'} />
-        )}
-        </InputFormWrapperParent>
-
-                        {/* {isPending && 'Submitting...'} */}
-                        
-                            <FormWrapperBtns>
-                            <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-                            <ButtonSky400  type="submit" >Save</ButtonSky400>
-                        </FormWrapperBtns>
-                    
-    
-
-        <ConFarimationBox className={cancel? "show":""}>
-        <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
-        <ConfimationBtnsWrapper>
-            <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>No</ButtonSky400>
-            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
-        </ConfimationBtnsWrapper>
-        </ConFarimationBox>
-        </Form>
-        </OverlayDiv2>
-
-        
-
-    </MangeProjectWrapper>
-)
-}
-
-export default ManageProjects
+      </MangeProjectWrapper>
+    );
+  };
+  
+  export default ManageProjects;

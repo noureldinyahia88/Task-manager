@@ -158,6 +158,7 @@ const Input = styled.input`
     &:focus {
         outline: none;
     }
+    
 `
 
 const FormWrapperBtns = styled.form`
@@ -289,6 +290,7 @@ const EditBtn = styled.input`
     position: absolute;
     left: -10px;
     opacity: 0;
+    
 `
 
 const OptionsWrapperParent = styled.div`
@@ -318,6 +320,39 @@ const LabelForRatio = styled.label`
     margin-top: 6px;
     margin-left: 10px;
 `
+
+// *******************uploud btn****************
+const UploudImage = styled.div`
+        width: 617px;
+    height: 230px;
+    background-color: #F9FAFB;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 0;
+    margin: 0 auto;
+    right: 0;
+    z-index: 99;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 20px;
+    padding: 5px;
+`
+const BoxHeader = styled.div`
+    border-bottom: 1px solid #000000;
+`
+const HeaderH2 = styled.h2`
+    font-size: 49px;
+    color: #1F2937;
+    font-weight: 600;
+    margin: 15px;
+`
+const UpoudBtnWrapper = styled.div``
+const BoxP = styled.p`
+    color: #9CA3AF;
+    font-size: 24px;
+    font-weight: 500;
+`
+
 const ManageAdmins = () => {
     //React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -504,7 +539,7 @@ const ManageAdmins = () => {
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form >
+        <Form>
 
         <InputFormWrapperParent>
         <InputformWrapper>
@@ -564,6 +599,27 @@ const ManageAdmins = () => {
                         <EditBtn type="file" name="img"  id="img" {...register('img', { required: 'photo is required' })} onChange={handleInputImage}   /><MdModeEditOutline style={{'font-size': '16px'}} />
                     </EditBtnWrapper>
                 </ImageWrapper>
+
+                {/* <UploudImage>
+                    <BoxHeader><HeaderH2>Update profile Photo</HeaderH2></BoxHeader>
+                    <UpoudBtnWrapper>
+                        <BoxP>JPG or PNG no larger than 5 MB</BoxP>
+                        <Input
+  type="file"
+  name="img"
+  id="img"
+  {...register('img', { required: 'photo is required' })}
+  onChange={handleInputImage}
+  style={{
+    border: '1px solid #ccc',
+    padding: '8px',
+    borderRadius: '4px',
+    marginTop: '8px',
+    width: '200px',  // Adjust the width as needed
+  }}
+/>
+                    </UpoudBtnWrapper>
+                </UploudImage> */}
             </FormHeadingWrapper>
         </InputformWrapper>
 
