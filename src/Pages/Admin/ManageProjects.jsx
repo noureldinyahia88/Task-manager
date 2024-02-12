@@ -351,7 +351,7 @@ useEffect(() => {
   }, [searchTerm]);
   
   let content;
-  let adminProjectCardCount = 0;
+  let adminProjectCardCount = 24;
   
   const foundedProject = searchData?.find(item => item.projectId === parseInt(searchTerm, 10));
   const foundedProjectTitle = searchData?.find(item => item.title === searchTerm);
@@ -390,6 +390,7 @@ useEffect(() => {
   } else if (searchData) {
     // If no project is found but searchData exists, display the list of projects
     content = searchData.map((event) => (
+        
       <AdminProjectCard
         key={event.projectId}
         id={event.projectId}
@@ -410,7 +411,6 @@ useEffect(() => {
       </>
     );
   }
-  
     return (
       <MangeProjectWrapper>
         <AdminSidebar />

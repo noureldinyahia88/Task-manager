@@ -53,10 +53,10 @@ const PMManageProjectHeader = () => {
     <MangeProjectHeader>
         <HeaderTitle>ID</HeaderTitle>
         <HeaderTitle>Title</HeaderTitle>
-        <HeaderTitle>Description</HeaderTitle>
+        {/* <HeaderTitle>Description</HeaderTitle> */}
         <HeaderTitle>Employee</HeaderTitle>
-        <HeaderTitle>Status</HeaderTitle>
-        <HeaderTitle>Date</HeaderTitle>
+        <HeaderTitle>Email</HeaderTitle>
+        <HeaderTitle>Phone number</HeaderTitle>
 
         <MangeWrapper>
             <ButtonSetting>

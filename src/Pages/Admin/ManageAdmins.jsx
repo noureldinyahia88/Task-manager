@@ -438,7 +438,7 @@ const ManageAdmins = () => {
     };
 
     const handlePost = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         // Create a FormData object
         const formData = new FormData();
 
@@ -539,27 +539,27 @@ const ManageAdmins = () => {
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form>
+        <Form onSubmit={handlePost}>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">First Name</Label>
         <Input type="text" placeholder='Enter your first name' name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName} />
-        <Span>{errors.title?.message}</Span>
+        <Span>{errors.firstName?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
         <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
-        <Span>{errors.id?.message}</Span>
+        <Span>{errors.email?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
         <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        <Span>{errors.password?.message}</Span>
         </InputWrapper>
         <FormHeadingWrapper>
 
@@ -628,20 +628,20 @@ const ManageAdmins = () => {
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
         <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
-        <Span>{errors.description?.message}</Span>
+        <Span>{errors.lastName?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
         <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
-        <Span>{errors.description?.message}</Span>
+        <Span>{errors.phoneNo?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Confirm New Password</Label>
         <Input type="text" placeholder='Confirm your new password' id='confirmPassUser' name='confirmPassUser' {...register("confirmPassUser")}/>
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        <Span>{errors.password?.message}</Span>
         </InputWrapper>
 
         </InputformWrapper>
@@ -649,7 +649,7 @@ const ManageAdmins = () => {
 
         <FormWrapperBtns>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  onClick={handlePost}>Save</ButtonSky400>
+            <ButtonSky400 type="button"  onClick={handleSubmit(handlePost)}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         <ConFarimationBox className={cancel? "show":""}>

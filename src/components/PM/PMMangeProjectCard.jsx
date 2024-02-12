@@ -76,15 +76,15 @@ const MangeWrapper = styled.div`
     
 `
 
-const PMMangeProjectCard = () => {
+const PMMangeProjectCard = ({id, title, email, phoneNo, imgSrc, lastNa}) => {
     return (
         <MangeProjectHeader>
-        <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle>Fake Title</HeaderTitle>
-        <HeaderTitle>lorem ipsum...</HeaderTitle>
-        <HeaderTitle><img src={manger} alt="" /> managerName</HeaderTitle>
-        <HeaderTitle>Done</HeaderTitle>
-        <HeaderTitle>9 \ 5 \ 2023</HeaderTitle>
+        <HeaderTitle>#{id}</HeaderTitle>
+        <HeaderTitle>{title}</HeaderTitle>
+        {/* <HeaderTitle>{lastNa}</HeaderTitle> */}
+        <HeaderTitle><img src={imgSrc} alt="" /> {lastNa}</HeaderTitle>
+        <HeaderTitle>{email}</HeaderTitle>
+        <HeaderTitle>{phoneNo}</HeaderTitle>
     
         <MangeWrapper>
         <NavLink className="navLink" to="/ProjectPageSetting" style={{ textDecoration: 'none' }}>
