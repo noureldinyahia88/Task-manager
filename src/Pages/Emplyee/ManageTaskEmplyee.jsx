@@ -132,13 +132,11 @@ const ManageTaskEmplyee = () => {
                                 <EmplyeeManageTaskCard key={tasks.staffId} 
                                 id={tasks.staffId}  
                                 title={tasks.firstName} 
-                                email={tasks.email} 
-                                phoneNo={tasks.phoneNo} 
-                                imgSrc={tasks.imgSrc} 
                                 lastNa={tasks.lastName} 
                                 onClick={(id)=> console.log(id)}/>
                             ))
                     }
+                    <EmplyeeManageTaskCard />
 
 
             
