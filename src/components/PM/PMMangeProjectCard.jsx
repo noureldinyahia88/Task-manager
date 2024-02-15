@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import manger from '../../img/manger.png'
 import { NavLink } from 'react-router-dom';
@@ -76,7 +76,16 @@ const MangeWrapper = styled.div`
     
 `
 
-const PMMangeProjectCard = ({id, title, email, phoneNo, imgSrc, lastNa}) => {
+const PMMangeProjectCard = ({id, title, email, phoneNo, imgSrc, lastNa, onClick}) => {
+
+    const [clikcedEmployee, setClickedEmployee] = useState()
+
+    const handleId = () =>{
+        // Save the id into localStorage
+        localStorage.setItem('clickedEmployeeId', id);
+        onClick(id)
+    }
+
     return (
         <MangeProjectHeader>
         <HeaderTitle>#{id}</HeaderTitle>
@@ -88,7 +97,7 @@ const PMMangeProjectCard = ({id, title, email, phoneNo, imgSrc, lastNa}) => {
     
         <MangeWrapper>
         <NavLink className="navLink" to="/ProjectPageSetting" style={{ textDecoration: 'none' }}>
-            <ButtonSetting>Manage</ButtonSetting>
+            <ButtonSetting onClick={handleId}>Manage</ButtonSetting>
             </NavLink>
         </MangeWrapper>
 

@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import manger from '../../img/manger.png'
 import adminImg from '../../img/adminpng.png'
 import { useForm } from 'react-hook-form';
-import  * as yup from 'yup';
-import {yupResolver} from '@hookform/resolvers/yup'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -108,7 +109,7 @@ const Label = styled.label`
 const Input = styled.input`
 
     border: none;
-    border-bottom: 2px solid ${theme.inputColor};
+    border-bottom: 2px solid  ${theme.inputColor};
     background-color: transparent;
     font-size: 20px;
     color: ${theme.gray500};
@@ -118,6 +119,18 @@ const Input = styled.input`
         outline: none;
     }
 `
+const StyledDatePicker = styled(DatePicker)`
+    border: none;
+    border-bottom: 2px solid  ${theme.inputColor};
+    background-color: transparent;
+    font-size: 20px;
+    color: ${theme.gray500};
+    padding: 7px;
+    width: 100%;
+    &:focus {
+        outline: none;
+    }
+`;
 
 const FormWrapperBtns = styled.div`
     position: absolute;
@@ -158,7 +171,11 @@ const InputWrapper = styled.div`
     gap: 5px;
     position: relative;
 `
-const Span = styled.span``
+const Span = styled.span`
+    color: #EF4444;
+    font-weight: 600;
+    font-size: 16px;
+`
 
 // ********ConFarimation Box Setting**************
 
@@ -226,25 +243,12 @@ const ConfimationBtnsWrapper = styled.div`
 `
 
 
-const PMMAngeProjectCardUpdate = () => {
+const PMMAngeProjectCardUpdate = ({id, title, email, phoneNo, imgSrc, lastNa, onClick}) => {
 
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        fristName: yup.string().required("Title is required"),
-        email: yup.string().required("Please Enter a valid Email"),
-        pass: yup.number().required("Passwprd is required"),
-        lastName: yup.string().required("Please Enter a last name"),
-        phoneNum: yup.number().required("Please Enter a phone number"),
-        confirmPass: yup.number().required("Please Enter a phone number"),
-    });
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
-    }
 
     const [choose, setChoose] = useState(false) 
     const [showUpdateForm, setUpdateFrom] = useState(false)
@@ -296,10 +300,46 @@ const PMMAngeProjectCardUpdate = () => {
         setChoose(false)
     }
 
+        // *******
+// post data
+const [post, setPost] = useState({
+    title: '',
+    description: '',
+    id: '',
+    deadLine: '',
+});
+
+const handleInput = (event) => {
+    setPost({ ...post, [event.target.name]: event.target.value });
+};
+
+const handlePost = async (event) => {
+    event.preventDefault();
+    console.log(post);
+    try {
+        const response = await axios.post(
+            'http://3.126.203.127:8084/managers',
+            post,
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        
+        console.log(response);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    handleclickUpdateForm()
+    
+};
+
     return (
         <MangeProjectHeader>
-        <HeaderTitle>#123</HeaderTitle>
-        <HeaderTitle>Fake Title</HeaderTitle>
+        <HeaderTitle>#{id}</HeaderTitle>
+        <HeaderTitle>{title}</HeaderTitle>
         <HeaderTitle>lorem ipsum...</HeaderTitle>
         <HeaderTitle><img src={manger} alt="" /> managerName</HeaderTitle>
         <HeaderTitle>Done</HeaderTitle>
@@ -311,7 +351,7 @@ const PMMAngeProjectCardUpdate = () => {
 
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(handlePost)}>
 
         <FormHeading2>Update Task</FormHeading2>
 
@@ -319,14 +359,14 @@ const PMMAngeProjectCardUpdate = () => {
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='Enter Your Title' name='title' id='title' {...register("title")} />
+        <Input type="text" placeholder='First Task' name='title' id='title' {...register('title', { required: 'title is required' })} onChange={handleInput}  value={post.title} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Description</Label>
-        <Input type='text' placeholder='Enter The Description' name='description' id='description' {...register("description")} />
-        <Span>{errors.id?.message}</Span>
+        <Input type="text" placeholder='This is the first task' name='description' id='description' {...register('description', { required: 'description is required' })} onChange={handleInput} value={post.description} />
+        <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         </InputformWrapper>
@@ -335,22 +375,30 @@ const PMMAngeProjectCardUpdate = () => {
         
         <InputWrapper>
         <Label htmlFor="">employee ID</Label>
-        <Input type='number' placeholder='Enter Employee ID'name='id' id='id' {...register("id")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='number' placeholder='123' name='ID' id='ID' {...register('id', { required: 'ID is required' })} onChange={handleInput} value={post.id} />
+        <Span>{errors.id?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
-        <Label htmlFor="">DeadLine</Label>
-        <Input type='text' placeholder='../../....' name='deadLine' id='deadLine' {...register("deadLine")}/>
-        {/* <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} /> */}
-        <Span>{errors.date?.message}</Span>
+        <Label htmlFor="deadLine">DeadLine</Label>
+    <StyledDatePicker
+    selected={post.deadLine ? new Date(post.deadLine) : null}
+    onChange={(date) => handleInput({ target: { name: 'deadLine', value: date } })}
+    dateFormat="MM/dd/yyyy"
+    placeholderText="8/12/2023"
+    name="deadLine"
+    id="deadLine"
+    {...register('deadLine', { required: 'DeadLine is required' })}
+    />
+    {/* <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} /> */}
+    <Span>{errors.deadLine?.message}</Span>
         </InputWrapper>
 
         </InputformWrapper>
         </InputFormWrapperParent>
 
         <FormWrapperBtns>
-            <ButtonSky100  type="submit" onClick={handleSubmitUpdate}>Finish</ButtonSky100>
+            <ButtonSky100  type="submit" >Finish</ButtonSky100>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
         </FormWrapperBtns>
 
@@ -358,8 +406,8 @@ const PMMAngeProjectCardUpdate = () => {
         <ConFarimationBox className={cancel? "show":""}>
         <Header2confirmation>Are you sure you want cancel Update</Header2confirmation>
         <ConfimationBtnsWrapper>
-            <ButtonSky100 onClick={handleclickUpdateForm}>Yes</ButtonSky100>
-            <ButtonSky100  onClick={confarimationHandleCancel}>No</ButtonSky100>
+            <ButtonSky100 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky100>
+            <ButtonSky100 type="reset"  onClick={confarimationHandleCancel}>No</ButtonSky100>
         </ConfimationBtnsWrapper>
         </ConFarimationBox>
         {/* End Of confirm cancel */}

@@ -6,6 +6,9 @@ import { IoSearch } from "react-icons/io5";
 import SidebarEmlpoyee from '../../components/Employee/SidebarEmlpoyee';
 import EmployeeHeader from '../../components/Employee/EmployeeHeader';
 import EmplyeeManageTaskCard from '../../components/Employee/EmplyeeManageTaskCard';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTasks } from '../../components/Uitily/http/Employee/Employee';
+import { jwtDecode } from 'jwt-decode';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -86,6 +89,23 @@ const ManageTaskEmplyee = () => {
         console.log('Search:', searchElement.current.value);
     };
 
+
+    const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDgxMDU5OTgsInN1YiI6IjUzIiwiZW1haWwiOiJqaWlpbGlqaGlhQGdtYWlsLmNvbSIsIm5hbWUiOiJvdXIiLCJpbWFnZSI6InVzZXIwMTExMTUyMzA2NS5wbmciLCJyb2xlIjpbIlJPTEVfRU1QTE9ZRUUiXX0.X3n2O-apXZh4umBzrIYwY-R4kWc0LAVLw4JLcV-SRP8';
+    const decodedToken = jwtDecode(jwtToken);
+    const sub = decodedToken.sub;
+
+    // Set the sub in localStorage
+    localStorage.setItem('sub', sub);
+
+    const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: () => fetchTasks(jwtToken, sub),
+    onSuccess: () => {
+        console.log("Success");
+        // Additional logic to handle success if needed
+    },
+});
+
     return (
         <MangeProjectPagePMWrapper>
         <SidebarEmlpoyee />
@@ -107,11 +127,21 @@ const ManageTaskEmplyee = () => {
             <PageContentWrapper>
                 <EmployeeHeader />
                 
-                <EmplyeeManageTaskCard />
-                <EmplyeeManageTaskCard />
-                <EmplyeeManageTaskCard />
-                <EmplyeeManageTaskCard />
-                <EmplyeeManageTaskCard />
+                {
+                            data && data.map((tasks)=>(
+                                <EmplyeeManageTaskCard key={tasks.staffId} 
+                                id={tasks.staffId}  
+                                title={tasks.firstName} 
+                                email={tasks.email} 
+                                phoneNo={tasks.phoneNo} 
+                                imgSrc={tasks.imgSrc} 
+                                lastNa={tasks.lastName} 
+                                onClick={(id)=> console.log(id)}/>
+                            ))
+                    }
+
+
+            
             </PageContentWrapper>
         </MangeProjectPage>
     </MangeProjectPagePMWrapper>

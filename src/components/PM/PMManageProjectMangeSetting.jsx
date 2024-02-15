@@ -98,11 +98,11 @@ const PMManageProjectMangeSetting = () => {
             <PageContentWrapper>
                 <PMManageProjectHeader />
                 
+                {/* <PMMangeProjectCard />
                 <PMMangeProjectCard />
                 <PMMangeProjectCard />
                 <PMMangeProjectCard />
-                <PMMangeProjectCard />
-                <PMMangeProjectCard />
+                <PMMangeProjectCard /> */}
             </PageContentWrapper>
         </MangeProjectPage>
 )

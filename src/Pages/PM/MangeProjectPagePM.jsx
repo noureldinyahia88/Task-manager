@@ -95,7 +95,7 @@ const MangeProjectPagePM = () => {
     // get Projects
     
 
-  const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDc4NDI4NjcsInN1YiI6Ijc3IiwiZW1haWwiOiJub3VyZWxlcnR5ZXJ0ZXJ0YUBnbWFpbC5jb20iLCJuYW1lIjoiTm91ciIsImltYWdlIjoidXNlcjAxMTExODYxMDA0LnBuZyIsInJvbGUiOlsiUk9MRV9QUk9KRUNUX01BTkFHRVIiXX0.Y2LpKEjYdb23Iqi1KiWd91Bhzj0YD_lz73rrM_Jnh3w';
+  const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDgwOTUxNjQsInN1YiI6Ijc3IiwiZW1haWwiOiJub3VyZWxlcnR5ZXJ0ZXJ0YUBnbWFpbC5jb20iLCJuYW1lIjoiTm91ciIsImltYWdlIjoidXNlcjAxMTExODYxMDA0LnBuZyIsInJvbGUiOlsiUk9MRV9QUk9KRUNUX01BTkFHRVIiXX0.TLeDPj7X9O_dvMtuNeHikPHjn432Y28cad3zlCY-2LI';
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['projects'],
@@ -154,27 +154,18 @@ const MangeProjectPagePM = () => {
                 </HeaderPage>
                 <PageContentWrapper>
                     <PMManageProjectHeader />
-                    {searchResults.length > 0 ? (
-                        // Render search results if available
-                        searchResults.map((project) => (
-                            <PMMangeProjectCard
-                                key={project.staffId}
-                                id={project.staffId}
-                                title={project.firstName}
-                                email={project.email}
-                                phoneNo={project.phoneNo}
-                                imgSrc={project.imgSrc}
-                                lastNa={project.lastName}
-                            />
-                        ))
-                    ) : (
-                        // Otherwise, render all projects
-                        
+                    {
                             data && data.map((emloyee)=>(
-                                <PMMangeProjectCard key={emloyee.staffId} id={emloyee.staffId}  title={emloyee.firstName} email={emloyee.email} phoneNo={emloyee.phoneNo} imgSrc={emloyee.imgSrc} lastNa={emloyee.lastName} />
+                                <PMMangeProjectCard key={emloyee.staffId} 
+                                id={emloyee.staffId}  
+                                title={emloyee.firstName} 
+                                email={emloyee.email} 
+                                phoneNo={emloyee.phoneNo} 
+                                imgSrc={emloyee.imgSrc} 
+                                lastNa={emloyee.lastName} 
+                                onClick={(id)=> console.log(id)}/>
                             ))
-                        
-                    )}
+                    }
                 </PageContentWrapper>
             </MangeProjectPage>
         </MangeProjectPagePMWrapper>

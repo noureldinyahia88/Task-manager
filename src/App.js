@@ -14,7 +14,12 @@ import MangeProjectPagePM from "./Pages/PM/MangeProjectPagePM";
 import PMProjectPageSetting from "./components/PM/PMProjectPageSetting";
 import ManageTaskEmplyee from "./Pages/Emplyee/ManageTaskEmplyee";
 
+const USER_TYEPS = {
+  Admin: "ROLE_GLOBAL_ADMIN",
+  Manager: 'ROLE_PROJECT_MANAGER'
+}
 
+const CurrentUser = USER_TYEPS.Admin
 
 function App() {
   return (
@@ -32,10 +37,12 @@ function App() {
       <Route index element={<LoginPage />} />
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
 
-  
       <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
       <Route path="/ProjectPageSetting" element={<PMProjectPageSetting />} />
       <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} />
+
+      {/* <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} /> */}
+      <Route path="/*"element={<div>Page Not Found</div>}></Route>
 
     </Routes>
     </BrowserRouter>
@@ -44,4 +51,7 @@ function App() {
   );
 }
 
-export default App;
+
+
+export default App
+

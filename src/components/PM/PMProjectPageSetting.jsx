@@ -9,7 +9,12 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import  * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
-import { useMutation } from 'react-query';
+// import { useMutation, useQuery } from 'react-query';
+import { fetchEmplyeeTasks } from '../Uitily/http/PMApi/GetProjects';
+
+import { useQuery } from '@tanstack/react-query';
+import {queryClient} from '../../components/Uitily/http/http'
+import axios from 'axios';
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -27,7 +32,7 @@ const MangeProjectPage = styled.div`
     padding-left: 55px;
     padding-right: 55px;
     padding-top: 13px;
-    height: 100%;
+    height: 100vh;
 `;
 
 const HeaderPage = styled.div`
@@ -224,7 +229,9 @@ const ConfimationBtnsWrapper = styled.div`
     margin-top: 15px;
 `
 const Span = styled.span`
-    color: red;
+        color: #EF4444;
+        font-weight: 600;
+        font-size: 16px;
 
 `
 
@@ -248,16 +255,7 @@ const ButtonSky400 = styled.button`
 const PMProjectPageSetting = () => {
 
     //React Hook Form
-    const validationSchema = yup.object().shape({
-        title: yup.string().required("Title is required"),
-        id: yup.number().positive().integer().required("Please Enter a valid ID"),
-        description: yup.string().required("Description is required"),
-        date: yup.string().required("Please Enter a valid date")
-    });
-
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const searchElement = useRef(null);
 
@@ -274,6 +272,16 @@ const PMProjectPageSetting = () => {
     const confarimationHandleCancel = () => {
         setCancel(!cancel)
     }
+    // ***********************************************
+    
+    // get Projects
+    const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDgwOTUxNjQsInN1YiI6Ijc3IiwiZW1haWwiOiJub3VyZWxlcnR5ZXJ0ZXJ0YUBnbWFpbC5jb20iLCJuYW1lIjoiTm91ciIsImltYWdlIjoidXNlcjAxMTExODYxMDA0LnBuZyIsInJvbGUiOlsiUk9MRV9QUk9KRUNUX01BTkFHRVIiXX0.TLeDPj7X9O_dvMtuNeHikPHjn432Y28cad3zlCY-2LI';
+
+    const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['EmployeeTasks'],
+    queryFn: () => fetchEmplyeeTasks(jwtToken, localStorage.getItem('clickedEmployeeId')),
+});
+    console.log(data);
 
     
     const handleclickUpdateForm = () => {
@@ -282,25 +290,39 @@ const PMProjectPageSetting = () => {
     }
 
     // and new project project
+// post data
+const [post, setPost] = useState({
+    title: '',
+    description: '',
+    id: '',
+    deadLine: '',
+});
 
-    // const {mutate, isPending} = useMutation({
-    //     mutationFn: createNewProject,
-    //     onSuccess: () => {
-    //         // to refatch the data
-    //         queryClient.invalidateQueries({queryKey:['data']});
-    //         console.log("sucsess");
-    //         Navigate('/')
-    //     }
-    // })
+const handleInput = (event) => {
+    setPost({ ...post, [event.target.name]: event.target.value });
+};
 
-    async function handleSubmitAddNewProject(formData){
-//     mutate({
-//         title: formData.title,
-//         description: formData.description,
-//         deadline: formData.date,
-//         managerID: formData.id
-// })
-}
+const handlePost = async (event) => {
+    event.preventDefault();
+    console.log(post);
+    try {
+        const response = await axios.post(
+            'http://3.126.203.127:8084/managers',
+            post,
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        
+        console.log(response);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    handleclickUpdateForm()
+};
     return (
     <MangeProjectPage>
             <HeaderPage>
@@ -328,33 +350,39 @@ const PMProjectPageSetting = () => {
             <PageContentWrapper>
                 <PMManageProjectHeader />
                 
+                {
+                            data && data.map((tasks)=>(
+                                <PMMAngeProjectCardUpdate key={tasks.staffId} 
+                                // id={tasks.staffId}  
+                                // title={tasks.firstName} 
+                                // email={tasks.email} 
+                                // phoneNo={tasks.phoneNo} 
+                                // imgSrc={tasks.imgSrc} 
+                                // lastNa={tasks.lastName} 
+                                onClick={(id)=> console.log(id)}/>
+                            ))
+                    }
                 <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
-                <PMMAngeProjectCardUpdate />
+            
             </PageContentWrapper>
 
-            {/* ********************Add New Project form************** */}
+            {/* ********************Add New Task form************** */}
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>
-        <Form onSubmit={handleSubmit(handleSubmitAddNewProject)}>
+        <Form>
         <FormHeading2>ADD Task</FormHeading2>
 
         <InputFormWrapperParent>
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Title</Label>
-        <Input type='text' placeholder='First Task' name='title' id='title' {...register("title")} />
+        <Input type="text" placeholder='First Task' name='title' id='title' {...register('title', { required: 'title is required' })} onChange={handleInput}  value={post.title} />
         <Span>{errors.title?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">Description</Label>
-        <Input type='number' placeholder='This is the first task' name='id' id='id' {...register("id")}/>
-        <Span>{errors.id?.message}</Span>
+        <Input type="text" placeholder='This is the first task' name='description' id='description' {...register('description', { required: 'description is required' })} onChange={handleInput} value={post.description}/>
+        <Span>{errors.description?.message}</Span>
         </InputWrapper>
         
         </InputformWrapper>
@@ -362,14 +390,14 @@ const PMProjectPageSetting = () => {
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">employee ID</Label>
-        <Input type='number' placeholder='123' name='date' id='date' {...register("date")} />
-        <Span>{errors.date?.message}</Span>
+        <Input type='number' placeholder='123' name='ID' id='ID' {...register('id', { required: 'ID is required' })} onChange={handleInput} value={post.id} />
+        <Span>{errors.id?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
         <Label htmlFor="">DeadLine</Label>
-        <Input type='text' placeholder='8/12/2023' name='description' id='description' {...register("description")} />
-        <Span>{errors.description?.message}</Span>
+        <Input type='text' placeholder='8/12/2023' name='deadLine' id='deadLine' {...register('deadLine', { required: 'DeadLine is required' })} onChange={handleInput} value={post.deadLine} />
+        <Span>{errors.deadLine?.message}</Span>
         </InputWrapper>
         
         </InputformWrapper>
@@ -383,17 +411,17 @@ const PMProjectPageSetting = () => {
                         {/* {isPending && 'Submitting...'} */}
                         
                             <FormWrapperBtns>
-                            <ButtonSky400 type="submit">Finish</ButtonSky400>
-                            <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky400>
-                        </FormWrapperBtns>
+                                <ButtonSky400 onClick={handleSubmit(handlePost)}>Finish</ButtonSky400>
+                                <ButtonSky400  type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky400>
+                            </FormWrapperBtns>
                     
     
 
             <ConFarimationBox className={cancel? "show":""}>
                 <Header2confirmation>Are you sure you want cancel</Header2confirmation>
                 <ConfimationBtnsWrapper>
-                    <ButtonSky400 onClick={handleclickUpdateForm}>Yes</ButtonSky400>
-                    <ButtonSky400 className='sky400' type='reset' onClick={confarimationHandleCancel}>No</ButtonSky400>
+                    <ButtonSky400 type="reset" onClick={handleclickUpdateForm}>Yes</ButtonSky400>
+                    <ButtonSky400 className='sky400' type="reset"onClick={confarimationHandleCancel}>No</ButtonSky400>
                 </ConfimationBtnsWrapper>
             </ConFarimationBox>
         </Form>
