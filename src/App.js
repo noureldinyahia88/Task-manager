@@ -32,14 +32,17 @@ function App() {
         <Route path="/manageEmployees" element={<ManageEmployees />} />
         <Route path="/managePMS" element={<ManagePMs />} />
         <Route path="/myAccountAdmin" element={<MyAccountAdmin />} />
+
+        <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
+      <Route path="/ProjectPageSetting" element={<PMProjectPageSetting />} />
+      <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} />
+      
       </Route>
 
       <Route index element={<LoginPage />} />
       <Route path="/forgetpassword" element={<ForgetPasswordPage />} />
 
-      <Route path="/manageProjectsPM" element={<MangeProjectPagePM />} />
-      <Route path="/ProjectPageSetting" element={<PMProjectPageSetting />} />
-      <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} />
+      
 
       {/* <Route path="/manageTaskEmplyee" element={<ManageTaskEmplyee />} /> */}
       <Route path="/*"element={<div>Page Not Found</div>}></Route>

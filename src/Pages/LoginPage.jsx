@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import loginimg from '../img/Office workplace.png'
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Login, fetchEvent, queryClient } from '../components/Uitily/http/http.js'
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
+import { jwtDecode } from 'jwt-decode'
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -159,19 +160,33 @@ const LoginPage = () => {
   };
 
   // login
+  const [profileType, setProfileType] = useState([]);
 
-  const {mutate, isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: Login,
     onSuccess: (data) => {
-        // to refatch the data
-        queryClient.invalidateQueries({queryKey:['data']});
-        console.log("sucsess");
-        console.log(data);
-        localStorage.setItem('token', data)
-        navigate('/manageProjects')
-
-    }
-})
+      // to refetch the data
+      queryClient.invalidateQueries({ queryKey: ['data'] });
+      console.log("success");
+      console.log(data);
+  
+      const decodedToken = jwtDecode(data);
+  
+      setProfileType(decodedToken.role[0]);
+      localStorage.setItem('token', data);
+      localStorage.setItem('profileType', decodedToken.role[0]);
+  
+      if (decodedToken.role[0] === "ROLE_GLOBAL_ADMIN") {
+        navigate('/manageProjects');
+      } else if (decodedToken.role[0] === "ROLE_PROJECT_MANAGER") {
+        navigate('/manageProjectsPM');
+      } else if (decodedToken.role[0] === "ROLE_EMPLOYEE") {
+        navigate('/manageTaskEmplyee');
+      }
+  
+      console.log(decodedToken.role[0]);
+    },
+  });
 
 async function handleSubmitLogin(formData){
 mutate({
