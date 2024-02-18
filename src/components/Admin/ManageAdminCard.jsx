@@ -39,7 +39,7 @@ const MangeAdminsHeader = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: 98%;
     background-color: ${theme.white};
     border-radius: 10px;
     padding-top: 10px;
@@ -139,6 +139,7 @@ const Form = styled.form`
     background-color: ${theme.white};
     width: 1130px;
     height: 768px;
+    /* height: 100%; */
     border-radius: 40px;
     gap: 80px;
     position: relative;
@@ -379,7 +380,7 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
     };
 
     const handlePost = async (event, id) => {
-        event.preventDefault();
+        // event.preventDefault();
         // Create a FormData object
   const formData = new FormData();
 
@@ -420,7 +421,7 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
 
     return (
     <MangeAdminsHeader>
-        <HeaderTitle>#{staffId}</HeaderTitle>
+        <HeaderTitle># {staffId}</HeaderTitle>
         <HeaderTitle><img src={imgSrc} alt="" /> {firstName}</HeaderTitle>
         <HeaderTitle>{email}</HeaderTitle>
         <HeaderTitle>+20 {phoneNo}</HeaderTitle>
@@ -454,7 +455,7 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="firstName">First Name</Label>
-        <Input type="text" name='firstName' id='firstName' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName}/>
+        <Input type="text" name='firstName' id='firstName' placeholder='Enter your first name' {...register('firstName', { required: 'First name is required' })} onChange={handleInput}  value={post.firstName}/>
                 {errors?.firstName && (
             <span>{errors.firstName.message}</span>
         )}
@@ -463,14 +464,14 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
         <InputWrapper>
         <Label htmlFor="">E-mail Address </Label>
         <Input type="text" placeholder='Enter your e-mail' id='email' name='email'  {...register('email', { required: 'email is required' })} onChange={handleInput} value={post.email} />
-        <Span>{errors.id?.message}</Span> 
+        <Span>{errors.email?.message}</Span> 
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">New Password</Label>
         <Input type="text" placeholder='Enter your new password' id='password' name='password' {...register('password', { required: 'password is required' })} onChange={handleInput}  value={post.password}  />
         <AiFillEyeInvisible style={{ position: 'absolute', right: 0, bottom: 17, color:'#6B7280' }} />
-        <Span>{errors.date?.message}</Span>
+        <Span>{errors.password?.message}</Span>
         </InputWrapper>
         </InputformWrapper>
 
@@ -479,13 +480,13 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
         <InputWrapper>
         <Label htmlFor="">Last Name</Label>
         <Input type="text" placeholder='Enter your last name' id='lastName' name='lastName'{...register('lastName', { required: 'Last name is required' })} onChange={handleInput}  value={post.lastName} />
-        <Span>{errors.description?.message}</Span>
+        <Span>{errors.lastName?.message}</Span>
         </InputWrapper>
         
         <InputWrapper>
         <Label htmlFor="">Phone Number</Label>
         <Input type="text" placeholder='Enter Phone Number' id='phoneNo' name='phoneNo' {...register('phoneNo', { required: 'phone Number is required' })} onChange={handleInput}  value={post.phoneNo} />
-        <Span>{errors.description?.message}</Span>
+        <Span>{errors.phoneNo?.message}</Span>
         </InputWrapper>
 
         <InputWrapper>
@@ -500,7 +501,7 @@ const ManageAdminCard = ({staffId, firstName, email, startDate, imgSrc, phoneNo,
 
         <FormWrapperBtns>
             <ButtonSky100 type="reset" onClick={confarimationHandleCancel}>Cancel</ButtonSky100>
-            <ButtonSky400  type="submit">Save</ButtonSky400>
+            <ButtonSky400  type="button" onClick={handleSubmit((e) => handlePost(e, projectId))}>Save</ButtonSky400>
         </FormWrapperBtns>
 
         {/* confirm cancel */}

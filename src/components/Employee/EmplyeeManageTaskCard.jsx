@@ -176,6 +176,7 @@ const EmplyeeManageTaskCard = () => {
 
     const showSubmintForm = () => {
         setUpload(!upload)
+        console.log("clc");
     }
     return (
     <MangeProjectHeader>
@@ -191,7 +192,7 @@ const EmplyeeManageTaskCard = () => {
             <ButtonSetting onClick={StartActionHandle} className={`${StartAction ? 'hide' : ''}`}>Start</ButtonSetting>
             <ButtonSetting className={`submit ${StartAction ? 'show' : ''} ` } onClick={showSubmintForm}>Submit</ButtonSetting>
 
-            <UploadBoxWraper>
+            <UploadBoxWraper className={`submit ${upload ? 'show' : ''} ` }>
                 <HeadingWrapper>
                 <H2Box>Upload Task</H2Box>
                 </HeadingWrapper>

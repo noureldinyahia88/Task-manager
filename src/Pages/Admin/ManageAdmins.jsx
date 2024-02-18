@@ -352,6 +352,23 @@ const BoxP = styled.p`
     font-size: 24px;
     font-weight: 500;
 `
+const ParentWrapper = styled.div`
+    height: 600px;
+    overflow-y: scroll;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+`;
 
 const ManageAdmins = () => {
     //React Hook Form
@@ -392,12 +409,10 @@ const ManageAdmins = () => {
     const handleSearch = () => {
         // Implement your search logic here
         const filteredResults = data.filter(
-            (project) =>
-                String(project.staffId) === searchInput ||
-                project.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.email.toLowerCase().includes(searchInput.toLowerCase())
+            (admin) =>
+                String(admin.staffId) === searchInput ||
+                admin.email.toLowerCase().includes(searchInput.toLowerCase())
         );
-    
         setSearchResults(filteredResults);
     };
 
@@ -491,7 +506,8 @@ const ManageAdmins = () => {
                     <SearchBtn onClick={handleSearch} type="submit" className="searchButton"><IoMdSearch style={{'fontSize':'20px'}} /></SearchBtn>
                     </FormWrapper>
                 </ManageProjectsInputs>
-
+                
+        <ParentWrapper>
             <ManageAdminHeaderpage />
 
 
@@ -534,8 +550,10 @@ const ManageAdmins = () => {
                         ))}
                 </Wrapper>
             )}
-            
+            </ParentWrapper>
             </Wrapper>
+
+            
         </MangeProjectPage>
 
         <OverlayDiv2 className={showUpdateForm ? 'show': ''}>

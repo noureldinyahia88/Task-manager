@@ -250,6 +250,23 @@ const ButtonSky100 = styled.button`
     cursor: pointer;
     z-index: 100;
 `
+const ParentWrapper = styled.div`
+    height: 600px;
+    overflow-y: scroll;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+`;
 
 const ManagePMs = () => {
     //React Hook Form
@@ -357,6 +374,7 @@ const ManagePMs = () => {
                     </FormWrapper>
                 </ManageProjectsInputs>
 
+        <ParentWrapper>
             <AdminMangeHeader />
 
 
@@ -396,7 +414,7 @@ const ManagePMs = () => {
                         ))}
                 </Wrapper>
             )}
-            
+        </ParentWrapper>
             </Wrapper>
         </MangeProjectPage>
 

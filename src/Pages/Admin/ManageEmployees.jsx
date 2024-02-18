@@ -295,6 +295,23 @@ const EditBtn = styled.input`
     left: -10px;
     opacity: 0;
 `
+const ParentWrapper = styled.div`
+    height: 600px;
+    overflow-y: scroll;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+`;
 
 
 const ManageEmployees = () => {
@@ -424,9 +441,9 @@ const ManageEmployees = () => {
                     </FormWrapper>
                 </ManageProjectsInputs>
 
+        <ParentWrapper>
+
             <ManageAdminHeaderpage />
-
-
 {searchResults.length > 0 && (
                 <Wrapper>
                     {searchResults.map((project) => (
@@ -462,9 +479,7 @@ const ManageEmployees = () => {
                         ))}
                 </Wrapper>
             )}
-
-
-            
+        </ParentWrapper>
             </Wrapper>
         </MangeProjectPage>
 

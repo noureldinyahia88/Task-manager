@@ -39,7 +39,7 @@ const MangeProjectHeader = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: 98%;
     background-color: ${theme.white};
     border-radius: 10px;
     padding: 10px;

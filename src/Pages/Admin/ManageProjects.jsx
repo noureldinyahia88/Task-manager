@@ -266,8 +266,22 @@ const ButtonSky100 = styled.button`
 const ErrorBlock = styled.div`
   
 `
-const LoadingIndicator = styled.div`
-  
+const Wapper = styled.div`
+  height: 500px;
+    overflow-y: scroll;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
 `
 
 const ManageProjects = () => {
@@ -418,6 +432,7 @@ useEffect(() => {
           <Header2>Manage Projects</Header2>
           <Wrapper>
             <AdminProjectSummery adminProjectCardCount={adminProjectCardCount} />
+
             <WrapperChild>
               <ManageProjectsInputs>
                 <FormWrapper>
@@ -434,8 +449,12 @@ useEffect(() => {
                 </BtnsWrapper>
               </ManageProjectsInputs>
             </WrapperChild>
+
+            <Wapper>
             <AdminMangeHeader />
             {content}
+            </Wapper>
+
           </Wrapper>
   
           {/* Add New Project form */}
