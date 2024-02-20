@@ -98,14 +98,19 @@ const AdminSidebar = () => {
 
     const [name, setName] = useState()
     const [imgeProfile, setImageProifile] = useState()
+    
 
     useEffect(() => {
     setName(jwtDecode(localStorage.getItem('token')).name)
     setImageProifile(jwtDecode(localStorage.getItem('token')).image)
+    
     }, [name,imgeProfile])
 
     const logedout = () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('clickedEmployeeId')
+        localStorage.removeItem('profileType')
+        localStorage.removeItem('sub')
     }
 return (
     <SidebarWrapper>

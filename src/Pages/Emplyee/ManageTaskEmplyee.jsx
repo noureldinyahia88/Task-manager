@@ -90,7 +90,7 @@ const ManageTaskEmplyee = () => {
     };
 
 
-    const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDgxMDU5OTgsInN1YiI6IjUzIiwiZW1haWwiOiJqaWlpbGlqaGlhQGdtYWlsLmNvbSIsIm5hbWUiOiJvdXIiLCJpbWFnZSI6InVzZXIwMTExMTUyMzA2NS5wbmciLCJyb2xlIjpbIlJPTEVfRU1QTE9ZRUUiXX0.X3n2O-apXZh4umBzrIYwY-R4kWc0LAVLw4JLcV-SRP8';
+    const jwtToken = localStorage.getItem('token');
     const decodedToken = jwtDecode(jwtToken);
     const sub = decodedToken.sub;
 

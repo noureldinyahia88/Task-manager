@@ -6,6 +6,7 @@ import { Login, fetchEvent, queryClient } from '../components/Uitily/http/http.j
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode'
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 const theme = {
     skyColor:'#7DD3FC',
@@ -75,6 +76,7 @@ font-family: "Roboto Serif", serif;
 `;
 
 const InputWrapper = styled.div`
+position: relative;
   
   display: flex;
   flex-direction: column;
@@ -97,11 +99,15 @@ const Input = styled.input`
   padding: 10px;
   border-radius: 15px;
   font-size: 20px;
-  color: ${theme.gray400};
+  color: #111827;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
 
   &:focus{
     outline: none;
+  }
+  &.error{
+    border: 1px solid #EF4444;
   }
 `;
 
@@ -142,9 +148,21 @@ const LongninBtn = styled.button`
     color: #fff;
     font-size: 20px;
     cursor: pointer;
+
+    &.error{
+      background-color: #D1D5DB;
+      cursor: not-allowed
+    }
 `
 const ErorrFrpm = styled.span`
-  color: red;
+  color: #EF4444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  position: absolute;
+    right: 2%;
+    top: 58%;
 `
 
 // Login Page component
@@ -196,9 +214,22 @@ mutate({
 
 }
 
-setTimeout(() => {
-  localStorage.removeItem('token')
-}, 12 * 60 * 60 * 1000);
+// Function to remove an item from local storage after a specified time
+const removeItemAfterDelay = (key, delay) => {
+  setTimeout(() => {
+    localStorage.removeItem(key);
+  }, delay);
+};
+
+// Set a timer for each item to be removed after 24 hours (in milliseconds)
+const twentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+// Example usage
+removeItemAfterDelay('token', twentyFourHoursInMilliseconds);
+removeItemAfterDelay('clickedEmployeeId', twentyFourHoursInMilliseconds);
+removeItemAfterDelay('profileType', twentyFourHoursInMilliseconds);
+removeItemAfterDelay('sub', twentyFourHoursInMilliseconds);
+
 
     return (
     <LoginPagestyle>
@@ -212,7 +243,7 @@ setTimeout(() => {
           <FormHeading2>Log In</FormHeading2>
 
           <InputWrapper>
-              <Label>Email</Label>
+              <Label>E-mail</Label>
               <Input
                 {...register("email", {
                   required: "Invalid email",
@@ -220,8 +251,9 @@ setTimeout(() => {
                 placeholder="Enter Your E-mail"
                 name='email'
                 id='email'
+                className={errors.password ? 'error' : ''}
               />
-              {errors.email && <ErorrFrpm>{errors.email.message}</ErorrFrpm>}
+              {errors.email && <ErorrFrpm>{errors.email.message} <IoInformationCircleOutline /></ErorrFrpm>}
             </InputWrapper>
 
             <InputWrapper>
@@ -234,8 +266,9 @@ setTimeout(() => {
                 placeholder="Enter Your Password"
                 name='password'
                 id='password'
+                className={errors.password ? 'error' : ''}
               />
-              {errors.password && <ErorrFrpm>{errors.password.message}</ErorrFrpm>}
+              {errors.password && <ErorrFrpm>{errors.password.message}  <IoInformationCircleOutline /></ErorrFrpm>}
             </InputWrapper>
 
           <WrapperRememberMeAndForgetPassword>
@@ -248,7 +281,7 @@ setTimeout(() => {
             </NavLink>
           </WrapperRememberMeAndForgetPassword>
 
-          <LongninBtn type="submit">Log in</LongninBtn>
+          <LongninBtn type="submit" className={errors.password ? 'error' : ''}>Log in</LongninBtn>
         </Form>
       </LoginWrapper>
       </LoginPageWrapper>

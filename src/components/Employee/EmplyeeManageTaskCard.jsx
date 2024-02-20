@@ -178,6 +178,14 @@ const EmplyeeManageTaskCard = () => {
         setUpload(!upload)
         console.log("clc");
     }
+
+    const handleFileChange = (event) => {
+        // Check if a file is selected
+        if (event.target.files && event.target.files.length > 0) {
+          // If a file is selected, hide the form
+        setUpload(false);
+        }
+    }
     return (
     <MangeProjectHeader>
         <HeaderTitle>#123</HeaderTitle>
@@ -200,7 +208,7 @@ const EmplyeeManageTaskCard = () => {
                     <P>JPG or PNG or File no larger than 5 MB</P>
                     <UploadBtn>
                     + Upload Photo
-                    <UploadBtnInput placeholder='+ Upload Photo' type='file' />
+                    <UploadBtnInput placeholder='+ Upload Photo' type='file' onChange={handleFileChange} />
                 </UploadBtn>
                 </ConstentWraper>
             </UploadBoxWraper>

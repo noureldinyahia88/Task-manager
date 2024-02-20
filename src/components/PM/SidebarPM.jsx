@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import logo from '../../img/logo.png'
@@ -9,6 +9,7 @@ import { IoPersonSharp } from "react-icons/io5";
 import { NavLink } from 'react-router-dom'
 
 import { GrGroup } from "react-icons/gr";
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -25,7 +26,8 @@ const SidebarWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
+    font-family: "Roboto Condensed", sans-serif;
+    
 `
 
 const LogoWrapper = styled.div``
@@ -45,6 +47,7 @@ const Header3 = styled.h3`
     text-align: center;
     padding: 0;
     margin: 0;
+    font-family: "Roboto Condensed", sans-serif;
 `
 const BtnsWrapper = styled.div`
     display: flex;
@@ -57,7 +60,7 @@ const BtnsWrapper = styled.div`
     gap: 40px;
 
 `
-const Button = styled.button`
+const Button = styled(NavLink)`
     background-color: ${theme.sky50};
     width: 200px;
     height: 50px;
@@ -86,6 +89,7 @@ const Button = styled.button`
         padding-left: 20px;
     }
 `
+
 const BtnsWrapperChiled = styled.div`
     display: flex;
     flex-direction: column;
@@ -106,6 +110,14 @@ const ButtonLogout = styled.button`
 
 const SidebarPM = () => {
 
+    const [name, setName] = useState()
+    const [imgeProfile, setImageProifile] = useState()
+
+    useEffect(() => {
+    setName(jwtDecode(localStorage.getItem('token')).name)
+    setImageProifile(jwtDecode(localStorage.getItem('token')).image)
+    }, [name,imgeProfile])
+
     const logedout = () => {
         localStorage.removeItem('token')
     }
@@ -117,18 +129,18 @@ const SidebarPM = () => {
         </LogoWrapper>
         <AdminInfoWrapper>
         <AdminImg src={adminImg} alt='' />
-        <Header3>Vivian R.  Lloyd</Header3>
+        <Header3>{name}</Header3>
         </AdminInfoWrapper>
 
     <BtnsWrapper>
         <BtnsWrapperChiled>
-            <NavLink className="navLink" to="/ManageProjects" style={{ textDecoration: 'none' }}>
-                <Button className="active"><GrGroup style={{fontSize:"16px"}} /> Manage Projects</Button>
-            </NavLink>
+            <Button className="navLink" to="/manageProjectsPM" style={{ textDecoration: 'none' }}>
+                <GrGroup style={{fontSize:"16px"}} /> Manage Projects
+            </Button>
 
-            <NavLink className="navLink" to="/myAccount" style={{ textDecoration: 'none' }}>
-                <Button><IoPersonSharp style={{fontSize:"20px"}} /> My Account</Button>
-            </NavLink>
+            <Button className="navLink" to="/myAccountPM" style={{ textDecoration: 'none' }}>
+                <IoPersonSharp style={{fontSize:"20px"}} /> My Account
+            </Button>
         </BtnsWrapperChiled>
     
     <NavLink className="navLink" to="/" style={{ textDecoration: 'none' }}>

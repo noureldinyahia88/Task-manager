@@ -267,7 +267,7 @@ const ErrorBlock = styled.div`
   
 `
 const Wapper = styled.div`
-  height: 500px;
+  /* height: 500px; */
     overflow-y: scroll;
     width: 100%;
 

@@ -95,7 +95,7 @@ const MangeProjectPagePM = () => {
     // get Projects
     
 
-  const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDgwOTUxNjQsInN1YiI6Ijc3IiwiZW1haWwiOiJub3VyZWxlcnR5ZXJ0ZXJ0YUBnbWFpbC5jb20iLCJuYW1lIjoiTm91ciIsImltYWdlIjoidXNlcjAxMTExODYxMDA0LnBuZyIsInJvbGUiOlsiUk9MRV9QUk9KRUNUX01BTkFHRVIiXX0.TLeDPj7X9O_dvMtuNeHikPHjn432Y28cad3zlCY-2LI';
+  const jwtToken = localStorage.getItem('token')
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['projects'],
@@ -108,29 +108,20 @@ const MangeProjectPagePM = () => {
     const [searchInput, setSearchInput] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
-    const handleSearch = (e) => {
-        e.preventDefault()
-        console.log("search");
-        if (!data || !data.data || !data.data.projects) {
-            // Handle case where data is not available
-            return;
-        }
-
+    const handleSearch = () => {
         // Implement your search logic here
-        const filteredResults = data.data.projects.filter(
-            (project) =>
-                String(project.title) === searchInput ||
-                project.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.email.toLowerCase().includes(searchInput.toLowerCase())
+        const filteredResults = data.filter(
+            (admin) =>
+                String(admin.staffId) === searchInput ||
+                admin.firstName.toLowerCase().includes(searchInput.toLowerCase())
         );
-
         setSearchResults(filteredResults);
     };
 
     const handleInputSearch = (event) => {
         setSearchInput(event.target.value);
-        console.log(searchInput);
     };
+
     
 
     return (
@@ -139,23 +130,25 @@ const MangeProjectPagePM = () => {
             <MangeProjectPage>
                 <HeaderPage>
                     <PageHeading2>Manage Project</PageHeading2>
-                    <FormWrapper onSubmit={handleSearch}>
+                    <FormWrapper>
                         <InputSearch
-                            type="text"
-                            className="manageProjectSearch"
-                            placeholder='Search by ID or Name'
+                            type="text" 
+                            className="mangeProjectSearch" 
+                            placeholder='Search by ID or Name' 
                             value={searchInput} 
                             onChange={handleInputSearch}
                         />
-                        <SearchBtn  className="searchButton">
+                        <SearchBtn  onClick={handleSearch} type="button" className="searchButton">
                             <IoSearch />
                         </SearchBtn>
                     </FormWrapper>
                 </HeaderPage>
                 <PageContentWrapper>
                     <PMManageProjectHeader />
-                    {
-                            data && data.map((emloyee)=>(
+                    {searchResults.length > 0 && (
+                        <Wrapper>
+                            {
+                            searchResults.map((emloyee)=>(
                                 <PMMangeProjectCard key={emloyee.staffId} 
                                 id={emloyee.staffId}  
                                 title={emloyee.firstName} 
@@ -166,6 +159,24 @@ const MangeProjectPagePM = () => {
                                 onClick={(id)=> console.log(id)}/>
                             ))
                     }
+                        </Wrapper>
+                    )}
+                    {!searchResults.length && (
+                        <Wrapper>
+                            {
+                                    data && data.map((emloyee)=>(
+                                        <PMMangeProjectCard key={emloyee.staffId} 
+                                        id={emloyee.staffId}  
+                                        title={emloyee.firstName} 
+                                        email={emloyee.email} 
+                                        phoneNo={emloyee.phoneNo} 
+                                        imgSrc={emloyee.imgSrc} 
+                                        lastNa={emloyee.lastName} 
+                                        onClick={(id)=> console.log(id)}/>
+                                    ))
+                            }
+                        </Wrapper>
+                    )}
                 </PageContentWrapper>
             </MangeProjectPage>
         </MangeProjectPagePMWrapper>

@@ -81,9 +81,10 @@ const Form = styled.form`
     padding: 40px;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     background-color: ${theme.white};
     width: 1130px;
-    height: 685px;
+    height: auto;
     border-radius: 40px;
     gap: 80px;
     position: relative;
@@ -133,9 +134,10 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 const FormWrapperBtns = styled.div`
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
+    /* position: absolute; */
+    justify-content: flex-end;
+    /* bottom: 40px;
+    right: 40px; */
     display: flex;
     gap: 10px;
 `
@@ -218,7 +220,7 @@ const ConFarimationBox = styled.div`
     border-radius: 10px;
     text-align: center;
     position: absolute;
-    bottom: 33px;
+    bottom: 13px;
     right: 31px;
     z-index: 200;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
