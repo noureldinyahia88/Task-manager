@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { deleteProject, queryClient, updateProject } from '../Uitily/http/http'
 import { useNavigate } from 'react-router-dom';
+import ReactDatePicker from 'react-datepicker';
 
 
 const theme = {
@@ -263,7 +264,19 @@ const ButtonSky100 = styled.button`
     z-index: 100;
 `
 // *********************
+const StyledDatePicker = styled(ReactDatePicker)`
+  border: none;
+    border-bottom: 2px solid ${theme.inputColor};
+    background-color: transparent;
+    font-size: 20px;
+    color: ${theme.gray500};
+    padding: 7px;
+    width: 99%;
 
+    &:focus {
+        outline: none;
+    }
+`;
 
 const AdminProjectCard = ({id ,progress ,managerImg, title, description, startDate, deadline, managerName, onClick}) => {
 
@@ -347,6 +360,13 @@ async function handleSubmitUpdate(formData) {
         console.log("clicked");
     }
 
+
+    const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
     return (
         <MangeProjectHeader>
         <HeaderTitle># {id}</HeaderTitle>
@@ -386,7 +406,14 @@ async function handleSubmitUpdate(formData) {
         <InputformWrapper>
         <InputWrapper>
         <Label htmlFor="">Date</Label>
-        <Input type='text' placeholder='....\....\....' name='date' id='date' {...register("date")}/>
+        <Input type='text' placeholder='....\....\....' name='date' id='date'  {...register("date")}/>
+        {/* <StyledDatePicker
+        selected={selectedDate}
+        onChange={handleDateChange}
+        dateFormat="yyyy-MM-dd" // Customize the date format if needed
+        isClearable // Add a clear button to reset the date
+        placeholderText="....\....\...."
+      /> */}
         <FaCalendarMinus style={{ position: 'absolute', right: 0, bottom: 17, color:'#0D1C2E' }} />
         <Span>{errors.date?.message}</Span>
         </InputWrapper>
